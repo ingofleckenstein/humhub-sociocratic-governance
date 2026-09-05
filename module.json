@@ -11,5 +11,6 @@
     "governance",
     "consent",
     "circles"
-  ]
+  ],
+  "licence": "AGPL-3.0-only"
 }
