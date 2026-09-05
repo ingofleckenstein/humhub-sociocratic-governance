@@ -440,7 +440,7 @@ Spätere Prüfungen müssen insbesondere abdecken:
 - Themensprecher*innen: sichtbare temporäre Zuordnung, Teilnahme an Themensitzungen, keine zusätzlichen allgemeinen HumHub-Rechte.
 - Revisionsfolgen: nach Schwere bis zur Kreisauflösung; bei Auflösungsentscheidungen keine Konsentrechte für Personen des betroffenen Kreises.
 - Zentraler Nutzerbegriff: **Vorhaben**; eigene fachliche Grundlage in der Governance-Erweiterung.
-- Lizenzziel: gemeinsame Mitarbeit, Kopieren, Verändern und Nutzung ermöglichen; Kommerzialisierung ausschließen.
+- Lizenz: GNU AGPL Version 3 (AGPL-3.0-only); Nutzung, Änderung und Weitergabe einschließlich kommerzieller Nutzung unter den Lizenzbedingungen.
 
 ### Noch zu entscheiden beziehungsweise zu präzisieren
 
@@ -452,7 +452,7 @@ Spätere Prüfungen müssen insbesondere abdecken:
 6. Praktische Übergabe und Umgang mit bereits ausgeführten Maßnahmen nach Revision.
 7. Konkrete HumHub-Version, Testinstanz und Integrationen.
 8. Aufbewahrung, Löschung, Aufnahmen und KI-Verarbeitung.
-9. Reichweite des Kommerzialisierungsverbots und dazu passende endgültige Lizenz.
+9. Lizenzkonformität gegebenenfalls übernommener Drittkomponenten vor deren Integration prüfen.
 10. Mandatsprüfung und Verteilung bei widersprüchlichen Zuständigkeiten, Schleifen oder Ideen außerhalb des Gesamtmandats.
 
 ## 15. Dokumentation und Mitarbeit
@@ -474,14 +474,12 @@ Beiträge sollen konkrete Praxisprobleme lösen, universell formulierbar sein un
 - [Kreisrollen — Sociocracy For All](https://www.sociocracyforall.org/process-roles/)
 - [Double linking — Sociocracy For All](https://www.sociocracyforall.org/double-linking/)
 
-## Lizenzziel und aktueller Lizenzstatus
+## Lizenz
 
-Gewünscht ist ein öffentlich zugängliches, gemeinschaftlich entwickeltes Projekt, das Menschen kopieren, verändern und nutzen können, **ohne Kommerzialisierung**.
+Dieses Projekt steht unter der **GNU Affero General Public License, Version 3** (**SPDX: AGPL-3.0-only**). Der vollständige Text steht in [LICENSE](LICENSE).
 
-Eine Lizenz mit kommerziellem Nutzungsverbot ist keine Open-Source-Lizenz nach der [Open Source Definition](https://opensource.org/osd), sondern eine Nutzungslizenz mit Einschränkungen für öffentlich zugänglichen Quellcode.
+Nutzung, Kopieren, Änderungen und Weitergabe sind unter den Bedingungen der Lizenz erlaubt, einschließlich kommerzieller Nutzung. Der frühere Wunsch nach einem Kommerzialisierungsverbot wurde durch diese Lizenzentscheidung ersetzt.
 
-Als Kandidat kommt [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) infrage. Sie erlaubt Nutzung, Änderungen und Weitergabe für die darin definierten zulässigen Zwecke, ist aber nicht bloß ein Verbot, das Plugin zu verkaufen.
+Bei Weitergabe gelten die Quellcode- und Lizenzpflichten der AGPL. Wer eine veränderte Version über ein Netzwerk interaktiv nutzbar macht, muss den betreffenden Nutzenden den entsprechenden Quellcode gemäß Abschnitt 13 anbieten.
 
-**Noch zu klären:** Soll auch interne Nutzung durch gewinnorientierte Unternehmen ausgeschlossen sein, oder nur Verkauf beziehungsweise kommerzielle Vermarktung des Plugins und darauf basierender Angebote? Diese Unterscheidung ist vor Lizenzwahl erforderlich.
-
-Es wurde noch kein endgültiger Lizenztext eingeführt. Dieser Abschnitt dokumentiert das Lizenzziel, ersetzt aber keine vollständige Lizenz. Die Vereinbarkeit mit HumHub und gegebenenfalls übernommenen Komponenten muss vor einer Distribution geprüft werden.
+Beiträge zu diesem Projekt erfolgen unter derselben Lizenz. Rechte und Lizenzbedingungen fremder Komponenten sind vor einer Übernahme gesondert zu prüfen.
