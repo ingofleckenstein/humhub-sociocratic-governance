@@ -1,0 +1,15 @@
+{
+  "id": "sociocratic-governance",
+  "name": "Sociocratic Governance",
+  "description": "Sociocratic governance for HumHub — development scaffold",
+  "version": "0.0.1",
+  "humhub": {
+    "minVersion": "1.18"
+  },
+  "keywords": [
+    "sociocracy",
+    "governance",
+    "consent",
+    "circles"
+  ]
+}
