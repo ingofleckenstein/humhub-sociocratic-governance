@@ -23,7 +23,7 @@ Im Backend soll konfiguriert werden können:
 - Welche Personen in welchen Kreisen dauerhaft Mitglied sind.
 - Welche organisatorische Sonderrolle oder Begründung zu einer dauerhaften Mitgliedschaft gehört.
 
-Eine dauerhafte Mitgliedschaft ist von einer befristeten Rollenbesetzung zu unterscheiden. Sie verleiht nicht automatisch technische Administrationsrechte oder ein persönliches Vetorecht außerhalb des vereinbarten Konsentverfahrens. Das genaue Verfahren zur Änderung solcher Backend-Einstellungen und seine Dokumentation sind noch zu definieren.
+Eine dauerhafte Mitgliedschaft ist von einer befristeten Rollenbesetzung zu unterscheiden. Sie verleiht nicht automatisch technische Administrationsrechte oder ein persönliches Vetorecht außerhalb des vereinbarten Konsentverfahrens. Die im Backend ausdrücklich bestimmte Admin-Sonderrolle entscheidet über dauerhafte Mitgliedschaften sowie Legitimation und Änderung des Mandats des obersten Kreises. Diskussionen, Konsultationen und Abstimmungen sind möglich, binden diese Entscheidung aber nicht. Diese Befugnis ist personenbezogen konfigurierbar und wird nicht pauschal allen technischen Administrator*innen zugewiesen.
 
 Der Kernkreis trägt zu Beginn Gesamtmandat, Gesamtverantwortung und die entsprechenden organisatorischen Entscheidungsbefugnisse. Mit der Bildung von Unterkreisen werden Mandatsbereiche und Entscheidungshoheit übertragen.
 
@@ -53,7 +53,7 @@ Ein Mandat beschreibt mindestens:
 - Wiederwahlrhythmus des Kreises, standardmäßig **sechs Monate**;
 - gegebenenfalls Gültigkeit, Reviewtermine und Erfolgskriterien.
 
-Der Oberkreis definiert das Mandat des Unterkreises. Änderungen benötigen Konsent im Oberkreis. Ob zusätzlich der Konsent des betroffenen Unterkreises erforderlich ist, ist noch offen.
+Der Oberkreis definiert das Mandat des Unterkreises. Änderungen benötigen Konsent im Oberkreis. Der betroffene Unterkreis wird konsultativ beteiligt. Die Entscheidung erfolgt im Oberkreis: dessen Kreismitglieder einschließlich Kreisleitung haben Konsentrecht, Delegierte sind bei dieser Mandatsänderung ausgeschlossen. Die genaue Reichweite dieses Ausschlusses (nur betroffene oder alle Delegiertenrollen) muss noch geklärt werden.
 
 Bei einer Teilung beziehungsweise Unterkreisgründung geht ein Teil des Mandats an den neuen Kreis über. Damit gehen echte Entscheidungsbefugnisse innerhalb dieses Bereichs an den Unterkreis.
 
@@ -65,7 +65,7 @@ Bei einer Teilung beziehungsweise Unterkreisgründung geht ein Teil des Mandats 
 - Beschließt der Oberkreis, dass eine Mandatsüberschreitung vorliegt, kann er den Beschluss revidieren.
 - Betroffene Mandatsstelle, Begründung und Revisionsbeschluss sollen nachvollziehbar dokumentiert werden.
 
-Dies ist keine allgemeine Vorabgenehmigung aller Unterkreisentscheidungen. Wie bereits ausgeführte Maßnahmen bei einer Revision behandelt werden, ist noch zu spezifizieren.
+Dies ist keine allgemeine Vorabgenehmigung aller Unterkreisentscheidungen. Folgen einer Revision richten sich nach der Schwere: von keinen weiteren Maßnahmen bis zur Kreisauflösung. Konkrete Abstufungen und die Behandlung bereits ausgeführter Maßnahmen bleiben fallbezogen zu bestimmen.
 
 ### Schutz der Mandate von Unterkreisen
 
@@ -115,7 +115,7 @@ Als Verfahrensentwurf für eine offene Wahl gilt:
 
 Rollenprofil → begründete Nominierungen → Austausch und gegebenenfalls Anpassung → Wahlvorschlag → Zustimmung der kandidierenden Person → Konsent → Besetzung.
 
-Die genaue Legitimation der Kreisleitung durch Ober- und Unterkreis sowie der Umgang mit überfälligen Wahlen sind noch zu definieren.
+Die Kreisleitung wird nach dem normalen Konsentprinzip legitimiert. Welcher Kreis welchen Verfahrensschritt übernimmt, muss technisch noch präzisiert werden. Ist eine Amtszeit abgelaufen und die Wiederwahl nicht abgeschlossen, wird der Kreis aufgelöst und an den Oberkreis zurückgeführt; es gibt keine stillschweigende Amtszeitverlängerung. Die Rückführung umfasst Mandat und offene Verantwortung, nicht die Löschung der Historie. Für den obersten Kreis ohne Oberkreis ist eine gesonderte Regel noch erforderlich.
 
 ### Rollen im Personenprofil
 
@@ -135,7 +135,7 @@ Wenn ein Kreis Wissen, Perspektive oder Abstimmung mit einem anderen Kreis benö
 
 Die Rolle soll Thema, Auftrag, entsendenden und empfangenden Kreis, Dauer und erforderlichen Zugang abbilden. Sie ersetzt keine dauerhafte Verbindungsrolle.
 
-Noch offener Vorschlag: beratende Teilnahme mit Rede- und Vorschlagsrecht, aber ohne automatisch entstehendes Konsentrecht. Rechte und Ende der Teilnahme müssen ausdrücklich geregelt werden.
+Themensprecher*innen nehmen an themenbezogenen Sitzungen teil und werden dem empfangenden Kreis mit klarer Rollenbenennung als temporär zugeordnet angezeigt. Daraus entstehen keine besonderen HumHub-Rechte. Erforderlicher Sitzungszugang ist gezielt zu ermöglichen, ohne pauschalen Zugriff auf interne Kreisinhalte. Ein eigenes Konsentrecht wird durch diese Rolle nicht gewährt.
 
 ## 4. Kreisgröße und Teilung
 
@@ -162,7 +162,7 @@ Ein Kreis entsteht durch Beschluss eines bestehenden Kreises, mit:
 
 Ausgangspunkt der Idee ist: Wenn eine Aufgabe, ein Projekt oder ein anderes Vorhaben über eine Person hinausgeht, soll ein Kreis entstehen.
 
-**Noch abzustimmender Umsetzungsvorschlag:** Die gemeinsame Aufgabenübernahme bereitet automatisch einen Gründungsvorgang vor; der Beschluss legitimiert Mandat und Kreis. Die genaue Verbindung zwischen automatischem Auslöser und erforderlichem Gründungsbeschluss ist offen.
+Die Gründung ist ein Sonderfall des zentralen Aufgabensystems: **Idee → Aufgabe → Bearbeitung eines Gründungsvorschlags → Gründungsbeschluss → Kreis mit Mandat**. Ein Anlass führt nicht ohne Beschluss zur automatischen Kreisgründung.
 
 ### Arbeitsphase
 
@@ -197,7 +197,7 @@ Es muss ein Verfahren geben, mit dem ein Oberkreis einen Unterkreis beispielswei
 4. Geordnete Übergabe von Arbeit, Mandaten und Unterkreisen.
 5. Archivierung mit nachvollziehbarem Verlauf.
 
-Offen sind insbesondere der Umgang mit Einwänden betroffener Verbindungsrollen, Interessenkonflikten und möglichen Notfallmaßnahmen. Ein Ausschluss dieser Personen vom Konsent oder ein Sonderentscheidungsrecht wird nicht stillschweigend vorausgesetzt.
+Bei der Entscheidung über die Auflösung eines Kreises haben alle Personen aus diesem betroffenen Kreis kein Stimm- beziehungsweise Konsentrecht, ausdrücklich auch dessen Kreisleitung und Sprecher*innen. Dieser Ausschluss gilt verfahrensbezogen, nicht für andere Entscheidungen. Anhörung bleibt vom Konsentrecht getrennt. Das übrige Verfahren bei Interessenkonflikten, Notfällen oder einer nicht entscheidungsfähigen verbleibenden Gruppe ist noch zu konkretisieren.
 
 ## 6. Aufgaben als eigenständige Objekte
 
@@ -209,9 +209,9 @@ Das Aufgabenmodul soll neu gebaut oder ein vorhandenes Modul entsprechend angepa
 - Bei Bedarf wird ein Entscheidungsverfahren verknüpft.
 - Ein Auftrag erweitert nicht automatisch das Mandat des empfangenden Kreises.
 
-**„Aufträge“ ist ein vorgeschlagener, noch nicht festgelegter Nutzername** für das neue Modul, damit es von gewöhnlichen Aufgabenlisten unterscheidbar ist.
+Der gewählte Nutzername lautet **„Vorhaben“**. Ein Vorhaben führt von der Idee über Mandatsprüfung, Aufgabe und Konsent zur Umsetzung und zum Review. „Aufgabe“ bleibt die Bezeichnung des konkreten Arbeitsauftrags innerhalb dieses Verlaufs. Das Vorhabensystem ist ein zentraler Bestandteil neben Kreisstruktur und Entscheidungsverfahren.
 
-Noch zu prüfen ist, ob eine Neuentwicklung oder Anpassung eines vorhandenen Moduls die bessere technische Grundlage bildet.
+Technische Richtung: eine eigene Domäne innerhalb der Governance-Erweiterung auf Basis von HumHub/Yii2. Ein vorhandenes Aufgabenmodul wird nicht zur vorausgesetzten Grundlage, da Vorhaben kreisübergreifende Zuständigkeiten, Konsent und eine durchgehende Historie benötigen. Die genaue HumHub-Anbindung und mögliche Wiederverwendung kompatibler Komponenten werden bei der Implementierung geprüft.
 
 ### Ideen → Mandatsprüfung → Aufgaben (verbindlicher Umfang von M2)
 
@@ -428,22 +428,32 @@ Spätere Prüfungen müssen insbesondere abdecken:
 - Mandatsübergaben und Archivierung;
 - Installation, Updates sowie Backup und Wiederherstellung.
 
-## 14. Offene Entscheidungen
+## 14. Entscheidungsstand und verbleibende Fragen
 
-1. Legitimation und Änderung des Mandats des obersten Kreises.
-2. Berechtigungen und Verfahren für dauerhafte Mitgliedschaften im Backend.
-3. Genaue Wahl- und Bestätigungsregeln für die Kreisleitung.
-4. Umgang mit abgelaufenen Amtszeiten und nicht abgeschlossenen Wiederwahlen.
-5. Zusammenspiel von automatischem Gründungsanlass und Gründungsbeschluss.
-6. Detailregeln zur Mitgliederzählung und verpflichtenden Teilung.
-7. Beteiligung des Unterkreises an Änderungen seines Mandats.
-8. Rechte der temporären Themensprecher*innen.
-9. Auflösungsverfahren bei Einwänden, Interessenkonflikten und Notfällen.
-10. Folgen einer Revision für bereits ausgeführte Beschlüsse.
-11. Konkrete HumHub-Version, Testinstanz und technische Integrationen.
-12. Endgültiger Name und technische Grundlage des neuen Aufgabenmoduls.
-13. Aufbewahrung, Löschung, Aufnahmen und KI-Verarbeitung.
-14. Open-Source-Lizenz vor dem ersten Release.
+### Geklärte Grundentscheidungen
+
+- Oberstes Mandat und dauerhafte Mitgliedschaften: abschließende Entscheidung der ausdrücklich konfigurierten Admin-Sonderrolle; Konsultationen sind möglich.
+- Kreisleitung: normales Konsentverfahren.
+- Abgelaufene Amtszeit ohne abgeschlossene Wiederwahl: Auflösung und Rückführung an den Oberkreis.
+- Gründung: Sonderfall des Vorhabensystems, von Idee und Aufgabe zum Gründungsbeschluss.
+- Mandatsänderung: Unterkreis konsultativ; Entscheidung im Oberkreis unter Ausschluss der Delegierten nach der noch zu präzisierenden Reichweite.
+- Themensprecher*innen: sichtbare temporäre Zuordnung, Teilnahme an Themensitzungen, keine zusätzlichen allgemeinen HumHub-Rechte.
+- Revisionsfolgen: nach Schwere bis zur Kreisauflösung; bei Auflösungsentscheidungen keine Konsentrechte für Personen des betroffenen Kreises.
+- Zentraler Nutzerbegriff: **Vorhaben**; eigene fachliche Grundlage in der Governance-Erweiterung.
+- Lizenzziel: gemeinsame Mitarbeit, Kopieren, Verändern und Nutzung ermöglichen; Kommerzialisierung ausschließen.
+
+### Noch zu entscheiden beziehungsweise zu präzisieren
+
+1. Detailregeln zur Mitgliederzählung und verpflichtenden Teilung.
+2. Verfahrenszuständigkeit für die Wahl der Kreisleitung.
+3. Reichweite des Delegiertenausschlusses bei Mandatsänderungen.
+4. Auflösung bei Interessenkonflikten, Notfällen oder fehlenden verbleibenden Konsentberechtigten.
+5. Regel für überfällige Wahlen im obersten Kreis ohne Oberkreis.
+6. Praktische Übergabe und Umgang mit bereits ausgeführten Maßnahmen nach Revision.
+7. Konkrete HumHub-Version, Testinstanz und Integrationen.
+8. Aufbewahrung, Löschung, Aufnahmen und KI-Verarbeitung.
+9. Reichweite des Kommerzialisierungsverbots und dazu passende endgültige Lizenz.
+10. Mandatsprüfung und Verteilung bei widersprüchlichen Zuständigkeiten, Schleifen oder Ideen außerhalb des Gesamtmandats.
 
 ## 15. Dokumentation und Mitarbeit
 
@@ -464,6 +474,14 @@ Beiträge sollen konkrete Praxisprobleme lösen, universell formulierbar sein un
 - [Kreisrollen — Sociocracy For All](https://www.sociocracyforall.org/process-roles/)
 - [Double linking — Sociocracy For All](https://www.sociocracyforall.org/double-linking/)
 
-## Lizenz
+## Lizenzziel und aktueller Lizenzstatus
 
-Das Repository ist öffentlich. Eine konkrete Open-Source-Lizenz wurde noch nicht festgelegt. Öffentliche Sichtbarkeit allein erteilt keine allgemeine Nutzungslizenz. Lizenzwahl und vollständiger Lizenztext müssen vor dem ersten Release ergänzt werden.
+Gewünscht ist ein öffentlich zugängliches, gemeinschaftlich entwickeltes Projekt, das Menschen kopieren, verändern und nutzen können, **ohne Kommerzialisierung**.
+
+Eine Lizenz mit kommerziellem Nutzungsverbot ist keine Open-Source-Lizenz nach der [Open Source Definition](https://opensource.org/osd), sondern eine Nutzungslizenz mit Einschränkungen für öffentlich zugänglichen Quellcode.
+
+Als Kandidat kommt [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) infrage. Sie erlaubt Nutzung, Änderungen und Weitergabe für die darin definierten zulässigen Zwecke, ist aber nicht bloß ein Verbot, das Plugin zu verkaufen.
+
+**Noch zu klären:** Soll auch interne Nutzung durch gewinnorientierte Unternehmen ausgeschlossen sein, oder nur Verkauf beziehungsweise kommerzielle Vermarktung des Plugins und darauf basierender Angebote? Diese Unterscheidung ist vor Lizenzwahl erforderlich.
+
+Es wurde noch kein endgültiger Lizenztext eingeführt. Dieser Abschnitt dokumentiert das Lizenzziel, ersetzt aber keine vollständige Lizenz. Die Vereinbarkeit mit HumHub und gegebenenfalls übernommenen Komponenten muss vor einer Distribution geprüft werden.
