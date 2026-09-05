@@ -254,6 +254,21 @@ Im Interface verwenden wir „Konsent“; englisch „consent“. Das Verfahren 
 
 Integration ist erforderlich, wenn Einwände beziehungsweise Änderungen vorliegen. Bei geändertem Vorschlag wird erneut auf Konsent geprüft. Die Oberfläche darf kein starres Fortschrittsbild zeigen, das Rücksprünge oder Wiederholungen verschweigt.
 
+### Durchgehende Änderungshistorie (M2)
+
+Alle Änderungen von der ursprünglichen Idee über die Aufgabe bis zum Konsent werden dokumentiert. Jede Änderung enthält:
+
+- **Zeitpunkt:** Datum und Uhrzeit.
+- **Space / Kreis:** Der Kontext, in dem die Änderung vorgenommen wurde.
+- **Autor*in:** Die Person, die die Änderung vorgenommen hat.
+- **Änderung:** Was geändert wurde, mit vorherigem und neuem Stand beziehungsweise einer nachvollziehbaren Änderungsbeschreibung.
+
+Dies umfasst insbesondere Titel und Text, Zuständigkeit und Weiterleitung, Verantwortliche, Termine, Mandatsbezug, Status, Vorschlagsversionen sowie Einwände und deren Bearbeitung. Bei einem Kreiswechsel bleiben Ausgangs- und Zielkreis nachvollziehbar. Auch kleine Bearbeitungen werden erfasst.
+
+Die Historie bleibt über die Umwandlung von Idee zu Aufgabe und bis zum Beschluss zusammenhängend erhalten. Spätere Bearbeitungen überschreiben frühere Einträge nicht stillschweigend. Historische Angaben zum damaligen Space und zur handelnden Person dürfen nicht durch spätere Zuordnungsänderungen verfälscht werden. Automatisierte Änderungen werden ausdrücklich als Systemaktion gekennzeichnet.
+
+Die Änderungshistorie unterliegt den Zugriffsrechten der Inhalte und macht private Kreisinhalte nicht automatisch öffentlich. Aufbewahrung und datenschutzgerechte Löschung bleiben gesondert zu spezifizieren. Diese Historie ist verbindlicher Umfang von M2; damit wird keine technische Manipulationssicherheit behauptet.
+
 ### Inhalt jedes Beschlusses
 
 Jeder Beschluss enthält:
