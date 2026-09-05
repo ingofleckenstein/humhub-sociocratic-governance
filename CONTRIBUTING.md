@@ -10,4 +10,4 @@ Tests müssen fehlenden Konsent, offene Einwände, Versionswechsel, Mandatsablau
 unberechtigte Zugriffe abdecken, soweit der jeweilige Beitrag diese Bereiche berührt.
 
 Keine Zugangsdaten oder realen, privaten Kreisdaten in Issues, Fixtures oder Commits.
-Die Lizenz ist noch festzulegen; externe Codeübernahmen müssen ausdrücklich geklärt werden.
+Das Projekt steht unter GNU AGPL Version 3 (AGPL-3.0-only), siehe LICENSE. Beiträge erfolgen unter derselben Lizenz; externe Codeübernahmen müssen kompatibel sein und ihre erforderlichen Hinweise behalten.
