@@ -45,12 +45,13 @@ Rückzug und gescheiterter Konsent; Protokoll mit Versionsbezug.
 - [ ] Suche, Filter und berechtigungsgeschützte Exporte.
 - [ ] Deutsche und englische Oberfläche, Tastaturbedienung und barrierearme Formulare.
 - [ ] Installation, Updates, Backup/Restore und dokumentierte Versionsmatrix.
-- [ ] Lizenz mit gewünschtem Kommerzialisierungsausschluss präzisieren, Kompatibilität prüfen und vollständigen Text hinzufügen; nicht als OSI-Open-Source bezeichnen.
+- [x] GNU AGPL Version 3 (AGPL-3.0-only) festlegen und vollständigen Lizenztext hinzufügen.
+- [ ] Lizenzbedingungen integrierter Drittkomponenten vor Veröffentlichung prüfen.
 Abnahme: Pilot mit mindestens zwei Kreisen, dokumentierte Rückmeldungen,
 bestandene Integrations- und Berechtigungstests vor Version 0.1.0.
 
 ## Noch gemeinsam festzulegen
 - HumHub-Version und Testinstanz.
-- Reichweite des Kommerzialisierungsverbots: interne Unternehmensnutzung oder nur kommerzielle Vermarktung?
+- Kompatibilität der konkret integrierten Drittkomponenten mit AGPL-3.0-only.
 - Pilotgemeinschaft und konkreter erster Entscheidungsablauf.
 - Aufbewahrung, Export und Löschung von Governance-Daten.
