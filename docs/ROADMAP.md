@@ -9,9 +9,11 @@ Alle Meilensteine sind offen. Nur Modulregistrierung und Konzeptdokumente sind v
 Abnahme: Zwei verbundene Kreise; Mandatsablauf; keine kreisübergreifenden Datenlecks;
 Zyklusprüfung; Migration und Deaktivierung in HumHub getestet.
 
-## M2 — Ideen, Mandatsprüfung, Aufgaben, Konsent und Beschlüsse
+## M2 — Vorhaben: Ideen, Mandatsprüfung, Aufgaben, Konsent und Beschlüsse
 M2 gehört zur Ausbaustufe 2 (gezielte Werkzeuge), nicht zur KI-Integration. Der gesamte Weg von der Idee bis zum Beschluss ist Bestandteil dieses Meilensteins.
 
+- [ ] Zentrales Vorhabensystem als eigene Domäne: Idee → Aufgabe → Konsent → Umsetzung → Review. Beschluss und Umsetzung bleiben getrennt.
+- [ ] Kreisgründung als Sonderfall: Idee → Aufgabe → Gründungsvorschlag → Konsent / Gründungsbeschluss → Kreis mit Mandat.
 - [ ] Ideenstatus: Alle angemeldeten Menschen der Organisation können Ideen erstellen und einem beliebigen Kreis zuordnen, auch ohne dortige Mitgliedschaft. Kein Zugriff auf interne Kreisinhalte durch Einreichung.
 - [ ] Mandatsprüfung ausschließlich auf Zuständigkeit; keine vorgelagerte Bewertung der Sinnhaftigkeit.
 - [ ] Innerhalb des Mandats: Idee nachvollziehbar in eine eigenständige Aufgabe umwandeln.
@@ -43,12 +45,12 @@ Rückzug und gescheiterter Konsent; Protokoll mit Versionsbezug.
 - [ ] Suche, Filter und berechtigungsgeschützte Exporte.
 - [ ] Deutsche und englische Oberfläche, Tastaturbedienung und barrierearme Formulare.
 - [ ] Installation, Updates, Backup/Restore und dokumentierte Versionsmatrix.
-- [ ] Lizenz festlegen und vollständigen Lizenztext hinzufügen.
+- [ ] Lizenz mit gewünschtem Kommerzialisierungsausschluss präzisieren, Kompatibilität prüfen und vollständigen Text hinzufügen; nicht als OSI-Open-Source bezeichnen.
 Abnahme: Pilot mit mindestens zwei Kreisen, dokumentierte Rückmeldungen,
 bestandene Integrations- und Berechtigungstests vor Version 0.1.0.
 
 ## Noch gemeinsam festzulegen
 - HumHub-Version und Testinstanz.
-- Gewünschte Open-Source-Lizenz.
+- Reichweite des Kommerzialisierungsverbots: interne Unternehmensnutzung oder nur kommerzielle Vermarktung?
 - Pilotgemeinschaft und konkreter erster Entscheidungsablauf.
 - Aufbewahrung, Export und Löschung von Governance-Daten.
