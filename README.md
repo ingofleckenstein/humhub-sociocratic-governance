@@ -213,6 +213,26 @@ Das Aufgabenmodul soll neu gebaut oder ein vorhandenes Modul entsprechend angepa
 
 Noch zu prüfen ist, ob eine Neuentwicklung oder Anpassung eines vorhandenen Moduls die bessere technische Grundlage bildet.
 
+### Ideen → Mandatsprüfung → Aufgaben (verbindlicher Umfang von M2)
+
+Alle angemeldeten Menschen der Organisation können eine Idee erstellen und einem beliebigen Kreis zuordnen; die Mitgliedschaft im adressierten Kreis ist dafür keine Voraussetzung. Einreichung verleiht keinen Zugriff auf dessen interne Inhalte. Die konkrete adressierbare Darstellung geschützter Kreise muss ohne Offenlegung vertraulicher Inhalte gestaltet werden.
+
+Die erste Prüfung lautet ausschließlich: **Liegt die Idee innerhalb unseres Mandats?** In diesem Schritt wird ausdrücklich nicht bewertet, ob die Idee sinnvoll, attraktiv oder erwünscht erscheint.
+
+- **Ja:** Aus der Idee wird eine Aufgabe des zuständigen Kreises.
+- **Nein:** Die Idee wird mit dokumentierter Mandatsbegründung an den nächsthöheren Kreis weitergegeben.
+- Dort wird dieselbe Zuständigkeitsprüfung wiederholt. Eine Idee kann so bis zum obersten Kreis wandern.
+- Ein höherer Kreis kann die Idee passend an einen zuständigen Kreis verteilen. Bereits delegierte Mandatsbereiche bleiben dabei geschützt.
+- Idee, Urheberschaft und Weiterleitungsverlauf bleiben erhalten. Eine Weiterleitung ist keine inhaltliche Ablehnung.
+
+Aus Ideen entstandene Aufgaben bilden die Arbeitsaufträge für die nächsten Sitzungen. Der Kreis bearbeitet sie über Vorschlag, Verständnisfragen, Reaktionen, Einwände und Integration, bis Konsent besteht. Nicht abgeschlossene Beratungen werden mit ihrem Stand in die nächste Sitzung übernommen. Fehlender Konsent darf nicht durch Fristablauf ersetzt werden. Ein Konsentbeschluss und die anschließende praktische Umsetzung sind getrennte Fortschritte: „beschlossen“ bedeutet noch nicht „umgesetzt“.
+
+Sichtbare Stationen sind **Idee**, **Mandatsprüfung**, gegebenenfalls **Weitergeleitet**, **Aufgabe / für Sitzung vorgesehen**, **In Bearbeitung** mit konkreter Verfahrensphase und **Konsent / beschlossen**. Bei jeder Weiterleitung beginnt die Mandatsprüfung im empfangenden Kreis erneut.
+
+Dieser vollständige Ablauf einschließlich einfacher Sitzungszuordnung gehört bereits zu **M2 in Ausbaustufe 2**, nicht erst zu M3 oder zur KI-Stufe. In Stufe 1 wird er zunächst methodisch beschrieben.
+
+Noch festzulegen: wer die Mandatsprüfung im Kreis dokumentiert, wie widersprüchliche Zuständigkeitsbewertungen und Weiterleitungsschleifen aufgelöst werden und was mit Ideen außerhalb des Gesamtmandats am obersten Kreis geschieht. Eine automatische Sinnhaftigkeitsprüfung oder automatische Ablehnung wird daraus nicht abgeleitet.
+
 ## 7. Entscheidungsfindung und Arbeitszyklus
 
 Der methodische Kern lautet:
@@ -261,7 +281,7 @@ Die genaue Teilnehmerregel und mögliche alternative Quoren sind noch zu beschli
 
 Geplant sind erkennbare Varianten für Sachentscheidungen, Rollenwahlen, Mandatsänderungen sowie Auflösungsverfahren. Die jeweiligen Schritte, Übergangsrechte und Abschlussbedingungen werden vor der Automatisierung spezifiziert.
 
-Ein Community-Beitrag soll später als Vorschlag an einen zuständigen Kreis gegeben werden können. Liegt die Angelegenheit außerhalb seines Mandats, wird sie nachvollziehbar weitergeleitet.
+Ein Community-Beitrag kann in M2 als Idee eingereicht werden und durchläuft den oben beschriebenen Weg über Mandatsprüfung, Aufgabe und Konsent.
 
 ## 8. Grafische Orientierung
 
@@ -323,7 +343,7 @@ Grundlegende Zugriffsrechte müssen trotzdem funktionieren. „Keine komplexe Lo
 
 Die Reihenfolge ergibt sich aus Erfahrungen mit Stufe 1. Mögliche Bausteine:
 
-- eigenständige Aufgaben und Delegation;
+- Ideen für alle, Mandatsprüfung, nachvollziehbare Weiterleitung und Umwandlung in eigenständige Aufgaben einschließlich Sitzungsbearbeitung bis Konsent (M2);
 - strukturierte Rollen, Amtszeiten, Wahlen und automatische Profileinträge;
 - Doppelrollenwarnungen und Größenhinweise;
 - geführte Entscheidungsverfahren mit Versionen und Einwandintegration;
