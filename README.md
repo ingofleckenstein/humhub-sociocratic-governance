@@ -115,7 +115,7 @@ Als Verfahrensentwurf für eine offene Wahl gilt:
 
 Rollenprofil → begründete Nominierungen → Austausch und gegebenenfalls Anpassung → Wahlvorschlag → Zustimmung der kandidierenden Person → Konsent → Besetzung.
 
-Die Kreisleitung wird nach dem normalen Konsentprinzip legitimiert. Welcher Kreis welchen Verfahrensschritt übernimmt, muss technisch noch präzisiert werden. Ist eine Amtszeit abgelaufen und die Wiederwahl nicht abgeschlossen, wird der Kreis aufgelöst und an den Oberkreis zurückgeführt; es gibt keine stillschweigende Amtszeitverlängerung. Die Rückführung umfasst Mandat und offene Verantwortung, nicht die Löschung der Historie. Für den obersten Kreis ohne Oberkreis ist eine gesonderte Regel noch erforderlich.
+Die Kreisleitung wird nach dem normalen Konsentprinzip legitimiert. Welcher Kreis welchen Verfahrensschritt übernimmt, muss technisch noch präzisiert werden. Ist eine Amtszeit abgelaufen und die Wiederwahl nicht abgeschlossen, wird der Kreis aufgelöst und an den Oberkreis zurückgeführt; es gibt keine stillschweigende Amtszeitverlängerung. Die Rückführung umfasst Mandat und offene Verantwortung, nicht die Löschung der Historie. Für den obersten Kreis kann im Backend eine dauerhafte Kreisleitung ohne turnusmäßiges Amtszeitende eingerichtet werden. Sie bleibt bis zur Abgabe, zum Austritt oder einem anderen ausdrücklich geregelten Ende bestehen. Darüber kann eine Trägerorganisation mit verantwortlicher Leitung als organisatorische Instanz hinterlegt werden; diese muss kein weiterer HumHub-Arbeitskreis sein. Die Nachfolge bei Wegfall der dauerhaften Leitung ist noch zu regeln.
 
 ### Rollen im Personenprofil
 
@@ -145,7 +145,7 @@ Themensprecher*innen nehmen an themenbezogenen Sitzungen teil und werden dem emp
 - Ihre Nichtberücksichtigung bei der Größe nimmt ihnen keine Konsentrechte.
 - Auch Unterkreise können weitere Unterkreise bilden.
 
-Die Struktur soll tatsächliche Mitglieder und die für die Größengrenze relevante Zahl getrennt darstellen. Der Umgang mit Personen, die zugleich eine reguläre Funktion und eine Unterkreisvertretung innehaben, ist noch zu klären.
+Die Struktur soll tatsächliche Mitglieder und die für die Größengrenze relevante Zahl getrennt darstellen. Gezählt werden Personen mit einer eigenen Rolle oder Mitarbeit im betrachteten Kreis, einschließlich seiner Kreisleitung und seiner eigenen Delegiertenrolle. Auch Personen, die von diesem Kreis als Kreisleitung in Unterkreise gehen, zählen hier mit. Jede Person zählt einmal, unabhängig von der Zahl ihrer Rollen. Die bisherige Ausnahme für reine Delegierte aus Unterkreisen bleibt bestehen; eine eigene Rolle oder Mitarbeit im betrachteten Kreis führt zur Mitzählung.
 
 Eine verpflichtende Teilung bedeutet keine willkürliche automatische Verteilung von Menschen oder Mandaten. Wie der Prozess ausgelöst, zeitlich begleitet und abgeschlossen wird, wird in Stufe 2 spezifiziert.
 
@@ -201,7 +201,7 @@ Bei der Entscheidung über die Auflösung eines Kreises haben alle Personen aus 
 
 ## 6. Aufgaben als eigenständige Objekte
 
-Das Aufgabenmodul soll neu gebaut oder ein vorhandenes Modul entsprechend angepasst werden.
+Das Vorhabensystem wird selbst entwickelt. Bestehende Aufgabenmodule werden nicht übernommen oder abgeändert.
 
 - Aufgaben sind eigenständige Objekte.
 - Sie können an Kreise delegiert werden.
@@ -211,7 +211,7 @@ Das Aufgabenmodul soll neu gebaut oder ein vorhandenes Modul entsprechend angepa
 
 Der gewählte Nutzername lautet **„Vorhaben“**. Ein Vorhaben führt von der Idee über Mandatsprüfung, Aufgabe und Konsent zur Umsetzung und zum Review. „Aufgabe“ bleibt die Bezeichnung des konkreten Arbeitsauftrags innerhalb dieses Verlaufs. Das Vorhabensystem ist ein zentraler Bestandteil neben Kreisstruktur und Entscheidungsverfahren.
 
-Technische Richtung: eine eigene Domäne innerhalb der Governance-Erweiterung auf Basis von HumHub/Yii2. Ein vorhandenes Aufgabenmodul wird nicht zur vorausgesetzten Grundlage, da Vorhaben kreisübergreifende Zuständigkeiten, Konsent und eine durchgehende Historie benötigen. Die genaue HumHub-Anbindung und mögliche Wiederverwendung kompatibler Komponenten werden bei der Implementierung geprüft.
+Technische Richtung: eine eigene Domäne innerhalb der Governance-Erweiterung auf Basis von HumHub/Yii2. Ein vorhandenes Aufgabenmodul wird nicht zur vorausgesetzten Grundlage, da Vorhaben kreisübergreifende Zuständigkeiten, Konsent und eine durchgehende Historie benötigen. Die genaue HumHub-Anbindung wird bei der Implementierung geprüft. Fremder Modul- oder Anwendungscode wird nicht übernommen; bestehende Lösungen können als konzeptionelle Inspiration dienen. Die vorgesehenen HumHub-/Yii2-Schnittstellen bleiben die technische Plattform.
 
 ### Ideen → Mandatsprüfung → Aufgaben (verbindlicher Umfang von M2)
 
@@ -231,7 +231,7 @@ Sichtbare Stationen sind **Idee**, **Mandatsprüfung**, gegebenenfalls **Weiterg
 
 Dieser vollständige Ablauf einschließlich einfacher Sitzungszuordnung gehört bereits zu **M2 in Ausbaustufe 2**, nicht erst zu M3 oder zur KI-Stufe. In Stufe 1 wird er zunächst methodisch beschrieben.
 
-Noch festzulegen: wer die Mandatsprüfung im Kreis dokumentiert, wie widersprüchliche Zuständigkeitsbewertungen und Weiterleitungsschleifen aufgelöst werden und was mit Ideen außerhalb des Gesamtmandats am obersten Kreis geschieht. Eine automatische Sinnhaftigkeitsprüfung oder automatische Ablehnung wird daraus nicht abgeleitet.
+Noch festzulegen: wer die Mandatsprüfung im Kreis dokumentiert, wie widersprüchliche Zuständigkeitsbewertungen und Weiterleitungsschleifen aufgelöst werden und wie die Entscheidung über das Gesamtmandat dokumentiert wird. Festgelegt ist: Ideen außerhalb des Gesamtmandats passen nicht zum Zweck der Organisation und können dort nicht bearbeitet werden. Sie erhalten einen begründeten Abschluss „Außerhalb des Gesamtmandats – nicht bearbeitbar“; Idee und Historie bleiben erhalten. Das ist eine Zuständigkeitsentscheidung, keine Sinnhaftigkeitsbewertung. Eine automatische Sinnhaftigkeitsprüfung oder automatische Ablehnung wird daraus nicht abgeleitet.
 
 ## 7. Entscheidungsfindung und Arbeitszyklus
 
@@ -442,18 +442,24 @@ Spätere Prüfungen müssen insbesondere abdecken:
 - Zentraler Nutzerbegriff: **Vorhaben**; eigene fachliche Grundlage in der Governance-Erweiterung.
 - Lizenz: GNU AGPL Version 3 (AGPL-3.0-only); Nutzung, Änderung und Weitergabe einschließlich kommerzieller Nutzung unter den Lizenzbedingungen.
 
+### Ergänzende Festlegungen
+
+- Mitgliederzählung: eigene Rollen und Mitarbeit zählen, einschließlich Kreisleitung, eigener Delegiertenrolle und in Unterkreise gehender Kreisleitungen. Personen werden einmal gezählt; reine Vertretung aus einem Unterkreis bleibt gemäß bisheriger Ausnahme ungezählt.
+- Oberste Leitung: konfigurierbare dauerhafte Besetzung bis Abgabe, Austritt oder anderem geregeltem Ende; eine übergeordnete Trägerorganisation kann hinterlegt werden. Keine Person oder Firma wird fest eingebaut.
+- Eigenentwicklung: keine Übernahme fremden Modul- oder Anwendungscodes. HumHub und seine vorgesehenen Schnittstellen bleiben die Plattform; andere Lösungen dürfen konzeptionell inspirieren.
+- Ideen außerhalb des Gesamtmandats können nicht bearbeitet werden und werden mit Mandatsbegründung abgeschlossen.
+
 ### Noch zu entscheiden beziehungsweise zu präzisieren
 
-1. Detailregeln zur Mitgliederzählung und verpflichtenden Teilung.
-2. Verfahrenszuständigkeit für die Wahl der Kreisleitung.
-3. Reichweite des Delegiertenausschlusses bei Mandatsänderungen.
-4. Auflösung bei Interessenkonflikten, Notfällen oder fehlenden verbleibenden Konsentberechtigten.
-5. Regel für überfällige Wahlen im obersten Kreis ohne Oberkreis.
-6. Praktische Übergabe und Umgang mit bereits ausgeführten Maßnahmen nach Revision.
-7. Konkrete HumHub-Version, Testinstanz und Integrationen.
-8. Aufbewahrung, Löschung, Aufnahmen und KI-Verarbeitung.
-9. Lizenzkonformität gegebenenfalls übernommener Drittkomponenten vor deren Integration prüfen.
-10. Mandatsprüfung und Verteilung bei widersprüchlichen Zuständigkeiten, Schleifen oder Ideen außerhalb des Gesamtmandats.
+1. Kreisleitungswahl: Entscheidet der Oberkreis, der künftige Unterkreis oder sind beide Konsentrunden erforderlich? Das Konsentverfahren selbst ist bereits festgelegt.
+2. Mandatsänderung: Ist nur die delegierte Person des betroffenen Unterkreises ausgeschlossen oder sind alle Delegierten im entscheidenden Oberkreis ausgeschlossen?
+3. Notfälle und Interessenkonflikte: Der Bedarf einer Regel ist bestätigt. Wer entscheidet konkret, wenn nach Ausschluss betroffener Personen keine Konsentberechtigten verbleiben?
+4. Übergabe nach Revision: Wer übernimmt offene Aufgaben, Ressourcen und bereits eingegangene Verpflichtungen? Was wird gestoppt, fortgeführt oder korrigiert?
+5. Testumgebung: Welche HumHub-Version läuft und wo kann das Plugin getrennt vom laufenden Betrieb getestet werden? Welche Sitzungs- und Wiki-Funktionen sollen angebunden werden?
+6. Daten: Wie lange bleiben Protokolle und Aufnahmen gespeichert, wer darf sie lesen oder löschen und darf später ein externer KI-Dienst sie verarbeiten? Diese Fragen können passend zur Ausbaustufe entschieden werden.
+7. Widersprüchliche Mandatsprüfungen: Wer löst den Fall, wenn Kreise eine Idee wiederholt zurückverweisen? Ideen außerhalb des Gesamtmandats sind bereits geregelt.
+8. Nachfolge bei Abgabe oder Austritt der dauerhaften obersten Kreisleitung.
+9. Praktischer Ablauf und Fristen einer verpflichtenden Kreisteilung.
 
 ## 15. Dokumentation und Mitarbeit
 
