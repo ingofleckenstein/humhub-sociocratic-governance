@@ -4,6 +4,9 @@ namespace humhub\modules\sociocraticGovernance;
 use humhub\modules\sociocraticGovernance\services\Access;
 use humhub\modules\sociocraticGovernance\widgets\{CircleBadge, ProfileRoles};
 use humhub\modules\ui\menu\MenuLink;
+use humhub\helpers\ControllerHelper;
+use humhub\modules\content\models\ContentContainerModuleState;
+use humhub\modules\space\components\SpaceDirectoryQuery;
 class Events
 {
     public static function spaceMenu($event)
@@ -27,5 +30,23 @@ class Events
         if (!\Yii::$app->user->isGuest) {
             $event->sender->addWidget(ProfileRoles::class, ['user' => $event->sender->user], ['sortOrder' => 25]);
         }
+    }
+    public static function topMenu($event)
+    {
+        if (\Yii::$app->user->isGuest) { return; }
+        $event->sender->addEntry(new MenuLink([
+            'id' => 'sociocratic-governance-directory', 'label' => 'Arbeitskreise', 'icon' => 'sitemap',
+            'url' => ['/sociocratic-governance/directory/index'], 'sortOrder' => 245,
+            'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'directory'),
+        ]));
+    }
+    public static function filterSpaceDirectory($event)
+    {
+        if (!$event->sender instanceof SpaceDirectoryQuery) { return; }
+        $enabledCircles = ContentContainerModuleState::find()->select('contentcontainer_id')->where([
+            'module_id' => 'sociocratic-governance',
+            'module_state' => [ContentContainerModuleState::STATE_ENABLED, ContentContainerModuleState::STATE_FORCE_ENABLED],
+        ]);
+        $event->query->andWhere(['not in', 'space.contentcontainer_id', $enabledCircles]);
     }
 }

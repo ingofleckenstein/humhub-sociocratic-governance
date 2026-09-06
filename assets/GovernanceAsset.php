@@ -5,4 +5,5 @@ class GovernanceAsset extends \yii\web\AssetBundle
 {
     public $sourcePath = __DIR__ . '/../resources';
     public $css = ['governance.css'];
+    public $js = ['governance-directory.js'];
 }

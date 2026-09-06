@@ -17,9 +17,13 @@ namespace humhub\modules\space\models {
         public static array $disabled = [];
         public static array $blocked = [];
         public static array $archived = [];
+        public static array $owners = [];
         public static function tableName() { return '{{%space}}'; }
         public function isMember($id = null) { return in_array((int) ($id ?? \Yii::$app->user->id), self::$members[$this->id] ?? [], true); }
         public function isArchived() { return in_array((int) $this->id, self::$archived, true); }
+        public function isSpaceOwner($userId = null) { return (int) (self::$owners[$this->id] ?? 0) === (int) ($userId ?? \Yii::$app->user->id); }
+        public function isAdmin($userId = null) { return $this->isSpaceOwner($userId); }
+        public function setSpaceOwner($userId) { self::$owners[$this->id] = (int) $userId; return true; }
         public function isBlockedForUser() { return in_array((int) $this->id, self::$blocked, true); }
         public function getModuleManager() {
             return new class($this->id) {
@@ -67,8 +71,12 @@ namespace {
     $db->createCommand()->createTable('{{%space}}', ['id' => 'pk', 'name' => 'string', 'visibility' => 'integer'])->execute();
     $db->createCommand()->createTable('{{%user}}', ['id' => 'pk', 'name' => 'string', 'status' => 'integer'])->execute();
     require dirname(__DIR__) . '/migrations/m260906_120000_initial.php';
+    require dirname(__DIR__) . '/migrations/m260906_130000_expand_circle_mandate.php';
     ob_start();
     (new \m260906_120000_initial())->up();
+    ob_start();
+    (new \m260906_130000_expand_circle_mandate())->up();
+    ob_end_clean();
     ob_end_clean();
     foreach ([1 => 'Kern', 2 => 'Technik', 3 => 'Privater Kreis'] as $id => $name) {
         $db->createCommand()->insert('{{%space}}', ['id' => $id, 'name' => $name, 'visibility' => $id === 3 ? 0 : 1])->execute();
@@ -77,4 +85,5 @@ namespace {
         $db->createCommand()->insert('{{%user}}', ['id' => $id, 'name' => $name, 'status' => 1])->execute();
     }
     \humhub\modules\space\models\Space::$members = [1 => [1, 2], 2 => [1, 2], 3 => [2]];
+    \humhub\modules\space\models\Space::$owners = [1 => 1, 2 => 1, 3 => 2];
 }

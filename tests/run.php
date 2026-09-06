@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 require __DIR__ . '/bootstrap.php';
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Role};
-use humhub\modules\sociocraticGovernance\services\{Access, CircleService};
+use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService};
 use humhub\modules\space\models\Space;
 
 $count = 0;
@@ -16,6 +16,7 @@ $space = Space::findOne(1);
 $form = new CircleForm(['purpose' => 'Gemeinschaft stärken', 'mandate' => 'Gesamtmandat', 'leader' => 1, 'delegate' => 2]);
 check($service->save($space, $form), 'First circle and roles persist through migration with table prefix');
 check(Role::find()->count() == 2, 'Both linking roles stored');
+check(Circle::findOne(1)->reelection_interval === 'Alle 6 Monate', 'New circles default to six-month reelection');
 $stale = CircleForm::forCircle(Circle::findOne(1));
 $fresh = CircleForm::forCircle(Circle::findOne(1));
 $fresh->purpose = 'Neuer Stand';
@@ -30,6 +31,8 @@ $invalid->leader = 3;
 check(!$service->save($space, $invalid), 'Nonmember cannot receive a role');
 $child = new CircleForm(['parent_space_id' => 1]);
 check($service->save(Space::findOne(2), $child), 'Child circle can reference parent');
+$directory = (new CircleDirectory())->data();
+check(count($directory['rows']) === 2 && $directory['rows'][0]['depth'] === 0 && $directory['rows'][1]['depth'] === 1, 'Directory returns visible circles as an indented hierarchy');
 $cycle = CircleForm::forCircle(Circle::findOne(1));
 $cycle->parent_space_id = 2;
 check(!$service->save($space, $cycle), 'Indirect circle cycle rejected');
@@ -65,6 +68,10 @@ $name = '<script>alert(1)</script>';
 Yii::$app->db->createCommand()->update('{{%space}}', ['name' => $name], ['id' => 1])->execute();
 $html = (new \humhub\modules\sociocraticGovernance\widgets\ProfileRoles(['user' => $user]))->run();
 check(!str_contains($html, '<script>') && str_contains($html, '&lt;script&gt;'), 'Profile escapes malicious names');
+$transfer = CircleForm::forCircle(Circle::findOne(1));
+$transfer->leader = 2; $transfer->delegate = 1;
+check($service->save($space, $transfer), 'Space owner can assign a new circle leader');
+check(Space::$owners[1] === 2, 'Circle leader becomes space owner');
 Yii::$app->db->createCommand()->delete('{{%user}}', ['id' => 2])->execute();
 check(!Role::find()->where(['user_id' => 2])->exists(), 'User deletion cascades role references');
 echo "$count checks passed.\n";

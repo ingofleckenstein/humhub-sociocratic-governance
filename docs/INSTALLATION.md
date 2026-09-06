@@ -1,4 +1,4 @@
-# Installation von Version 0.1.0
+# Installation von Version 0.2.0
 
 Erste Entwicklungsfassung für HumHub Community Edition 1.18.5.
 Vollständiger Installationstest auf MySQL/MariaDB steht noch aus.
@@ -14,11 +14,12 @@ HumHub-Befehle laufen unter diesem Benutzer. Siehe [Deployment](DEPLOYMENT.md).
 
 1. Dateien in protected/modules/sociocratic-governance bereitstellen.
 2. Unter Administration → Module „Sociocratic Governance“ aktivieren.
-   Die initiale Migration legt vier Tabellen mit dem konfigurierten Tabellenpräfix an:
-   sg_circle, sg_role, sg_config, sg_permanent.
+   Die Migrationen legen die Governance-Tabellen und die strukturierten Mandatsfelder
+   mit dem konfigurierten Tabellenpräfix an.
 3. Im gewünschten Space unter dessen Modulverwaltung „Arbeitskreis“ aktivieren.
-   Eine vorhandene private Sichtbarkeit wird nicht verändert. Für organisationsweites
-   Lesen die Space-Sichtbarkeit auf registrierte Nutzer*innen einstellen.
+   Der Space wird auf sichtbar für registrierte Nutzer*innen, Beitritt per Einladung
+   und Anfrage sowie öffentliche Standardinhalte gesetzt. Die Sichtbarkeit kann danach
+   im Space-Adminbereich geändert werden.
 4. Als Space-Mitglied „Arbeitskreis“ öffnen und „Mandat & Rollen pflegen“ wählen.
 5. Den Kernkreis zuerst ohne Oberkreis speichern. Weitere Kreise danach einrichten.
 6. In der globalen Modulkonfiguration Kernkreis, Trägerorganisation und bei Bedarf
@@ -35,9 +36,14 @@ vor einem Kontowechsel die Zuständigkeit auf der Backend-Seite übertragen.
 
 ## Was bereits funktioniert
 
-Zweck und Mandat pflegen, Oberkreis zuordnen, vier Rollen manuell besetzen,
-aktuelle Rollen im Personenprofil anzeigen und methodische Hilfen lesen.
+Zweck und strukturiertes Mandat pflegen, Oberkreis zuordnen, vier Rollen manuell
+besetzen, aktuelle Rollen im Personenprofil anzeigen und methodische Hilfen lesen.
 Eine Person darf mehrere Rollen tragen, aber niemals zugleich Kreisleitung und Delegierte*r.
+Beim Speichern einer Kreisleitung wird diese Person Space-Besitzer*in; nur bestehende
+Space-Besitzer*innen oder -Administrator*innen dürfen diesen Rollenwechsel ausführen.
+
+Die globale Kreisübersicht ist über „Arbeitskreise“ in der oberen Navigation erreichbar.
+Sie enthält eine hierarchische Tabelle und eine zoombare Karte.
 
 Dauerhafte Mitgliedschaften sind dokumentierte Vereinbarungen mit vorhandenen
 Kreismitgliedern. Sie erzwingen noch keine Mitgliedschaft und keinen Austrittsschutz.
@@ -55,6 +61,11 @@ Kreismitgliedern. Sie erzwingen noch keine Mitgliedschaft und keinen Austrittssc
 - Profilanzeige und Verwaltung der dauerhaften Vereinbarungen prüfen.
 - Modul im Space deaktivieren und wieder aktivieren: Angaben bleiben erhalten.
 - Global deaktivieren/reaktivieren: Tabellen und Inhalt bleiben erhalten.
+- Aktivierung prüfen: Sichtbarkeit für registrierte Nutzer*innen, Beitritt per Einladung
+  und Anfrage, öffentliche Standardinhalte sowie Schreibrecht für Mitglieder.
+- Kreisleitung durch eine*n Space-Administrator*in wechseln und den Besitzerwechsel prüfen;
+  als normales Mitglied muss dieser Wechsel abgelehnt werden.
+- Kreisübersicht in Tabellen- und Kartenansicht mit sichtbaren und privaten Kreisen prüfen.
 
 Bei Deaktivierung gibt es absichtlich keine Datenlöschung. Das endgültige Löschen eines
 HumHub-Spaces entfernt jedoch seine Governance-Daten durch Fremdschlüssel.

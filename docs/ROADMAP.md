@@ -1,6 +1,6 @@
 # Roadmap
 
-Version 0.1.0 implementiert den Kern von Ausbaustufe 1. Die Abnahme auf HumHub 1.18.5 steht noch aus. M2/M3/M4 sind technische Pakete der zweiten Ausbaustufe; KI bildet eine spätere dritte Ausbaustufe.
+Version 0.2.0 erweitert den Kern von Ausbaustufe 1 um strukturierte Mandate und die globale Kreisorientierung. Die Abnahme auf HumHub 1.18.5 steht noch aus. M2/M3/M4 sind technische Pakete der zweiten Ausbaustufe; KI bildet eine spätere dritte Ausbaustufe.
 
 ## M1 — Orientierung und manuelle Kreisverwaltung (Ausbaustufe 1)
 - [x] Space-Modul, Navigation, Kreisprofil und initiale Migration.
@@ -9,6 +9,9 @@ Version 0.1.0 implementiert den Kern von Ausbaustufe 1. Die Abnahme auf HumHub 1
 - [x] Profilanzeige, Kernkreis und Backend für dauerhafte Mitgliedschaften als dokumentierte Vereinbarungen.
 - [x] Grafische Konsent-Anleitung, SMART und Beschlussvorlage.
 - [x] Komponententests, PHP-Syntax und Klassenkompatibilitätsprüfung.
+- [x] Strukturierte Mandatsfelder, Mandatskurzform sowie Markdown- und Emoji-Eingaben.
+- [x] Aktivierungsvoreinstellungen für sichtbare Arbeitskreise, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte.
+- [x] Globale Kreisübersicht: hierarchische Tabelle und zoombare Kartenansicht; Arbeitskreise aus dem allgemeinen Space-Verzeichnis ausblenden.
 - [ ] Installation und Migration auf HumHub 1.18.5/MySQL oder MariaDB abnehmen.
 - [ ] End-to-End-Prüfung mit Mitglied, Nichtmitglied und Admin im echten HumHub-Layout.
 

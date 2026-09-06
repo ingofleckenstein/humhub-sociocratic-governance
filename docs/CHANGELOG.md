@@ -1,6 +1,22 @@
 # Änderungen
 
-## Generisches Deployment — 2026-09-06
+## 0.2.0 – 2026-09-06
+
+- Mandat in Verantwortung, Befugnisse, Grenzen, Budget, Wiederwahl und Review
+  gegliedert; Mandatskurzform mit maximal 255 Zeichen ergänzt.
+- Markdown- und Emoji-Editoren für geeignete Mandats- und Zweckfelder ergänzt;
+  die Ausgabe verwendet HumHubs sichere Rich-Text-Ausgabe.
+- Aktivierung eines Arbeitskreises setzt die vereinbarten Space-Voreinstellungen
+  und das Schreibrecht für öffentliche Inhalte von Mitgliedern.
+- Kreisleitung wird beim Speichern als Space-Besitzer*in gesetzt; die Übertragung
+  ist auf Space-Besitzer*innen und -Administrator*innen beschränkt.
+- Globale Navigation, hierarchische Tabellenansicht und zoombare Bubble-Karte
+  der sichtbaren Kreisstruktur ergänzt; Arbeitskreise werden aus dem allgemeinen
+  Space-Verzeichnis ausgeblendet.
+- Migration, Komponententests und Rendering-Vorschau für die neuen Felder und die
+  Kreisübersicht erweitert.
+
+## Generisches Deployment – 2026-09-06
 
 - Konkrete Betriebsangaben aus aktuellem Repository entfernt.
 - Installationspfad, Website-Benutzer und privates Downloadverzeichnis sind verpflichtende Einstellungen.

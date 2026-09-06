@@ -2,6 +2,12 @@
 use yii\helpers\Html;
 use humhub\modules\sociocraticGovernance\models\Role;
 \humhub\modules\sociocraticGovernance\assets\GovernanceAsset::register($this);
+$renderRich = static function ($text): string {
+    if (class_exists(\humhub\modules\content\widgets\richtext\RichText::class)) {
+        return \humhub\modules\content\widgets\richtext\RichText::output((string) $text);
+    }
+    return nl2br(Html::encode((string) $text));
+};
 $byId = [];
 foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 ?>
@@ -17,8 +23,14 @@ foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 <?php if (!$circle): ?><div class="sg-note">Dieser Space ist als Arbeitskreis aktiviert. Ein Kreismitglied kann jetzt Zweck, Mandat und Rollen eintragen.</div><?php endif ?>
 <div class="sg-grid">
 <section class="sg-card"><h2>Unser Zweck</h2>
-<p class="sg-text"><?= Html::encode($circle && $circle->purpose !== '' ? $circle->purpose : 'Noch nicht beschrieben.') ?></p>
-<h3>Unser Mandat</h3><p class="sg-text"><?= Html::encode($circle && $circle->mandate !== '' ? $circle->mandate : 'Welche Verantwortung, Befugnisse und Grenzen gelten?') ?></p>
+<div class="sg-text sg-markdown"><?= $renderRich($circle && $circle->purpose !== '' ? $circle->purpose : 'Noch nicht beschrieben.') ?></div>
+<h3>Unser Mandat</h3>
+<?php if ($circle && $circle->mandate_summary): ?><p class="sg-summary"><?= Html::encode($circle->mandate_summary) ?></p><?php endif ?>
+<?php foreach (['responsibility' => 'Verantwortung', 'authority' => 'Befugnisse', 'boundaries' => 'Grenzen', 'budget' => 'Budget / Ressourcen', 'reelection_interval' => 'Wiederwahl', 'review' => 'Review'] as $attribute => $label): ?>
+<?php if ($circle && trim((string) $circle->$attribute) !== ''): ?><h4><?= Html::encode($label) ?></h4><div class="sg-text sg-markdown"><?= $renderRich($circle->$attribute) ?></div><?php endif ?>
+<?php endforeach ?>
+<?php if ($circle && trim((string) $circle->mandate) !== ''): ?><h4>Weitere Beschreibung</h4><div class="sg-text sg-markdown"><?= $renderRich($circle->mandate) ?></div><?php endif ?>
+<?php if (!$circle || (!$circle->mandate_summary && !$circle->responsibility && !$circle->authority && !$circle->boundaries && !$circle->mandate)): ?><p class="sg-muted">Welche Verantwortung, Befugnisse und Grenzen gelten?</p><?php endif ?>
 <p class="sg-muted">Mandatsänderungen brauchen den vorgesehenen Beschluss im Oberkreis. Diese erste Version dokumentiert Angaben, sie führt noch kein Konsentverfahren aus.</p></section>
 <section class="sg-card"><h2>Unsere Rollen</h2>
 <?php

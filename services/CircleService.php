@@ -41,6 +41,13 @@ final class CircleService
             $circle = $circle ?? new Circle(['space_id' => $space->id, 'revision' => -1]);
             $circle->purpose = $form->purpose;
             $circle->mandate = $form->mandate;
+            $circle->mandate_summary = $form->mandate_summary;
+            $circle->responsibility = $form->responsibility;
+            $circle->authority = $form->authority;
+            $circle->boundaries = $form->boundaries;
+            $circle->budget = $form->budget;
+            $circle->reelection_interval = $form->reelection_interval;
+            $circle->review = $form->review;
             $circle->parent_space_id = $parentId;
             $circle->revision = (int) $circle->revision + 1;
             $circle->updated_at = time();
@@ -51,6 +58,15 @@ final class CircleService
                 if ($id !== null) {
                     $role = new Role(['space_id' => $space->id, 'user_id' => $id, 'role_key' => $key]);
                     if (!$role->save(false)) { throw new \RuntimeException('Rolle konnte nicht gespeichert werden.'); }
+                }
+            }
+            $leaderId = $roles['leader'] ?? null;
+            if ($leaderId !== null && method_exists($space, 'isSpaceOwner') && !$space->isSpaceOwner($leaderId)) {
+                if (method_exists($space, 'isAdmin') && !$space->isAdmin()) {
+                    throw new \DomainException('Nur Space-Besitzer*innen oder -Administrator*innen dürfen die Kreisleitung mit dem Space-Besitz verbinden.');
+                }
+                if (!$space->setSpaceOwner($leaderId)) {
+                    throw new \RuntimeException('Die Kreisleitung konnte nicht als Space-Besitzer*in gesetzt werden.');
                 }
             }
             $tx->commit();
@@ -65,4 +81,3 @@ final class CircleService
         }
     }
 }
-

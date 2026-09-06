@@ -33,10 +33,9 @@ final class Access
     public static function visibleCircles(): array
     {
         $result = [];
-        foreach (\humhub\modules\sociocraticGovernance\models\Circle::find()->with('space')->all() as $circle) {
+        foreach (\humhub\modules\sociocraticGovernance\models\Circle::find()->with(['space', 'roles.user'])->all() as $circle) {
             if (self::read($circle->space)) { $result[] = $circle; }
         }
         return $result;
     }
 }
-

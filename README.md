@@ -2,8 +2,8 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.1.0 – erste Implementierung der Ausbaustufe 1, bereit für den Installationstest.**
-Arbeitskreis-Ansichten, Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige und Backend-Konfiguration sind implementiert. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
+**Status: Version 0.2.0 – erweiterte Kreisorientierung, bereit für den Installationstest.**
+Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 
 - [Installation und Abnahme](docs/INSTALLATION.md)
 - [Manuelles Deployment](docs/DEPLOYMENT.md)
@@ -467,17 +467,20 @@ Versionsnummern ersetzen keine Datenbankmigrationen und keine dokumentierten Upg
 
 ## 13. Aktueller Repository- und Teststand
 
-**Version 0.1.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
+**Version 0.2.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
 
 Implementiert:
 
 - Space-Modul mit Kennzeichnung „Arbeitskreis“, Navigationslink und Seitenleistenkarte.
-- Kreisprofil mit Zweck, Mandat und Oberkreis; sichtbare Kreisübersicht und Unterkreislinks.
+- Kreisprofil mit Zweck, strukturiertem Mandat, Mandatskurzform und Oberkreis.
 - Vier manuell besetzbare Rollen: Kreisleitung, Delegierte*r, Moderation und Dokumentation.
 - Profileinträge für aktuelle Kreismitglieder; private Kreise und deaktivierte Rollen werden nicht offengelegt.
 - Backend für Kernkreis, zuständige Admin-Sonderrolle, Trägerorganisation und dokumentierte dauerhafte Mitgliedschaften.
 - Grafische Konsent-Anleitung, SMART-Beschlussvorlage und Erläuterung des Kreislebens.
 - Eigene Datenbanktabellen; Schutz vor Kreiszyklen, unzulässiger Personalunion und veralteten Formularständen.
+- Aktivierung setzt den Space auf sichtbar für angemeldete Personen, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte; Mitglieder dürfen öffentliche Inhalte erstellen.
+- Die Kreisleitung wird bei der Rollenpflege als Space-Besitzer*in gesetzt; nur bestehende Space-Besitzer*innen oder -Administrator*innen dürfen diese Übertragung auslösen.
+- Globale Navigation sowie tabellarische und zoombare Kartenansicht der sichtbaren Kreisstruktur. Arbeitskreise erscheinen nicht im allgemeinen Space-Verzeichnis.
 
 Bewusste Grenzen der ersten Fassung:
 
@@ -485,8 +488,8 @@ Bewusste Grenzen der ersten Fassung:
 - Dauerhafte Mitgliedschaften werden dokumentiert, nicht technisch gegen Austritt erzwungen.
 - Rollenänderungen erzeugen noch keine automatische Mitgliedschaft im Oberkreis.
 - Keine Vorhabenobjekte, Sitzungsverwaltung oder vollständige Änderungshistorie; diese folgen in M2.
-- Vorhandene Space-Sichtbarkeit bleibt erhalten. Organisationsweite Lesbarkeit muss im Space eingestellt sein.
-- Die eigene Kreisübersicht kennzeichnet Arbeitskreise; das allgemeine HumHub-Space-Verzeichnis wird nicht ersetzt.
+- Die Aktivierung setzt eine öffentliche Sichtbarkeit für angemeldete Personen. Diese kann anschließend im Space-Adminbereich geändert werden.
+- Die Detailrechte externer Module (Mediathek, Share Content, Wiki, Kalender, Let's Meet) sind noch nicht technisch gekoppelt.
 - Deutsche Oberfläche; weitere Sprachen folgen später.
 - Bei Deaktivierung bleiben Modultabellen erhalten. Endgültiges Löschen eines HumHub-Spaces entfernt über Fremdschlüssel dessen Moduldatensätze; für Wissenserhalt archivieren statt löschen.
 

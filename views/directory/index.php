@@ -1,18 +1,42 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Json;
+use humhub\modules\sociocraticGovernance\models\Role;
 \humhub\modules\sociocraticGovernance\assets\GovernanceAsset::register($this);
-$byId = [];
-foreach ($circles as $circle) { $byId[(int) $circle->space_id] = $circle; }
+
+$avatar = static function ($user): string {
+    if (!$user) { return ''; }
+    if (class_exists(\humhub\modules\user\widgets\Image::class)) {
+        return \humhub\modules\user\widgets\Image::widget(['user' => $user, 'width' => 32, 'height' => 32, 'linkOptions' => ['class' => 'sg-avatar-link']]);
+    }
+    return Html::a(Html::tag('span', Html::encode(mb_substr($user->displayName, 0, 1)), ['class' => 'sg-avatar']), $user->getUrl());
+};
+$roleImages = static function ($circle) use ($avatar): string {
+    $images = [];
+    foreach ($circle->roles as $role) {
+        if ($role->user && (int) $role->user->status === \humhub\modules\user\models\User::STATUS_ENABLED) {
+            $images[] = Html::tag('span', $avatar($role->user), ['class' => 'sg-role-avatar', 'title' => Role::LABELS[$role->role_key]]);
+        }
+    }
+    return implode('', $images);
+};
+$graph = [];
+foreach ($nodes as $id => $node) {
+    $graph[] = ['id' => $id, 'x' => $node['x'], 'depth' => $node['depth'], 'parentId' => $node['parentId'], 'focus' => in_array($id, $focusSpaceIds, true)];
+}
 ?>
 <div class="container sg">
-<header class="sg-hero"><span class="sg-eyebrow">Organisation</span><h1>Unsere Arbeitskreise</h1><p>Welche Verantwortung liegt wo? Die Übersicht zeigt die für dich sichtbaren, eingerichteten Kreise.</p></header>
-<div class="sg-grid">
-<?php foreach ($circles as $circle): ?>
-<section class="sg-card"><span class="sg-eyebrow">Arbeitskreis<?= $circle->space->isArchived() ? ' · archiviert' : '' ?></span>
-<h2><?= Html::a(Html::encode($circle->space->name), $circle->space->createUrl('/sociocratic-governance/circle/index')) ?></h2>
-<p class="sg-text"><?= Html::encode($circle->purpose ?: 'Zweck noch nicht beschrieben.') ?></p>
-<p class="sg-muted">Oberkreis: <?= Html::encode($circle->parent_space_id ? (isset($byId[$circle->parent_space_id]) ? $byId[$circle->parent_space_id]->space->name : 'Nicht sichtbar oder nicht aktiv') : 'Nicht zugeordnet') ?></p>
-</section>
-<?php endforeach ?></div>
-<?php if (!$circles): ?><section class="sg-card">Noch keine sichtbaren Kreisprofile. Aktiviere das Modul in einem Space und pflege dort das Kreisprofil.</section><?php endif ?>
+<header class="sg-hero"><span class="sg-eyebrow">Organisation</span><h1>Unsere Arbeitskreise</h1><p>Welche Verantwortung liegt wo? Die Übersicht zeigt nur Kreise, die du sehen darfst.</p></header>
+<?php if (!$hasConfiguredRoot && $rows): ?><div class="sg-note">Der Kernkreis ist noch nicht festgelegt. Die Übersicht zeigt deshalb die sichtbaren Wurzelkreise.</div><?php endif ?>
+<?php if ($rows): ?>
+<div class="sg-directory-switch" role="tablist" aria-label="Ansicht wählen"><button class="sg-button" type="button" data-sg-directory-tab="table" aria-selected="true">Tabelle</button><button class="sg-button sg-button-secondary" type="button" data-sg-directory-tab="map" aria-selected="false">Karte</button></div>
+<section class="sg-card" data-sg-directory-panel="table"><div class="table-responsive"><table class="sg-directory-table"><thead><tr><th>Kreis</th><th>Mandat in Kürze</th><th>Rollen</th></tr></thead><tbody>
+<?php foreach ($rows as $row): $circle = $row['circle']; ?>
+<tr><td><div class="sg-tree-name" style="padding-left:<?= (int) $row['depth'] * 28 ?>px"><?= Html::a(Html::encode($circle->space->name), $circle->space->createUrl('/sociocratic-governance/circle/index')) ?></div></td><td><?= Html::encode($circle->mandateSummary() ?: 'Noch nicht beschrieben.') ?></td><td class="sg-role-avatars"><?= $roleImages($circle) ?></td></tr>
+<?php endforeach ?></tbody></table></div></section>
+<section class="sg-card sg-directory-map-panel" data-sg-directory-panel="map" hidden><p class="sg-muted">Mit Mausrad oder Pinch zoomen, mit Ziehen verschieben. Die Ansicht startet bei deinen Kreisrollen.</p><div class="sg-circle-map" data-sg-circle-map data-graph='<?= Json::htmlEncode($graph) ?>'><svg class="sg-map-links" aria-hidden="true"></svg><div class="sg-map-world">
+<?php foreach ($nodes as $id => $node): $circle = $node['circle']; ?>
+<a class="sg-map-bubble<?= in_array($id, $focusSpaceIds, true) ? ' is-focus' : '' ?>" data-sg-node-id="<?= (int) $id ?>" href="<?= Html::encode($circle->space->createUrl('/sociocratic-governance/circle/index')) ?>"><span class="sg-map-role-avatars"><?= $roleImages($circle) ?></span><strong><?= Html::encode($circle->space->name) ?></strong><span><?= Html::encode($circle->mandateSummary() ?: 'Mandat noch nicht beschrieben.') ?></span></a>
+<?php endforeach ?></div></div></section>
+<?php else: ?><section class="sg-card">Noch keine sichtbaren Kreisprofile. Aktiviere das Modul in einem Space und pflege dort das Kreisprofil.</section><?php endif ?>
 </div>

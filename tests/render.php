@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 require __DIR__ . '/bootstrap.php';
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Configuration, PermanentMembership};
-use humhub\modules\sociocraticGovernance\services\{Access, CircleService};
+use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService};
 use humhub\modules\space\models\Space;
 $out = getenv('PREVIEW_DIR');
 if (!$out || !is_dir($out)) { throw new RuntimeException('Set PREVIEW_DIR to an existing output directory.'); }
@@ -22,11 +22,12 @@ $service->save($space, new CircleForm([
 $service->save(Space::findOne(2), new CircleForm(['purpose' => 'Digitale Zusammenarbeit zuverlässig ermöglichen.', 'parent_space_id' => 1]));
 $circle = Circle::findOne(1);
 $circles = Access::visibleCircles();
+$directoryData = (new CircleDirectory())->data();
 $pages = [
     'circle' => ['circle/index', compact('space', 'circle', 'circles') + ['canWrite' => true]],
     'guide' => ['circle/guide', compact('space')],
     'edit' => ['circle/edit', ['space' => $space, 'form' => CircleForm::forCircle($circle), 'parents' => [2 => 'Technik'], 'members' => [1 => 'Alex', 2 => 'Robin']]],
-    'directory' => ['directory/index', compact('circles')],
+    'directory' => ['directory/index', $directoryData + compact('circles')],
     'admin' => ['admin/index', ['config' => Configuration::findOne(1), 'permanent' => new PermanentMembership(), 'spaces' => [1 => 'Kern', 2 => 'Technik'], 'users' => [1 => 'Alex', 2 => 'Robin'], 'declarations' => []]],
 ];
 foreach ($pages as $name => [$template, $params]) {

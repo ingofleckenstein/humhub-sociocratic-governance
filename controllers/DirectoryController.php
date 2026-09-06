@@ -3,6 +3,7 @@
 namespace humhub\modules\sociocraticGovernance\controllers;
 use Yii;
 use humhub\modules\sociocraticGovernance\services\Access;
+use humhub\modules\sociocraticGovernance\services\CircleDirectory;
 class DirectoryController extends \humhub\components\Controller
 {
     public function beforeAction($action)
@@ -11,5 +12,9 @@ class DirectoryController extends \humhub\components\Controller
         if (Yii::$app->user->isGuest) { throw new \yii\web\ForbiddenHttpException('Bitte anmelden.'); }
         return true;
     }
-    public function actionIndex() { return $this->render('index', ['circles' => Access::visibleCircles()]); }
+    public function actionIndex()
+    {
+        $directory = (new CircleDirectory())->data();
+        return $this->render('index', $directory + ['circles' => Access::visibleCircles()]);
+    }
 }
