@@ -1,69 +1,75 @@
-# Manuelles Deployment auf die Testinstallation
+# Konfigurierbares manuelles Deployment
 
-## Zuständigkeiten
+## Ablauf
 
-1. **Root** lädt das Repository nach /root/temp/data/sociocratic-governance.
-2. **Root** kopiert die Moduldateien in die Testinstallation.
-3. **Root** übergibt ausschließlich das Modulverzeichnis an **sexpositiv.events_0chzqp83gyz5** und dessen primäre Gruppe.
-4. **Der Website-Benutzer** führt über runuser Migrationen und Cacheleeren aus.
+Root lädt den Git-Checkout in ein ausdrücklich angegebenes privates Verzeichnis,
+kopiert das Modul in die ausgewählte HumHub-Installation und übergibt ausschließlich
+den Modulordner an deren Systembenutzer. Migrationen und Cacheleeren laufen über
+runuser unter diesem Website-Benutzer.
 
-Das Skript muss auch für eine Vorschau als root gestartet werden. Es führt kein
-rekursives chown über die gesamte Website aus und verändert keine anderen Moduleigentümer.
+Es gibt keine fest eingebauten Serveradressen, Benutzer oder Installationspfade.
+Zunächst auf einer Testinstallation verwenden.
 
-## Herunterladen und starten
+## Konfiguration
 
-In einer Root-Sitzung:
+| Variable | Bedeutung |
+|---|---|
+| HUMHUB_ROOT | Pflicht: absoluter Installationspfad mit protected/yii |
+| DEPLOY_USER | Pflicht: vorhandener Website-Systembenutzer, nicht root |
+| DOWNLOAD_ROOT | Pflicht: vorhandenes Downloadverzeichnis, root-Eigentum und Modus 700 |
+| PHP_BIN | Optional: PHP-CLI-Binary passend zur Website; Standard php |
+| DEPLOY_BRANCH | Optional: Git-Branch; Standard main |
 
-```bash
-mkdir -p /root/temp
-curl --fail --location https://raw.githubusercontent.com/ingofleckenstein/humhub-sociocratic-governance/main/scripts/deploy-test.sh -o /root/temp/deploy-governance.sh
+Der Checkout liegt unter DOWNLOAD_ROOT/sociocratic-governance.
+Das Modulziel ist HUMHUB_ROOT/protected/modules/sociocratic-governance.
+Download- und Installationsverzeichnis dürfen sich nicht überlappen.
 
-# Skript ansehen, dann Vorschau:
-bash /root/temp/deploy-governance.sh --dry-run
+## Einmalig vorbereiten
 
-# Dateien übertragen, Eigentümer setzen und HumHub aktualisieren:
-bash /root/temp/deploy-governance.sh --apply
-```
-
-Das Skript nach Änderungen erneut herunterladen. Es liegt außerhalb des synchronisierten
-Checkouts, damit ein Git-Update nicht das gerade laufende Skript überschreibt.
-
-## Einstellungen
-
-- Git-Checkout: /root/temp/data/sociocratic-governance
-- Standard-HumHub-Verzeichnis: /var/www/vhosts/sexpositiv.events/testcommunity.selbstsein.events
-- Modulziel darunter: protected/modules/sociocratic-governance
-- Branch: main, alternativ DEPLOY_BRANCH
-- PHP-CLI: php, alternativ PHP_BIN als vollständiger Pfad zur passenden PHP-Version
-- Zielsystem: HumHub Community Edition 1.18.5
-
-Beispiel mit einem zur Website passenden PHP-Binary:
+Als root ausführen und die Beispielwerte durch die eigenen Angaben ersetzen:
 
 ```bash
-PHP_BIN=/pfad/zum/php bash /root/temp/deploy-governance.sh --apply
+export HUMHUB_ROOT="/srv/example/humhub-test"
+export DEPLOY_USER="website-user"
+export DOWNLOAD_ROOT="/root/module-downloads"
+export PHP_BIN="/usr/bin/php"
+
+install -d -m 700 -o root -g root "$DOWNLOAD_ROOT"
+curl --fail --location \
+  https://raw.githubusercontent.com/ingofleckenstein/humhub-sociocratic-governance/main/scripts/deploy-test.sh \
+  -o "$DOWNLOAD_ROOT/deploy-governance.sh"
+
+# Skript prüfen, anschließend Vorschau:
+bash "$DOWNLOAD_ROOT/deploy-governance.sh" --dry-run
+
+# Bewusst anwenden:
+bash "$DOWNLOAD_ROOT/deploy-governance.sh" --apply
 ```
 
-HUMHUB_ROOT kann den Installationspfad überschreiben, muss aber mit dem Verzeichnisnamen
-testcommunity.selbstsein.events enden und protected/yii enthalten. Ein abweichendes
-Document-Root-Layout muss vor dem Deployment geprüft werden.
+Die Werte können alternativ in einer privaten, root-eigenen Konfigurationsdatei
+außerhalb des Repositories als export-Anweisungen gespeichert und vor dem Start
+in die Shell geladen werden. Keine tatsächlichen Betriebsangaben committen.
+Das laufende Skript außerhalb des synchronisierten Modul-Checkouts speichern.
 
-Benötigt: Bash, Git, rsync, realpath, flock, find, runuser, id, chown, chmod und PHP-CLI
-mit den zur Website passenden Erweiterungen.
+## Voraussetzungen und Schutz
 
-## Ablauf und Prüfungen
+Benötigt werden Bash, Git, rsync, realpath, flock, find, runuser, id, chown, chmod,
+stat sowie PHP-CLI mit passenden Erweiterungen. Das Skript startet nur als root.
 
-- Nur root darf starten; der Website-Benutzer muss existieren und PHP ausführen können.
-- Downloadverzeichnis wird root zugeordnet und mit Modus 700 geschützt.
-- Gleichzeitige Deployments werden über eine Sperrdatei verhindert.
-- Bestehende Checkouts müssen root gehören, den richtigen Ursprung und Branch haben
-  und frei von lokalen Änderungen sein. Updates erfolgen nur als Fast-forward.
-- Symbolische Links im Modulquell- oder Zielbaum werden abgelehnt.
-- Modul-ID und PHP-Syntax werden vor dem Kopieren geprüft; PHP läuft dabei bereits
-  als Website-Benutzer, Inhalte werden aus dem privaten Root-Checkout über stdin zugereicht.
-- rsync kopiert als root und entfernt veraltete Dateien ausschließlich im geprüften Modulziel.
-  Verzeichnisse erhalten 755, Dateien 644. Keine Laufzeitdaten im Modulverzeichnis speichern.
-- Danach wird der gesamte Modulzielbaum an den Website-Benutzer und dessen primäre Gruppe übergeben.
-- Aus protected werden die folgenden Befehle jeweils per runuser als Website-Benutzer gestartet:
+Ein bestehender Checkout muss root gehören, den richtigen Ursprung und Branch haben
+und frei von lokalen Änderungen sein. Updates erfolgen nur als Fast-forward.
+Symbolische Links im Modulquell- und Zielbaum werden abgelehnt.
+Die Sperrdatei verhindert gleichzeitige Deployments mit demselben Downloadverzeichnis.
+
+Die Vorschau aktualisiert nur den privaten Checkout. Website-Dateien, Eigentümer
+der Website und Datenbank bleiben unverändert.
+Beim Anwenden entfernt rsync veraltete Dateien ausschließlich im geprüften Modulziel,
+setzt Verzeichnisse auf 755 und Dateien auf 644 und übergibt sie dem Website-Benutzer
+und dessen primärer Gruppe. Keine Laufzeitdaten im Modulordner speichern.
+
+## HumHub-Befehle
+
+Nach der Kopie werden im protected-Verzeichnis unter DEPLOY_USER ausgeführt:
 
 ```bash
 php yii cache/flush-all --interactive=0
@@ -71,23 +77,18 @@ php yii migrate/up --includeModuleMigrations=1 --interactive=0
 php yii cache/flush-all --interactive=0
 ```
 
-**Der Migrationsbefehl verarbeitet alle ausstehenden Core- und aktivierten Modulmigrationen
-der Testinstallation**, nicht nur dieses Modul. Es werden keine Core-Dateien aktualisiert
-und keine Composer-Updates ausgeführt.
+Dabei wird das konfigurierte PHP_BIN verwendet.
+**Der Migrationslauf verarbeitet alle ausstehenden Core- und aktivierten Modulmigrationen
+der ausgewählten Installation.** Es findet kein Core-Datei- oder Composer-Update statt.
 
-Eine Vorschau synchronisiert den Root-Checkout und prüft ihn. Website-Dateien,
-Website-Eigentümer und Datenbank bleiben dabei unverändert.
-Die Dateikopie ist nicht atomar; während eines Updates die Testwebsite nicht parallel benutzen.
+Nach der ersten Bereitstellung das Modul global und im gewünschten Space aktivieren.
+Siehe [Installation](INSTALLATION.md).
 
-## Erstaktivierung und Fehler
+Dateikopie und Datenbankänderung sind kein atomarer Release-Wechsel. Bei Fehlern
+stoppt das Skript ohne automatischen Rollback. Vorhandene Backups müssen eine
+abgestimmte Wiederherstellung von Dateien und Datenbank ermöglichen.
 
-Nach dem ersten Kopieren das Modul global und anschließend im gewünschten Space aktivieren.
-Siehe [Installation und Abnahme](INSTALLATION.md).
+Bash-Syntax lokal geprüft; der tatsächliche Root-/runuser-/rsync-Lauf muss auf der
+jeweiligen Testinstallation geprüft werden.
 
-Bei Fehlern stoppt das Skript. Dateien können bereits aktualisiert sein. Kein automatischer
-Datenbank-Rollback; bei Bedarf vorhandenes Backup zur abgestimmten Wiederherstellung verwenden.
-
-Bash-Syntax lokal geprüft. Ein tatsächlicher Root-/runuser-/rsync-Lauf auf dem Zielserver
-steht aus. Durch diese Änderung wurde kein Serverdeployment ausgeführt.
-
-Quelle der Console-Befehle: [HumHub CLI](https://docs.humhub.org/docs/admin/console/).
+Quelle: [HumHub CLI](https://docs.humhub.org/docs/admin/console/).
