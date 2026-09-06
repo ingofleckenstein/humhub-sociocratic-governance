@@ -380,15 +380,13 @@ Für die zunächst geplante Installation gilt als gewünschte Konfiguration:
 
 Das universelle Plugin bildet diese Vorgaben als ausdrücklich wählbare Einstellungen ab. Bestehende private Space-Inhalte werden dadurch nicht stillschweigend öffentlich. Aufnahme, Protokoll, Änderungshistorie und allgemeine Space-Inhalte benötigen unterscheidbare Sichtbarkeitsregeln.
 
-### Projektbezogene Entwicklungsumgebung
+### Konfigurierbare Entwicklungsumgebung
 
-- Produktivinstallation: https://community.selbstsein.events
-- Testinstallation: https://testcommunity.selbstsein.events
-- Betreiberangabe: **HumHub Community Edition 1.18.5**. Ziel dieser Entwicklung; noch kein Nachweis eines bestandenen Plugin-Integrationstests.
+Die Entwicklungsbasis ist HumHub Community Edition 1.18.5. Jede Organisation stellt eine eigene Testinstallation bereit; Produktiv- und Testadressen gehören in die lokale Betriebsdokumentation, nicht in das öffentliche Repository.
 
-Diese Adressen sind Betriebsangaben für das konkrete Entwicklungsprojekt, keine fest eingebauten Plugin-Adressen. Entwicklung und Tests erfolgen auf der Testinstallation; diese Dokumentationsänderung nimmt keine Änderung an den Installationen vor.
+Für das manuelle Deployment werden HUMHUB_ROOT (Installationsverzeichnis), DEPLOY_USER (Website-Systembenutzer) und DOWNLOAD_ROOT (privates Downloadverzeichnis von root) ausdrücklich gesetzt. PHP_BIN und DEPLOY_BRANCH sind optional. Es gibt keine eingebauten Serverdomains, Kontonamen oder Installationspfade.
 
-Backups und Testkonten sind laut Betreiber vorhanden. Das Deployment startet der Betreiber manuell per SSH; kein dauerhafter Entwicklungszugang ist erforderlich. Siehe [Deployment-Anleitung](docs/DEPLOYMENT.md) und [Bash-Skript](scripts/deploy-test.sh).
+Backups und geeignete Testkonten werden durch die jeweilige Administration bereitgestellt. Siehe [Deployment-Anleitung](docs/DEPLOYMENT.md).
 
 ## 10. Drei Ausbaustufen
 
