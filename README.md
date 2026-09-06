@@ -284,6 +284,20 @@ Die Historie bleibt über die Umwandlung von Idee zu Aufgabe und bis zum Beschlu
 
 Die Änderungshistorie unterliegt den Zugriffsrechten der Inhalte und macht private Kreisinhalte nicht automatisch öffentlich. Aufbewahrung und datenschutzgerechte Löschung bleiben gesondert zu spezifizieren. Diese Historie ist verbindlicher Umfang von M2; damit wird keine technische Manipulationssicherheit behauptet.
 
+### SMART als Hilfe zur Beschlussformulierung
+
+Die Beschlussvorlage verbindet Wer, Was, Wann, Warum und Mandat mit **SMART**:
+
+- **Spezifisch:** Was soll konkret erreicht oder ermöglicht werden? Zuständigkeit und Umfang benennen.
+- **Messbar:** Woran erkennen wir das Ergebnis? Auch qualitative, überprüfbare Kriterien sind möglich.
+- **Attraktiv / akzeptiert:** Warum ist das Vorhaben sinnvoll und für die Verantwortlichen tragbar? Zustimmung zur Verantwortungsübernahme klären.
+- **Realistisch:** Sind Zeit, Fähigkeiten, Ressourcen und Mandatsbefugnisse vorhanden?
+- **Terminiert:** Umsetzungstermin und passenden Reviewzeitpunkt festlegen.
+
+SMART unterstützt verständliche und überprüfbare Beschlüsse. Es ersetzt keinen Konsent
+und ist keine vorgelagerte Sinnhaftigkeitsbewertung eingereichter Ideen. Diese werden
+zuerst ausschließlich auf Zuständigkeit geprüft.
+
 ### Inhalt jedes Beschlusses
 
 Jeder Beschluss enthält:
@@ -362,9 +376,11 @@ Das universelle Plugin bildet diese Vorgaben als ausdrücklich wählbare Einstel
 
 - Produktivinstallation: https://community.selbstsein.events
 - Testinstallation: https://testcommunity.selbstsein.events
-- Betreiberangabe: aktuellste HumHub-Version. Die genaue installierte Versionsnummer ist noch nicht technisch verifiziert.
+- Betreiberangabe: **HumHub Community Edition 1.18.5**. Ziel dieser Entwicklung; noch kein Nachweis eines bestandenen Plugin-Integrationstests.
 
 Diese Adressen sind Betriebsangaben für das konkrete Entwicklungsprojekt, keine fest eingebauten Plugin-Adressen. Entwicklung und Tests erfolgen auf der Testinstallation; diese Dokumentationsänderung nimmt keine Änderung an den Installationen vor.
+
+Backups und Testkonten sind laut Betreiber vorhanden. Das Deployment startet der Betreiber manuell per SSH; kein dauerhafter Entwicklungszugang ist erforderlich. Siehe [Deployment-Anleitung](docs/DEPLOYMENT.md) und [Bash-Skript](scripts/deploy-test.sh).
 
 ## 10. Drei Ausbaustufen
 
@@ -488,7 +504,7 @@ Spätere Prüfungen müssen insbesondere abdecken:
 2. Mitgliedschaft nach Rollenende: zusätzliche Mitgliedschaftsgründe und Zugriff beim Wechsel der Kreisleitung erhalten beziehungsweise beenden.
 3. Notfälle und Interessenkonflikte: Der Bedarf einer Regel ist bestätigt. Wer entscheidet konkret, wenn nach Ausschluss betroffener Personen keine Konsentberechtigten verbleiben?
 4. Krisensitzungen: konkrete Abläufe für Korrektur, Mitgliederausschluss und Übernahme durch den Oberkreis.
-5. Exakte installierte HumHub-Version vor Entwicklung prüfen; konkrete Sitzungs-, Wiki- und spätere KI-Anbindung festlegen.
+5. Integration auf der angegebenen HumHub Community Edition 1.18.5 testen; konkrete Sitzungs-, Wiki- und spätere KI-Anbindung festlegen.
 6. Datenkonfiguration: technische Umsetzung organisationsweiter Lesbarkeit, gesonderte Löschrechte und Auswahl des externen KI-Dienstes. Die Aufbewahrung ist zunächst unbefristet.
 7. Widersprüchliche Mandatsprüfungen: Wer löst den Fall, wenn Kreise eine Idee wiederholt zurückverweisen? Ideen außerhalb des Gesamtmandats sind bereits geregelt.
 8. Nachfolge bei Abgabe oder Austritt der dauerhaften obersten Kreisleitung.
