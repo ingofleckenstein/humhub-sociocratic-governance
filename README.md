@@ -42,6 +42,21 @@ Die Oberfläche trennt beide optisch:
 
 Die Kreisstruktur soll ohne Änderungen am HumHub-Core aufgebaut werden. Kommunikation, vorhandene Dateien und andere geeignete HumHub-Funktionen werden einbezogen. Welche bestehenden Module technisch integriert werden, ist noch zu prüfen.
 
+### Standard-Zugriffsmodell
+
+Die vorgesehene HumHub-Installation erlaubt **keine Gäste**. Zugriff setzt ein registriertes, angemeldetes Nutzerkonto voraus.
+
+Für Arbeitskreise gelten standardmäßig:
+
+- **Lesen:** Alle angemeldeten Nutzer*innen der Installation können die Kreis-Inhalte lesen.
+- **Schreiben:** Nur Mitglieder des jeweiligen Kreises können dort Inhalte erstellen und bearbeiten. Detailrechte wie die Bearbeitung fremder Inhalte bleiben gesondert geregelt.
+- **Konsent:** Schreibrecht allein erteilt kein Konsentrecht; Rollen und verfahrensbezogene Ausschlüsse gelten zusätzlich.
+- **Ideen einreichen:** Die ausdrücklich vereinbarte organisationsweite Einreichung einer Idee an einen beliebigen Kreis bleibt eine gezielte Ausnahme. Nichtmitglieder erhalten dadurch keine allgemeinen Schreibrechte im Kreis.
+- **Themensprecher*innen:** Ihre Zuordnung verleiht weiterhin keine zusätzlichen allgemeinen Schreibrechte.
+- **Abweichungen:** Organisationsweite Lesbarkeit ist die Voreinstellung. Falls ein Kreis ausdrücklich eingeschränkte Sichtbarkeit erhält, müssen diese Rechte auch in Profilen, Historien und Benachrichtigungen gelten.
+
+Das universelle Plugin beschreibt und unterstützt diese Voreinstellungen. Der Ausschluss von Gästen ist eine installationsweite HumHub-Einstellung; diese Dokumentation behauptet keine technische Prüfung oder Änderung der laufenden Installation.
+
 ## 2. Mandate und verteilte Entscheidungshoheit
 
 Ein Mandat beschreibt mindestens:
