@@ -5,10 +5,10 @@ Vollständiger Installationstest auf MySQL/MariaDB steht noch aus.
 
 ## Deployment
 
-Den aktuellen Stand von scripts/deploy-test.sh erneut herunterladen; ältere Downloads
-kennen die neue Benutzerprüfung nicht. Das Skript ausschließlich als
-**root** starten. Es lädt nach /root/temp/data, kopiert die Dateien und übergibt das Modul
-an **sexpositiv.events_0chzqp83gyz5**. HumHub-Befehle laufen als Website-Benutzer. Siehe [Deployment](DEPLOYMENT.md).
+Den aktuellen Stand von scripts/deploy-test.sh herunterladen und als root starten.
+Vorher HUMHUB_ROOT, DEPLOY_USER und DOWNLOAD_ROOT für die eigene Testumgebung setzen.
+Root kopiert das Modul und übergibt es an den konfigurierten Website-Benutzer.
+HumHub-Befehle laufen unter diesem Benutzer. Siehe [Deployment](DEPLOYMENT.md).
 
 ## Erstaktivierung
 
