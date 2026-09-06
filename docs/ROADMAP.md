@@ -1,13 +1,18 @@
 # Roadmap
 
-Alle Meilensteine sind offen. Nur Modulregistrierung und Konzeptdokumente sind vorhanden.
+Version 0.1.0 implementiert den Kern von Ausbaustufe 1. Die Abnahme auf HumHub 1.18.5 steht noch aus. M2/M3/M4 sind technische Pakete der zweiten Ausbaustufe; KI bildet eine spätere dritte Ausbaustufe.
 
-## M1 — Kreise und Rollen
-- [ ] Space-Modul, Navigation, Kreisprofil und Migrationen.
-- [ ] Explizite Kreismitgliedschaft und Berechtigungen.
-- [ ] Rollen, befristete Besetzungen und doppelte Verknüpfung.
-Abnahme: Zwei verbundene Kreise; Mandatsablauf; keine kreisübergreifenden Datenlecks;
-Zyklusprüfung; Migration und Deaktivierung in HumHub getestet.
+## M1 — Orientierung und manuelle Kreisverwaltung (Ausbaustufe 1)
+- [x] Space-Modul, Navigation, Kreisprofil und initiale Migration.
+- [x] Lesen entsprechend Space-Sichtbarkeit, Schreiben nur als Kreismitglied; keine Gäste.
+- [x] Zweck, Mandat, Oberkreis und vier manuell zugeordnete Rollen.
+- [x] Profilanzeige, Kernkreis und Backend für dauerhafte Mitgliedschaften als dokumentierte Vereinbarungen.
+- [x] Grafische Konsent-Anleitung, SMART und Beschlussvorlage.
+- [x] Komponententests, PHP-Syntax und Klassenkompatibilitätsprüfung.
+- [ ] Installation und Migration auf HumHub 1.18.5/MySQL oder MariaDB abnehmen.
+- [ ] End-to-End-Prüfung mit Mitglied, Nichtmitglied und Admin im echten HumHub-Layout.
+
+Keine automatischen Wahlen, Mitgliedschaftsübernahmen oder Krisenaktionen in M1.
 
 ## M2 — Vorhaben: Ideen, Mandatsprüfung, Aufgaben, Konsent und Beschlüsse
 M2 gehört zur Ausbaustufe 2 (gezielte Werkzeuge), nicht zur KI-Integration. Der gesamte Weg von der Idee bis zum Beschluss ist Bestandteil dieses Meilensteins.

@@ -2,13 +2,19 @@
 
 Zielversion: HumHub Community Edition **1.18.5** (vom Betreiber angegeben).
 Backups und Testkonten sind vorhanden. Es wird kein dauerhafter Agentenzugang benötigt:
-Der Betreiber startet das Skript selbst per SSH als Systembenutzer der Website.
+Der Betreiber startet das Skript selbst per SSH als **sexpositiv.events_0chzqp83gyz5**. Das Skript verweigert andere Benutzer, auch im Vorschaumodus.
 
 ## Voraussetzungen
 
 Linux mit Bash, Git, rsync, realpath, flock, find und passendem PHP-CLI.
 PHP-CLI muss zur Website passen und deren benötigte Erweiterungen haben.
-Nicht als root starten; unter Plesk den zur Testwebsite gehörenden Systembenutzer verwenden.
+Nicht als root starten. Bei bestehendem administrativem SSH-Zugang zunächst zum Website-Benutzer wechseln:
+
+```bash
+sudo -iu sexpositiv.events_0chzqp83gyz5
+```
+
+Danach Download, Vorschau und Ausführung aus dessen eigener Sitzung vornehmen. Dateien, Migrationen und Cache werden unter dieser Identität geschrieben. Bereits vorhandene Moduldateien eines anderen Besitzers führen zum Abbruch; das Skript führt kein pauschales chown aus.
 Das Skript verändert keine Eigentümer und legt keine Zugangsdaten ab.
 
 ## Erstmalig herunterladen
@@ -68,9 +74,7 @@ die Testwebsite nicht parallel benutzen. Das Skript richtet keinen Wartungsmodus
 ## Erstaktivierung und Fehler
 
 Nach dem ersten Kopieren das Modul in der HumHub-Administration aktivieren.
-Das vorhandene Gerüst hat noch keine Migrationen oder Oberfläche. Der Upload ist deshalb
-noch keine erste funktionale Pluginversion. Für später hinzukommende Migrationen die
-Erstinstallation und Aktualisierung auf HumHub 1.18.5 testen.
+Version 0.1.0 enthält eine initiale Migration und Kreisoberflächen. Die Erstaktivierung führt die Modulmigration aus. Danach das Modul im gewünschten Space aktivieren und das Kreisprofil einrichten; siehe [Installation](INSTALLATION.md).
 
 Bei Fehlern stoppt das Skript. Es setzt keine Datenbankmigration automatisch zurück.
 Dateien können dann bereits aktualisiert sein; Fehlermeldung prüfen und gegebenenfalls

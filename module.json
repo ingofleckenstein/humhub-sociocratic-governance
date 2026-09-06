@@ -1,10 +1,10 @@
 {
   "id": "sociocratic-governance",
   "name": "Sociocratic Governance",
-  "description": "Sociocratic governance for HumHub — development scaffold",
-  "version": "0.0.1",
+  "description": "Arbeitskreise, Mandate, manuelle Kreisrollen und methodische Konsent-Unterstützung.",
+  "version": "0.1.0",
   "humhub": {
-    "minVersion": "1.18"
+    "minVersion": "1.18.5"
   },
   "keywords": [
     "sociocracy",

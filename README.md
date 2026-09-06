@@ -2,7 +2,15 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Konzept und minimales Modulgerüst. Die hier beschriebenen Funktionen sind noch nicht implementiert.** Es gibt derzeit keine Governance-Oberfläche, Rollenverwaltung, Entscheidungslogik oder Datenbanktabellen. Dieses README dokumentiert den gemeinsam erarbeiteten Zielstand vom 6. September 2026.
+**Status: Version 0.1.0 – erste Implementierung der Ausbaustufe 1, bereit für den Installationstest.**
+Arbeitskreis-Ansichten, Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige und Backend-Konfiguration sind implementiert. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
+
+- [Installation und Abnahme](docs/INSTALLATION.md)
+- [Manuelles Deployment](docs/DEPLOYMENT.md)
+- [Änderungen](docs/CHANGELOG.md)
+- [Testumfang und Grenzen](tests/README.md)
+
+Die folgenden Abschnitte beschreiben das gesamte Zielmodell. Funktionen der Stufen 2 und 3 sind weiterhin Planung.
 
 ## Warum dieses Plugin?
 
@@ -461,21 +469,32 @@ Versionsnummern ersetzen keine Datenbankmigrationen und keine dokumentierten Upg
 
 ## 13. Aktueller Repository- und Teststand
 
-Vorhanden sind `Module.php`, `config.php`, `module.json` und Konzeptdokumente. Die Metadaten nennen Version **0.0.1** und HumHub **1.18** als Entwicklungsbasis. Die Kompatibilität wurde noch nicht in einer HumHub-Installation geprüft.
+**Version 0.1.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
 
-Für eine spätere Testinstallation liegt das Modulverzeichnis als `sociocratic-governance` in einem konfigurierten HumHub-Modulpfad. Das vorhandene Gerüst registriert lediglich das Modul und ist keine einsatzfähige Governance-Anwendung.
+Implementiert:
 
-Bisher geprüft: PHP-Syntax von `Module.php` und `config.php`. Ausstehend: HumHub-Integration, Installation, Migrationen, Oberflächen und funktionale Tests.
+- Space-Modul mit Kennzeichnung „Arbeitskreis“, Navigationslink und Seitenleistenkarte.
+- Kreisprofil mit Zweck, Mandat und Oberkreis; sichtbare Kreisübersicht und Unterkreislinks.
+- Vier manuell besetzbare Rollen: Kreisleitung, Delegierte*r, Moderation und Dokumentation.
+- Profileinträge für aktuelle Kreismitglieder; private Kreise und deaktivierte Rollen werden nicht offengelegt.
+- Backend für Kernkreis, zuständige Admin-Sonderrolle, Trägerorganisation und dokumentierte dauerhafte Mitgliedschaften.
+- Grafische Konsent-Anleitung, SMART-Beschlussvorlage und Erläuterung des Kreislebens.
+- Eigene Datenbanktabellen; Schutz vor Kreiszyklen, unzulässiger Personalunion und veralteten Formularständen.
 
-Spätere Prüfungen müssen insbesondere abdecken:
+Bewusste Grenzen der ersten Fassung:
 
-- Schutz zwischen Kreisen und Sichtbarkeit im Profil;
-- verbotene Personalunion von Kreisleitung und Delegiertenrolle;
-- Fristen, Mitgliedschafts- und Versionswechsel;
-- offene Einwände und fehlende Rückmeldungen;
-- konkurrierende Beschlussabschlüsse;
-- Mandatsübergaben und Archivierung;
-- Installation, Updates sowie Backup und Wiederherstellung.
+- Keine automatischen Wahlen, Amtszeitaktionen, Kriseneingriffe oder Kreisteilungen.
+- Dauerhafte Mitgliedschaften werden dokumentiert, nicht technisch gegen Austritt erzwungen.
+- Rollenänderungen erzeugen noch keine automatische Mitgliedschaft im Oberkreis.
+- Keine Vorhabenobjekte, Sitzungsverwaltung oder vollständige Änderungshistorie; diese folgen in M2.
+- Vorhandene Space-Sichtbarkeit bleibt erhalten. Organisationsweite Lesbarkeit muss im Space eingestellt sein.
+- Die eigene Kreisübersicht kennzeichnet Arbeitskreise; das allgemeine HumHub-Space-Verzeichnis wird nicht ersetzt.
+- Deutsche Oberfläche; weitere Sprachen folgen später.
+- Bei Deaktivierung bleiben Modultabellen erhalten. Endgültiges Löschen eines HumHub-Spaces entfernt über Fremdschlüssel dessen Moduldatensätze; für Wissenserhalt archivieren statt löschen.
+
+Lokal geprüft: PHP-Syntax, isolierte Yii-/SQLite-Komponententests, gerenderte Ansichten mit CSRF-Feldern sowie Klassen-/Eventkompatibilität gegen HumHub 1.18.5.
+Noch ausstehend: vollständige Installation, MySQL-/MariaDB-Migration und Sperrverhalten, Layout im echten HumHub-Theme sowie End-to-End-Prüfung mit den vorhandenen Testkonten.
+Siehe [Testbeschreibung](tests/README.md).
 
 ## 14. Entscheidungsstand und verbleibende Fragen
 

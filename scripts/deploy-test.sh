@@ -8,6 +8,8 @@ die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
 trap 'printf "Deployment failed at line %s. Check files and database before retrying; no automatic rollback.\n" "$LINENO" >&2' ERR
 
 MODULE_ID=sociocratic-governance
+DEPLOY_USER=sexpositiv.events_0chzqp83gyz5
+[[ "$(id -un)" == "$DEPLOY_USER" ]] || die "Run this script as $DEPLOY_USER (including dry-run)."
 REPOSITORY=https://github.com/ingofleckenstein/humhub-sociocratic-governance.git
 SITE_ROOT="${HUMHUB_ROOT:-/var/www/vhosts/sexpositiv.events/testcommunity.selbstsein.events}"
 PHP_BIN="${PHP_BIN:-php}"
@@ -29,6 +31,7 @@ MODULES="$SITE_ROOT/protected/modules"
 TARGET="$MODULES/$MODULE_ID"
 [[ ! -L "$TARGET" ]] || die "Module destination must not be a symlink."
 [[ ! -e "$TARGET" || -d "$TARGET" ]] || die "Destination is not a directory."
+[[ ! -d "$TARGET" || -z "$(find "$TARGET" ! -user "$DEPLOY_USER" -print -quit)" ]] || die "Existing module files have a different owner; correct ownership before deployment."
 [[ "$(realpath -m -- "$TARGET")" == "$SITE_ROOT/protected/modules/$MODULE_ID" ]] || die "Unsafe destination."
 
 [[ ! -L "$HOME/temp" ]] || die "~/temp must not be a symlink."

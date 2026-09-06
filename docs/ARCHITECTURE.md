@@ -38,3 +38,4 @@ Endgültige Löschung und Aufbewahrungsfristen werden separat spezifiziert.
 Exporte enthalten nur Inhalte, die die anfragende Person lesen darf.
 Auditdaten werden zugriffsgeschützt und datensparsam gespeichert; sie sind ohne weitere
 technische Maßnahmen nicht als manipulationssicher zu bezeichnen.
+

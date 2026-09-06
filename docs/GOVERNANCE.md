@@ -52,3 +52,4 @@ Ersetzte und ausgelaufene Beschlüsse werden entsprechend gekennzeichnet.
 Sichtbarkeit folgt HumHub-Space-Rechten. Öffentlicher Quellcode macht Kreis-Inhalte nicht öffentlich.
 Domänenkonflikte gehen an den zuständigen verbundenen Kreis; Eskalation und Begründung werden protokolliert.
 Notfallregeln benötigen ein explizites, zeitlich begrenztes Mandat und nachträglichen Review.
+
