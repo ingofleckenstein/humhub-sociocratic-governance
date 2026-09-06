@@ -1,9 +1,15 @@
 # Änderungen
 
+## Generisches Deployment — 2026-09-06
+
+- Konkrete Betriebsangaben aus aktuellem Repository entfernt.
+- Installationspfad, Website-Benutzer und privates Downloadverzeichnis sind verpflichtende Einstellungen.
+- Keine automatische Auswahl einer Installation anhand eingebauter Domains.
+
 ## Deployment-Überarbeitung — 2026-09-06
 
-- Root lädt nach /root/temp/data/sociocratic-governance und kopiert ins Modulziel.
-- Eigentümerübergabe nur für das Modul an sexpositiv.events_0chzqp83gyz5.
+- Root lädt nach das konfigurierte private Downloadverzeichnis und kopiert ins Modulziel.
+- Eigentümerübergabe nur für das Modul an den konfigurierten Website-Benutzer.
 - Migrationen und Cacheleeren weiterhin als Website-Benutzer über runuser.
 - Vorschau ändert keine Website-Dateien, Website-Eigentümer oder Datenbank.
 
