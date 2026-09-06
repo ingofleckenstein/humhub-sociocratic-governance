@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.2.1 – 2026-09-06
+
+- Bubble-Karte lesbar skaliert und Kreisleitung sowie Delegierte*r klar
+  gekennzeichnet.
+- Optionales Virtual-Card-Popover-Addon für Version 1.2.1+ ergänzt. Es zeigt
+  sichtbare Kreisrollen in der Reihenfolge zum Kernkreis sowie Zweck und Mandat
+  von Arbeitskreisen, ohne das VCard-Plugin zu verändern.
+
 ## 0.2.0 – 2026-09-06
 
 - Mandat in Verantwortung, Befugnisse, Grenzen, Budget, Wiederwahl und Review

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 namespace humhub\modules\sociocraticGovernance;
 use humhub\modules\sociocraticGovernance\services\Access;
-use humhub\modules\sociocraticGovernance\widgets\{CircleBadge, ProfileRoles};
+use humhub\modules\sociocraticGovernance\widgets\{CircleBadge, ProfileRoles, VCardGovernance};
 use humhub\modules\ui\menu\MenuLink;
 use humhub\helpers\ControllerHelper;
 use humhub\modules\content\models\ContentContainerModuleState;
@@ -48,5 +48,16 @@ class Events
             'module_state' => [ContentContainerModuleState::STATE_ENABLED, ContentContainerModuleState::STATE_FORCE_ENABLED],
         ]);
         $event->query->andWhere(['not in', 'space.contentcontainer_id', $enabledCircles]);
+    }
+    public static function vCardAddons($event)
+    {
+        $vCardModule = \Yii::$app->getModule('popover-vcard');
+        if (!$vCardModule || version_compare($vCardModule->getVersion(), '1.2.1', '<')) {
+            return;
+        }
+        $container = $event->sender->container ?? null;
+        if ($container instanceof \humhub\modules\user\models\User || $container instanceof \humhub\modules\space\models\Space) {
+            $event->sender->addWidget(VCardGovernance::class, ['container' => $container], ['sortOrder' => 100]);
+        }
     }
 }

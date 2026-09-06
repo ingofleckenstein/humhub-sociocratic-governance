@@ -2,7 +2,7 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.2.0 – erweiterte Kreisorientierung, bereit für den Installationstest.**
+**Status: Version 0.2.1 – erweiterte Kreisorientierung, bereit für den Installationstest.**
 Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 
 - [Installation und Abnahme](docs/INSTALLATION.md)
@@ -481,6 +481,7 @@ Implementiert:
 - Aktivierung setzt den Space auf sichtbar für angemeldete Personen, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte; Mitglieder dürfen öffentliche Inhalte erstellen.
 - Die Kreisleitung wird bei der Rollenpflege als Space-Besitzer*in gesetzt; nur bestehende Space-Besitzer*innen oder -Administrator*innen dürfen diese Übertragung auslösen.
 - Globale Navigation sowie tabellarische und zoombare Kartenansicht der sichtbaren Kreisstruktur. Arbeitskreise erscheinen nicht im allgemeinen Space-Verzeichnis.
+- Optionales Addon für Virtual Card Popover 1.2.1+: Kreisrollen sowie Kreiszweck und Mandat erscheinen in den jeweiligen Karten; ohne VCard bleibt die Oberfläche unverändert.
 
 Bewusste Grenzen der ersten Fassung:
 

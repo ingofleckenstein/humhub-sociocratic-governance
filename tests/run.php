@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 require __DIR__ . '/bootstrap.php';
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Role};
-use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService};
+use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService, VCardData};
 use humhub\modules\space\models\Space;
 
 $count = 0;
@@ -56,6 +56,10 @@ Space::$disabled = []; Space::$blocked = [1];
 check(!Access::read($space), 'Blocked viewer cannot access circle');
 Space::$blocked = [];
 Yii::$app->db->createCommand()->update('{{%sg_config}}', ['root_space_id' => 1], ['id' => 1])->execute();
+$vCardRoles = VCardData::roles(\humhub\modules\user\models\User::findOne(1));
+check($vCardRoles === 'Kern:Kreisleitung', 'VCard role value is ordered from the configured core circle');
+check(VCardData::purpose($space) === 'Neuer Stand', 'VCard purpose value respects circle visibility');
+check(VCardData::mandate($space) === 'Gesamtmandat', 'VCard mandate value uses the short mandate');
 $root = CircleForm::forCircle(Circle::findOne(1)); $root->parent_space_id = 2;
 check(!$service->save($space, $root), 'Root cannot acquire parent');
 $user = \humhub\modules\user\models\User::findOne(1);

@@ -9,7 +9,8 @@ Yii::setAlias('@humhub', $humhub . '/protected/humhub');
 Yii::setAlias('@humhub/modules/sociocraticGovernance', dirname(__DIR__));
 foreach ([
     'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController',
-    'controllers\AdminController', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'assets\GovernanceAsset',
+    'controllers\AdminController', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
+    'services\VCardData', 'assets\GovernanceAsset',
 ] as $class) {
     if (!class_exists('humhub\modules\sociocraticGovernance\\' . $class)) { throw new RuntimeException($class); }
     echo "Loaded against HumHub core: $class\n";

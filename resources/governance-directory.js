@@ -29,11 +29,11 @@
         var svg = map.querySelector('.sg-map-links');
         var nodes = {};
         graph.forEach(function (node) { nodes[node.id] = node; });
-        var stepX = 230, stepY = 180, bubbleWidth = 190, bubbleHeight = 120;
+        var stepX = 310, stepY = 300, bubbleWidth = 260, bubbleHeight = 260;
         var maxX = Math.max.apply(null, graph.map(function (node) { return node.x; }));
         var maxY = Math.max.apply(null, graph.map(function (node) { return node.depth; }));
-        var worldWidth = Math.max(340, (maxX + 1) * stepX + 70);
-        var worldHeight = Math.max(260, (maxY + 1) * stepY + 80);
+        var worldWidth = Math.max(400, (maxX + 1) * stepX + 100);
+        var worldHeight = Math.max(360, (maxY + 1) * stepY + 100);
         world.style.width = worldWidth + 'px';
         world.style.height = worldHeight + 'px';
         svg.setAttribute('width', String(worldWidth));
@@ -70,9 +70,17 @@
             if (!focus.length) { focus = graph; }
             var cx = focus.reduce(function (sum, node) { return sum + node.cx; }, 0) / focus.length;
             var cy = focus.reduce(function (sum, node) { return sum + node.cy; }, 0) / focus.length;
-            scale = Math.min(1, Math.max(0.55, map.clientWidth / Math.max(360, focus.length * stepX + 120)));
+            var left = Math.min.apply(null, focus.map(function (node) { return node.cx - bubbleWidth / 2; }));
+            var right = Math.max.apply(null, focus.map(function (node) { return node.cx + bubbleWidth / 2; }));
+            var top = Math.min.apply(null, focus.map(function (node) { return node.cy - bubbleHeight / 2; }));
+            var bottom = Math.max.apply(null, focus.map(function (node) { return node.cy + bubbleHeight / 2; }));
+            var padding = 56;
+            scale = Math.min(1, Math.max(0.4, Math.min(
+                (map.clientWidth - padding) / (right - left),
+                (map.clientHeight - padding) / (bottom - top)
+            )));
             tx = map.clientWidth / 2 - cx * scale;
-            ty = Math.max(24, map.clientHeight / 2 - cy * scale);
+            ty = map.clientHeight / 2 - cy * scale;
             positioned = true;
             apply();
         }
