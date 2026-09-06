@@ -8,24 +8,26 @@ die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
 trap 'printf "Deployment failed at line %s. Check files and database before retrying; no automatic rollback.\n" "$LINENO" >&2' ERR
 
 MODULE_ID=sociocratic-governance
-DEPLOY_USER=sexpositiv.events_0chzqp83gyz5
+: "${DEPLOY_USER:?Set DEPLOY_USER to the website system user}"
 [[ "$EUID" -eq 0 ]] || die "Run this script as root (including dry-run)."
-DOWNLOAD_ROOT=/root/temp/data
+: "${DOWNLOAD_ROOT:?Set DOWNLOAD_ROOT to an existing root-private download directory}"
 REPOSITORY=https://github.com/ingofleckenstein/humhub-sociocratic-governance.git
-SITE_ROOT="${HUMHUB_ROOT:-/var/www/vhosts/sexpositiv.events/testcommunity.selbstsein.events}"
+: "${HUMHUB_ROOT:?Set HUMHUB_ROOT to the installation directory containing protected/yii}"
+SITE_ROOT="$HUMHUB_ROOT"
 PHP_BIN="${PHP_BIN:-php}"
 BRANCH="${DEPLOY_BRANCH:-main}"
 MODE="${1:---dry-run}"
 [[ "$MODE" == --apply || "$MODE" == --dry-run ]] || die "Usage: bash deploy-test.sh [--dry-run|--apply]"
 
-for tool in git rsync realpath flock find runuser id chown chmod; do command -v "$tool" >/dev/null || die "Missing: $tool"; done
+for tool in git rsync realpath flock find runuser id chown chmod stat; do command -v "$tool" >/dev/null || die "Missing: $tool"; done
 PHP_BIN="$(command -v "$PHP_BIN")" || die "PHP_BIN is not executable."
+[[ "$(id -u "$DEPLOY_USER")" -ne 0 ]] || die "DEPLOY_USER must not be root."
 DEPLOY_GROUP="$(id -gn "$DEPLOY_USER")" || die "Website user does not exist."
 runuser -u "$DEPLOY_USER" -- "$PHP_BIN" -v >/dev/null
 git check-ref-format --branch "$BRANCH" >/dev/null
 
 SITE_ROOT="$(realpath -e -- "$SITE_ROOT")"
-[[ "${SITE_ROOT##*/}" == testcommunity.selbstsein.events ]] || die "Only the named test site is allowed."
+[[ "$SITE_ROOT" != / ]] || die "Invalid installation root."
 [[ -f "$SITE_ROOT/protected/yii" && -d "$SITE_ROOT/protected/config" ]] || die "Set HUMHUB_ROOT to the directory containing protected/yii."
 MODULES="$SITE_ROOT/protected/modules"
 [[ -d "$MODULES" && ! -L "$MODULES" ]] || die "Expected non-symlink protected/modules."
@@ -37,14 +39,14 @@ TARGET="$MODULES/$MODULE_ID"
 
 [[ "$(realpath -m -- "$TARGET")" == "$SITE_ROOT/protected/modules/$MODULE_ID" ]] || die "Unsafe destination."
 
-# Root-private checkout, independent of the caller's HOME.
-for path in /root /root/temp "$DOWNLOAD_ROOT"; do
-    [[ ! -L "$path" ]] || die "Download path must not contain symlinks."
-done
-mkdir -p -- "$DOWNLOAD_ROOT"
-[[ "$(realpath -e -- "$DOWNLOAD_ROOT")" == /root/temp/data ]] || die "Unsafe download path."
-chown root:root "$DOWNLOAD_ROOT"
-chmod 700 "$DOWNLOAD_ROOT"
+# Explicit root-private checkout location; never infer a production site.
+[[ "$DOWNLOAD_ROOT" == /* && "$HUMHUB_ROOT" == /* ]] || die "Use absolute paths."
+[[ -d "$DOWNLOAD_ROOT" && ! -L "$DOWNLOAD_ROOT" ]] || die "Create a root-private download directory first."
+[[ "$(realpath -e -- "$DOWNLOAD_ROOT")" == "$(realpath -ms -- "$DOWNLOAD_ROOT")" ]] || die "Download path contains symlinks."
+DOWNLOAD_ROOT="$(realpath -e -- "$DOWNLOAD_ROOT")"
+[[ "$DOWNLOAD_ROOT" != / ]] || die "Invalid download root."
+[[ "$(stat -c %u "$DOWNLOAD_ROOT")" == 0 && "$(stat -c %a "$DOWNLOAD_ROOT")" == 700 ]] || die "Download directory must be owned by root with mode 700."
+[[ "$DOWNLOAD_ROOT/" != "$SITE_ROOT/"* && "$SITE_ROOT/" != "$DOWNLOAD_ROOT/"* ]] || die "Download and installation directories must not overlap."
 STAGING="$DOWNLOAD_ROOT/$MODULE_ID"
 [[ ! -L "$STAGING" ]] || die "Checkout must not be a symlink."
 [[ ! -L "$DOWNLOAD_ROOT/.$MODULE_ID-deploy.lock" ]] || die "Lock must not be a symlink."
