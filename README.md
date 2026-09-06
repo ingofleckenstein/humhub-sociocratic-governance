@@ -53,7 +53,7 @@ Ein Mandat beschreibt mindestens:
 - Wiederwahlrhythmus des Kreises, standardmäßig **sechs Monate**;
 - gegebenenfalls Gültigkeit, Reviewtermine und Erfolgskriterien.
 
-Der Oberkreis definiert das Mandat des Unterkreises. Änderungen benötigen Konsent im Oberkreis. Der betroffene Unterkreis wird konsultativ beteiligt. Die Entscheidung erfolgt im Oberkreis: dessen Kreismitglieder einschließlich Kreisleitung haben Konsentrecht, Delegierte sind bei dieser Mandatsänderung ausgeschlossen. Die genaue Reichweite dieses Ausschlusses (nur betroffene oder alle Delegiertenrollen) muss noch geklärt werden.
+Der Oberkreis definiert das Mandat des Unterkreises. Änderungen benötigen Konsent im Oberkreis. Der betroffene Unterkreis wird konsultativ beteiligt. Die Entscheidung erfolgt im Oberkreis. Zwei Verfahrensmodi werden unterschieden: Bei einem regulären Antrag des betroffenen Kreises bleibt dessen delegierte Person konsentberechtigt. Bei einer Krisenintervention im Konfliktfall wird nur die delegierte Person des betroffenen Kreises ausgeschlossen, nicht die Delegierten anderer Kreise. Der Ausschluss gilt ausschließlich für dieses Verfahren. Für eine Kreisauflösung gilt die gesonderte weitergehende Ausschlussregel unten.
 
 Bei einer Teilung beziehungsweise Unterkreisgründung geht ein Teil des Mandats an den neuen Kreis über. Damit gehen echte Entscheidungsbefugnisse innerhalb dieses Bereichs an den Unterkreis.
 
@@ -65,7 +65,7 @@ Bei einer Teilung beziehungsweise Unterkreisgründung geht ein Teil des Mandats 
 - Beschließt der Oberkreis, dass eine Mandatsüberschreitung vorliegt, kann er den Beschluss revidieren.
 - Betroffene Mandatsstelle, Begründung und Revisionsbeschluss sollen nachvollziehbar dokumentiert werden.
 
-Dies ist keine allgemeine Vorabgenehmigung aller Unterkreisentscheidungen. Folgen einer Revision richten sich nach der Schwere: von keinen weiteren Maßnahmen bis zur Kreisauflösung. Konkrete Abstufungen und die Behandlung bereits ausgeführter Maßnahmen bleiben fallbezogen zu bestimmen.
+Dies ist keine allgemeine Vorabgenehmigung aller Unterkreisentscheidungen. Folgen einer Revision richten sich nach der Schwere: von keinen weiteren Maßnahmen bis zur Kreisauflösung. Für Korrektur, Übergabe und Folgen ist zuerst der verursachende Kreis verantwortlich; kann dieser die Verantwortung nicht übernehmen, übernimmt der Oberkreis. Grundsatz: Aus Macht folgt Verantwortung. Krisensitzungen behandeln die konkreten Folgen. Bei Handeln ohne Berechtigung kann auch der Ausschluss einzelner Mitglieder Gegenstand einer Entscheidung sein. Verfahren, Anhörung, Entscheidungsrechte und konkrete technische Gestaltung des Krisenwerkzeugs sind noch auszuarbeiten; es gibt keinen automatischen Personenausschluss.
 
 ### Schutz der Mandate von Unterkreisen
 
@@ -115,7 +115,7 @@ Als Verfahrensentwurf für eine offene Wahl gilt:
 
 Rollenprofil → begründete Nominierungen → Austausch und gegebenenfalls Anpassung → Wahlvorschlag → Zustimmung der kandidierenden Person → Konsent → Besetzung.
 
-Die Kreisleitung wird nach dem normalen Konsentprinzip legitimiert. Welcher Kreis welchen Verfahrensschritt übernimmt, muss technisch noch präzisiert werden. Ist eine Amtszeit abgelaufen und die Wiederwahl nicht abgeschlossen, wird der Kreis aufgelöst und an den Oberkreis zurückgeführt; es gibt keine stillschweigende Amtszeitverlängerung. Die Rückführung umfasst Mandat und offene Verantwortung, nicht die Löschung der Historie. Für den obersten Kreis kann im Backend eine dauerhafte Kreisleitung ohne turnusmäßiges Amtszeitende eingerichtet werden. Sie bleibt bis zur Abgabe, zum Austritt oder einem anderen ausdrücklich geregelten Ende bestehen. Darüber kann eine Trägerorganisation mit verantwortlicher Leitung als organisatorische Instanz hinterlegt werden; diese muss kein weiterer HumHub-Arbeitskreis sein. Die Nachfolge bei Wegfall der dauerhaften Leitung ist noch zu regeln.
+Die Kreisleitung wird nach dem normalen Konsentprinzip legitimiert: Bei der Gründung wählt der Oberkreis die erste Kreisleitung. Besteht der Kreis bereits, wählt er seine Kreisleitung selbst. Die gewählte Person wird automatisch Mitglied des Oberkreises. Die Mitgliedschaft ist mit der Rollenbesetzung zu verknüpfen; beim Rollenende müssen zusätzliche unabhängige Mitgliedschaftsgründe berücksichtigt werden. Ist eine Amtszeit abgelaufen und die Wiederwahl nicht abgeschlossen, wird der Kreis aufgelöst und an den Oberkreis zurückgeführt; es gibt keine stillschweigende Amtszeitverlängerung. Die Rückführung umfasst Mandat und offene Verantwortung, nicht die Löschung der Historie. Für den obersten Kreis kann im Backend eine dauerhafte Kreisleitung ohne turnusmäßiges Amtszeitende eingerichtet werden. Sie bleibt bis zur Abgabe, zum Austritt oder einem anderen ausdrücklich geregelten Ende bestehen. Darüber kann eine Trägerorganisation mit verantwortlicher Leitung als organisatorische Instanz hinterlegt werden; diese muss kein weiterer HumHub-Arbeitskreis sein. Die Nachfolge bei Wegfall der dauerhaften Leitung ist noch zu regeln.
 
 ### Rollen im Personenprofil
 
@@ -333,6 +333,24 @@ Vorgesehen sind:
 
 Eine konkrete Konferenz-, Aufnahme- oder KI-Lösung ist noch nicht ausgewählt. Aufzeichnung und Verarbeitung müssen für Teilnehmende transparent und passend freigegeben sein. Ein Transkript ist nicht automatisch ein gültiger Beschluss; Beschlüsse werden ausdrücklich bestätigt.
 
+### Datenvorgaben und installationsbezogene Konfiguration
+
+Für die zunächst geplante Installation gilt als gewünschte Konfiguration:
+
+- **Aufbewahrung:** unbefristet, zunächst keine automatische Löschfrist.
+- **Lesbarkeit von Sitzungsprotokollen und Aufnahmen:** alle Mitglieder der Organisation. Dies bedeutet keine anonyme Veröffentlichung im Internet und keine allgemeinen Löschrechte für alle.
+- **Externe KI-Verarbeitung:** grundsätzlich vorgesehen und vom Projektverantwortlichen gewünscht. Dies ersetzt weder die transparente Freigabe einer konkreten Aufnahme durch die Beteiligten noch die Auswahl und Konfiguration eines konkreten Dienstes.
+
+Das universelle Plugin bildet diese Vorgaben als ausdrücklich wählbare Einstellungen ab. Bestehende private Space-Inhalte werden dadurch nicht stillschweigend öffentlich. Aufnahme, Protokoll, Änderungshistorie und allgemeine Space-Inhalte benötigen unterscheidbare Sichtbarkeitsregeln.
+
+### Projektbezogene Entwicklungsumgebung
+
+- Produktivinstallation: https://community.selbstsein.events
+- Testinstallation: https://testcommunity.selbstsein.events
+- Betreiberangabe: aktuellste HumHub-Version. Die genaue installierte Versionsnummer ist noch nicht technisch verifiziert.
+
+Diese Adressen sind Betriebsangaben für das konkrete Entwicklungsprojekt, keine fest eingebauten Plugin-Adressen. Entwicklung und Tests erfolgen auf der Testinstallation; diese Dokumentationsänderung nimmt keine Änderung an den Installationen vor.
+
 ## 10. Drei Ausbaustufen
 
 ### Stufe 1 — Orientierung und grundlegende Kreise
@@ -436,7 +454,7 @@ Spätere Prüfungen müssen insbesondere abdecken:
 - Kreisleitung: normales Konsentverfahren.
 - Abgelaufene Amtszeit ohne abgeschlossene Wiederwahl: Auflösung und Rückführung an den Oberkreis.
 - Gründung: Sonderfall des Vorhabensystems, von Idee und Aufgabe zum Gründungsbeschluss.
-- Mandatsänderung: Unterkreis konsultativ; Entscheidung im Oberkreis unter Ausschluss der Delegierten nach der noch zu präzisierenden Reichweite.
+- Mandatsänderung: regulärer Antrag des betroffenen Kreises mit Konsentrecht seiner delegierten Person; Krisenintervention im Konfliktfall unter Ausschluss nur dieser delegierten Person. Kreisauflösung hat eigene weitergehende Ausschlussregeln.
 - Themensprecher*innen: sichtbare temporäre Zuordnung, Teilnahme an Themensitzungen, keine zusätzlichen allgemeinen HumHub-Rechte.
 - Revisionsfolgen: nach Schwere bis zur Kreisauflösung; bei Auflösungsentscheidungen keine Konsentrechte für Personen des betroffenen Kreises.
 - Zentraler Nutzerbegriff: **Vorhaben**; eigene fachliche Grundlage in der Governance-Erweiterung.
@@ -451,12 +469,12 @@ Spätere Prüfungen müssen insbesondere abdecken:
 
 ### Noch zu entscheiden beziehungsweise zu präzisieren
 
-1. Kreisleitungswahl: Entscheidet der Oberkreis, der künftige Unterkreis oder sind beide Konsentrunden erforderlich? Das Konsentverfahren selbst ist bereits festgelegt.
-2. Mandatsänderung: Ist nur die delegierte Person des betroffenen Unterkreises ausgeschlossen oder sind alle Delegierten im entscheidenden Oberkreis ausgeschlossen?
+1. Krisenwerkzeug: Wer setzt den Krisenmodus, wie werden Gründe, Anhörung und verfahrensbezogene Ausschlüsse dokumentiert?
+2. Mitgliedschaft nach Rollenende: zusätzliche Mitgliedschaftsgründe und Zugriff beim Wechsel der Kreisleitung erhalten beziehungsweise beenden.
 3. Notfälle und Interessenkonflikte: Der Bedarf einer Regel ist bestätigt. Wer entscheidet konkret, wenn nach Ausschluss betroffener Personen keine Konsentberechtigten verbleiben?
-4. Übergabe nach Revision: Wer übernimmt offene Aufgaben, Ressourcen und bereits eingegangene Verpflichtungen? Was wird gestoppt, fortgeführt oder korrigiert?
-5. Testumgebung: Welche HumHub-Version läuft und wo kann das Plugin getrennt vom laufenden Betrieb getestet werden? Welche Sitzungs- und Wiki-Funktionen sollen angebunden werden?
-6. Daten: Wie lange bleiben Protokolle und Aufnahmen gespeichert, wer darf sie lesen oder löschen und darf später ein externer KI-Dienst sie verarbeiten? Diese Fragen können passend zur Ausbaustufe entschieden werden.
+4. Krisensitzungen: konkrete Abläufe für Korrektur, Mitgliederausschluss und Übernahme durch den Oberkreis.
+5. Exakte installierte HumHub-Version vor Entwicklung prüfen; konkrete Sitzungs-, Wiki- und spätere KI-Anbindung festlegen.
+6. Datenkonfiguration: technische Umsetzung organisationsweiter Lesbarkeit, gesonderte Löschrechte und Auswahl des externen KI-Dienstes. Die Aufbewahrung ist zunächst unbefristet.
 7. Widersprüchliche Mandatsprüfungen: Wer löst den Fall, wenn Kreise eine Idee wiederholt zurückverweisen? Ideen außerhalb des Gesamtmandats sind bereits geregelt.
 8. Nachfolge bei Abgabe oder Austritt der dauerhaften obersten Kreisleitung.
 9. Praktischer Ablauf und Fristen einer verpflichtenden Kreisteilung.
