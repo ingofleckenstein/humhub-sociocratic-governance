@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 require __DIR__ . '/bootstrap.php';
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Configuration, PermanentMembership};
-use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService};
+use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService, ParticipationDashboard};
 use humhub\modules\space\models\Space;
 $out = getenv('PREVIEW_DIR');
 if (!$out || !is_dir($out)) { throw new RuntimeException('Set PREVIEW_DIR to an existing output directory.'); }
@@ -22,12 +22,28 @@ $service->save($space, new CircleForm([
 $service->save(Space::findOne(2), new CircleForm(['purpose' => 'Digitale Zusammenarbeit zuverlässig ermöglichen.', 'parent_space_id' => 1]));
 $circle = Circle::findOne(1);
 $circles = Access::visibleCircles();
+Space::$members[1][] = 3;
 $directoryData = (new CircleDirectory())->data();
+$workService = new \humhub\modules\sociocraticGovernance\services\WorkService();
+$workIdea = $workService->create($space, '<script>Idee</script>', 'Ein Vorschlag mit <img src=x onerror=alert(1)>', 'idea', 'Commons, Sicherheit');
+$workTask = $workService->create($space, 'Ein konkreter Arbeitsauftrag', 'Beschreibung', 'task', 'Technik');
+$workTask = $workService->change($workTask->id, 0, 'resource', ['resource_type' => 'time', 'label' => 'Moderation', 'required_amount' => '8', 'available_amount' => '0', 'unit' => 'Stunden', 'time_mode' => 'scheduled', 'time_pattern' => 'Alle zwei Wochen donnerstags, 3 Stunden', 'details' => 'Für die erste Runde']);
+Yii::$app->user->id = 3;
+$workTask = $workService->change($workTask->id, 1, 'contribute', ['resource_id' => $workTask->resources[0]->id, 'amount' => '2']);
+Yii::$app->user->id = 1;
+$workTask = $workService->change($workTask->id, 2, 'claim');
+$workTask = $workService->change($workTask->id, 3, 'start');
+$workTask = $workService->change($workTask->id, 4, 'submit', ['note' => 'Das Ergebnis liegt vor.']);
+$dashboardData = (new ParticipationDashboard())->data();
 $pages = [
+    'work-board' => ['work/index', ['space' => $space, 'items' => [$workIdea, $workTask], 'error' => '', 'draft' => new \humhub\modules\sociocraticGovernance\models\WorkItem(), 'draftTopics' => '']],
+    'work-idea' => ['work/view', ['space' => $space, 'item' => $workIdea, 'error' => '']],
+    'work-review' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '']],
     'circle' => ['circle/index', compact('space', 'circle', 'circles') + ['canWrite' => true]],
     'guide' => ['circle/guide', compact('space')],
     'edit' => ['circle/edit', ['space' => $space, 'form' => CircleForm::forCircle($circle), 'parents' => [2 => 'Technik'], 'members' => [1 => 'Alex', 2 => 'Robin']]],
     'directory' => ['directory/index', $directoryData + compact('circles')],
+    'dashboard' => ['dashboard/index', $dashboardData + ['focus' => 'topics']],
     'admin' => ['admin/index', ['config' => Configuration::findOne(1), 'permanent' => new PermanentMembership(), 'spaces' => [1 => 'Kern', 2 => 'Technik'], 'users' => [1 => 'Alex', 2 => 'Robin'], 'declarations' => []]],
 ];
 foreach ($pages as $name => [$template, $params]) {
@@ -43,8 +59,56 @@ foreach ($pages as $name => [$template, $params]) {
     echo '</body></html>';
     $view->endPage();
     $html = ob_get_clean();
-    if (in_array($name, ['edit', 'admin'], true) && !str_contains($html, 'name="_csrf"')) {
+    if (in_array($name, ['edit', 'admin', 'work-board', 'work-idea', 'work-review'], true) && !str_contains($html, 'name="_csrf"')) {
         throw new RuntimeException('Missing CSRF field: ' . $name);
+    }
+    if (str_starts_with($name, 'work-')) {
+        if (str_contains($html, '<script>Idee') || str_contains($html, '<img src=x onerror')) {
+            throw new RuntimeException('Unsafe work text output');
+        }
+        $dom = new DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new DOMXPath($dom);
+        foreach ($xpath->query('//form') as $form) {
+            if (strtolower($form->getAttribute('method')) !== 'post'
+                || $xpath->query('.//input[@name="_csrf"]', $form)->length !== 1) {
+                throw new RuntimeException('Work mutation form without POST/CSRF');
+            }
+            if (str_contains($form->getAttribute('action'), 'work%2Fchange')
+                && $xpath->query('.//input[@name="revision"]', $form)->length !== 1) {
+                throw new RuntimeException('Work action missing optimistic revision');
+            }
+        }
+    }
+    if ($name === 'directory') {
+        // Browsers repair nested links by moving the content outside the bubble.
+        preg_match_all('/<\/?a\b[^>]*>/i', $html, $anchors);
+        $insideLink = false;
+        foreach ($anchors[0] as $anchor) {
+            if (str_starts_with(strtolower($anchor), '</a')) {
+                $insideLink = false;
+            } else {
+                if ($insideLink) { throw new RuntimeException('Nested directory links'); }
+                $insideLink = true;
+            }
+        }
+        $dom = new DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new DOMXPath($dom);
+        $map = $xpath->query('//div[@data-sg-circle-map]')->item(0);
+        if (!$map || !$map->hasAttribute('data-graph')) { throw new RuntimeException('Missing map application data'); }
+        $graph = json_decode(html_entity_decode($map->getAttribute('data-graph'), ENT_QUOTES | ENT_HTML5), true);
+        if (!is_array($graph) || count($graph['nodes'] ?? []) !== count($directoryData['nodes'])) {
+            throw new RuntimeException('Map application data omits visible circles');
+        }
+        if (array_key_exists('circle', $graph['nodes'][0] ?? []) || array_key_exists('user', $graph['nodes'][0] ?? [])) {
+            throw new RuntimeException('Map application serializes server objects');
+        }
+        foreach ($graph['nodes'] as $node) {
+            if (!isset($node['name'], $node['url'], $node['members'], $node['roles'], $node['mandate'])) {
+                throw new RuntimeException('Map application node is incomplete');
+            }
+        }
     }
     file_put_contents($out . '/' . $name . '.html', $html);
     echo "Rendered $name\n";

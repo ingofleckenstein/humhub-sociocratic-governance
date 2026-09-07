@@ -4,6 +4,7 @@ namespace humhub\modules\sociocraticGovernance\services;
 
 use Yii;
 use humhub\modules\space\models\Space;
+use humhub\modules\user\models\User;
 
 final class Access
 {
@@ -13,10 +14,23 @@ final class Access
     }
     public static function read(?Space $space): bool
     {
-        if (Yii::$app->user->isGuest || !self::enabled($space) || $space->isBlockedForUser()) {
+        if (Yii::$app->user->isGuest) {
             return false;
         }
-        return $space->visibility != Space::VISIBILITY_NONE || $space->isMember();
+        return self::readForUser($space, User::findOne((int) Yii::$app->user->id));
+    }
+    /**
+     * Access checks for background work must use the recipient, not the
+     * currently logged-in person. This keeps notifications from disclosing
+     * private circle history after a delegation.
+     */
+    public static function readForUser(?Space $space, ?User $user): bool
+    {
+        if (!$user || (int) $user->status !== User::STATUS_ENABLED || !self::enabled($space)
+            || $space->isArchived() || $space->isBlockedForUser($user)) {
+            return false;
+        }
+        return $space->visibility != Space::VISIBILITY_NONE || $space->isMember($user->id);
     }
     public static function write(?Space $space): bool
     {

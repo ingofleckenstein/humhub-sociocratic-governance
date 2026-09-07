@@ -34,6 +34,11 @@ class Module extends ContentContainerModule
         }
         $container->permissionManager->setGroupState(Space::USERGROUP_MEMBER, CreatePublicContent::class, BasePermission::STATE_ALLOW);
         $container->permissionManager->setGroupState(Space::USERGROUP_USER, CreatePublicContent::class, BasePermission::STATE_DENY);
+        $messages = \humhub\modules\sociocraticGovernance\services\RequiredModules::enable($container);
+        if ($messages && \Yii::$app->has('session')) {
+            \Yii::$app->session->setFlash('warning', implode(' ', $messages));
+        }
+
     }
     // Governance records deliberately survive disabling, including container settings.
     public function disableContentContainer(ContentContainerActiveRecord $container) {}

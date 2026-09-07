@@ -8,6 +8,26 @@ use humhub\modules\sociocraticGovernance\models\Configuration;
 /** Builds a visibility-safe, deterministic tree for both directory views. */
 final class CircleDirectory
 {
+    /** Active, visible members, once per person, with all their circle roles. */
+    public static function people($circle): array
+    {
+        if (!Access::read($circle->space) || $circle->space->isArchived()) { return []; }
+        $people = [];
+        foreach ($circle->space->getMemberListService()->getQuery()->all() as $user) {
+            if ((int) $user->status !== \humhub\modules\user\models\User::STATUS_ENABLED) { continue; }
+            $labels = [];
+            foreach ($circle->roles as $role) {
+                if ((int) $role->user_id === (int) $user->id) {
+                    $labels[] = \humhub\modules\sociocraticGovernance\models\Role::LABELS[$role->role_key] ?? $role->role_key;
+                }
+            }
+            $people[] = ['user' => $user, 'label' => $labels ? implode(', ', $labels) : 'Kreismitglied'];
+        }
+        usort($people, static fn($a, $b) => strnatcasecmp($a['user']->displayName, $b['user']->displayName)
+            ?: (int) $a['user']->id <=> (int) $b['user']->id);
+        return $people;
+    }
+
     public function data(): array
     {
         $visible = Access::visibleCircles();
@@ -43,7 +63,8 @@ final class CircleDirectory
             $childX = [];
             foreach ($childIds as $childId) { $childX[] = $visit($childId, $depth + 1); }
             $x = $childX ? array_sum($childX) / count($childX) : $leaf++;
-            $nodes[$id] = ['circle' => $circle, 'depth' => $depth, 'x' => $x, 'parentId' => (int) $circle->parent_space_id];
+            $people = self::people($circle);
+            $nodes[$id] = ['people' => $people, 'diameter' => max(260, (int) ceil(count($people) * 46 / M_PI + 64)), 'circle' => $circle, 'depth' => $depth, 'x' => $x, 'parentId' => (int) $circle->parent_space_id];
             return $x;
         };
         foreach ($roots as $root) { $visit($root, 0); }

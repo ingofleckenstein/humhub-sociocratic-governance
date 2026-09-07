@@ -10,12 +10,14 @@ $renderRich = static function ($text): string {
 };
 $byId = [];
 foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
+$toneClass = $circle ? $circle->colorClass() : 'sg-tone-teal';
 ?>
-<div class="sg">
+<div class="sg <?= Html::encode($toneClass) ?>">
 <header class="sg-hero">
 <span class="sg-eyebrow">Arbeitskreis · Orientierung</span><h1><?= Html::encode($space->name) ?></h1>
 <p>Gemeinsam Verantwortung übernehmen. Im vereinbarten Mandat selbstständig handeln.</p>
 <div class="sg-actions">
+<?= Html::a('Vorhaben-Board', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-button']) ?>
 <?= Html::a('So arbeiten wir', $space->createUrl('/sociocratic-governance/circle/guide'), ['class' => 'sg-button']) ?>
 <?= Html::a('Kreisübersicht', ['/sociocratic-governance/directory/index'], ['class' => 'sg-button']) ?>
 <?php if ($canWrite): ?><?= Html::a('Mandat & Rollen pflegen', $space->createUrl('/sociocratic-governance/circle/edit'), ['class' => 'sg-button']) ?><?php endif ?>

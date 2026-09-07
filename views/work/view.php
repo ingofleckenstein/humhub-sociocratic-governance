@@ -1,0 +1,149 @@
+<?php
+// SPDX-License-Identifier: AGPL-3.0-only
+use yii\helpers\{Html, Json};
+use humhub\modules\sociocraticGovernance\models\{WorkItem, WorkEvent};
+use humhub\modules\sociocraticGovernance\services\{Access, WorkAccess};
+\humhub\modules\sociocraticGovernance\assets\GovernanceAsset::register($this);
+$submitted = $submitted ?? [];
+$draftInput = static function ($action, $field, $fallback = '') use ($submitted) {
+    return ($submitted['action'] ?? null) === $action && is_string($submitted[$field] ?? null) ? $submitted[$field] : $fallback;
+};
+$member = Access::write($space);
+$reviewer = WorkAccess::reviewer($space);
+$actor = (int) Yii::$app->user->id;
+$canContribute = !$item->archived_at && WorkAccess::activeUser() && $item->kind === 'task' && !in_array($item->status, ['done', 'rejected'], true);
+$contributors = [];
+if ($item->kind === 'task') {
+    foreach ($item->resources as $resource) {
+        foreach ($resource->contributions as $contribution) {
+            if ((float) $contribution->amount > 0 && $contribution->user && (int) $contribution->user->status === \humhub\modules\user\models\User::STATUS_ENABLED) {
+                $contributors[(int) $contribution->user_id] = $contribution->user;
+            }
+        }
+    }
+}
+$formStart = static function ($action) use ($space, $item) {
+    return Html::beginForm($space->createUrl('/sociocratic-governance/work/change', ['id' => $item->id]), 'post')
+        . Html::hiddenInput('revision', $item->revision) . ($action === '' ? '' : Html::hiddenInput('action', $action));
+};
+$button = static function ($action, $label) use ($formStart) {
+    return $formStart($action) . Html::submitButton($label, ['class' => 'sg-button']) . Html::endForm();
+};
+$rich = static function ($text) {
+    return class_exists(\humhub\modules\content\widgets\richtext\RichText::class)
+        ? \humhub\modules\content\widgets\richtext\RichText::output((string) $text) : nl2br(Html::encode((string) $text));
+};
+?>
+<div class="sg">
+<header class="sg-hero"><span class="sg-eyebrow">Vorhaben #<?= (int) $item->id ?> · <?= Html::encode(WorkItem::STATUSES[$item->status]) ?><?= $item->archived_at ? ' · Archiviert' : '' ?></span>
+<h1><?= Html::encode($item->title) ?></h1>
+<?= Html::a('Zum Board', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-button']) ?></header>
+<?php if ($error): ?><p class="alert alert-danger" role="alert"><?= Html::encode($error) ?></p><?php endif ?>
+<section class="sg-card"><h2><?= $item->kind === 'idea' ? 'Idee' : 'Aufgabe' ?></h2>
+<div class="sg-text"><?= $rich($item->description) ?></div>
+<?php if ($item->topics): ?><p class="sg-tags"><?php foreach ($item->topics as $topic): ?><span><?= Html::encode($topic->name) ?></span><?php endforeach ?></p><?php endif ?>
+<p>Eingereicht von <?= Html::encode($item->author?->displayName ?? 'Gelöschtes Konto') ?>.
+<?= Html::encode($item->assignee ? 'Verantwortlich: ' . $item->assignee->displayName : 'Noch nicht übernommen.') ?></p>
+<?php if ($contributors): ?><p><strong>Mitwirkende:</strong> <?= implode(', ', array_map(static fn($user) => Html::encode($user->displayName), $contributors)) ?></p><?php endif ?>
+<?php if ($item->status === 'review'): $reviewers = WorkAccess::reviewers($space); ?>
+<p>Ergebnis liegt zur Abnahme vor. Beide Rollen bestätigen unabhängig voneinander.</p>
+<ul><?php foreach (['leader' => 'Kreisleitung', 'delegate' => 'Delegierte*r'] as $key => $label): ?>
+<li><?= Html::encode($label) ?>: <?= !isset($reviewers[$key]) ? 'Rolle nicht aktiv besetzt' : ((int) $item->{$key . '_approval_id'} === $reviewers[$key] ? 'Bestätigt' : 'Bestätigung offen') ?></li>
+<?php endforeach ?></ul>
+<?php endif ?>
+<div class="sg-actions">
+<?php if (!$item->archived_at && $member && !$item->assignee_id && in_array($item->status, ['open', 'working'], true)): ?><?= $button('claim', 'Mir zuweisen') ?><?php endif ?>
+<?php if (!$item->archived_at && $member && (int) $item->assignee_id === $actor && $item->status === 'open'): ?><?= $button('start', 'In Bearbeitung verschieben') ?><?php endif ?>
+<?php if (!$item->archived_at && $reviewer && $item->status === 'review'): ?><?= $button('approve', 'Abnahme bestätigen') ?><?php endif ?>
+<?php if ($member && !$item->archived_at && $item->kind === 'task' && in_array($item->status, ['done', 'rejected'], true)): ?><?= $button('archive', 'Archivieren') ?><?php endif ?>
+</div></section>
+<?php
+$actions = [];
+if ($reviewer && $item->status === 'idea') { $actions['accept'] = 'Im Mandat: als Aufgabe annehmen'; }
+if ($member && (int) $item->assignee_id === $actor && $item->status === 'working') { $actions['submit'] = 'Fertig: zur Abnahme vorlegen'; }
+if ($reviewer && $item->status === 'review') { $actions['return'] = 'Zur Nacharbeit zurückgeben'; }
+if ($member && $item->kind === 'task' && in_array($item->status, ['open', 'working'], true)) { $actions['reject'] = 'Aufgabe begründet ablehnen'; }
+if ($reviewer && $item->status === 'idea' && !\humhub\modules\sociocraticGovernance\models\Circle::findOne($space->id)->parent_space_id) { $actions['reject'] = 'Außerhalb des Gesamtmandats abschließen'; }
+?>
+<?php if ($actions): ?><section class="sg-card"><h2>Nächster Schritt</h2>
+<?= $formStart('') ?><?= Html::label('Aktion', 'work-action') ?><?= Html::dropDownList('action', $submitted['action'] ?? null, $actions, ['id' => 'work-action']) ?>
+<?= Html::label('Mandatsbezug, Ergebnis oder Begründung', 'work-note') ?><?= Html::textarea('note', $draftInput($submitted['action'] ?? '', 'note'), ['id' => 'work-note', 'rows' => 4, 'required' => true, 'maxlength' => 20000]) ?>
+<?= Html::submitButton('Schritt dokumentieren', ['class' => 'sg-button']) ?><?= Html::endForm() ?></section><?php endif ?>
+<?php if ($member && in_array($item->status, ['idea', 'open', 'working'], true)):
+$targets = WorkAccess::neighbours($space);
+if ($item->kind === 'idea') {
+    $parentId = (int) \humhub\modules\sociocraticGovernance\models\Circle::findOne($space->id)->parent_space_id;
+    $targets = $reviewer && isset($targets[$parentId]) ? [$parentId => $targets[$parentId]] : [];
+}
+?>
+<?php if ($targets): ?><section class="sg-card"><h2><?= $item->kind === 'idea' ? 'Außerhalb des Mandats: an Oberkreis weiterleiten' : 'Aufgabe delegieren' ?></h2>
+<?= $formStart('delegate') ?><?= Html::label('Direkt benachbarter Kreis', 'work-target') ?><?= Html::dropDownList('target_space_id', null, $targets, ['id' => 'work-target']) ?>
+<?= Html::label('Mandatsbegründung und Übergabe', 'work-handover') ?><?= Html::textarea('note', $draftInput('delegate', 'note'), ['id' => 'work-handover', 'required' => true, 'maxlength' => 20000, 'rows' => 3]) ?>
+<p>Die Aufgabe wird im Zielkreis offen und ohne Zuweisung eingestellt. Bisherige Inhalte bleiben geschützt: Lesen erfordert Zugang zu allen bisher beteiligten Kreisen.</p>
+<?= Html::submitButton('Mit Verlauf weitergeben', ['class' => 'sg-button']) ?><?= Html::endForm() ?></section><?php endif ?>
+<?php endif ?>
+<?php if (in_array($item->status, ['idea', 'open', 'working'], true) && ($member || ($item->kind === 'idea' && (int) $item->author_id === $actor))): ?>
+<details class="sg-card"><summary>Titel und Beschreibung bearbeiten</summary>
+<?= $formStart('edit') ?><?= Html::label('Titel', 'work-edit-title') ?><?= Html::textInput('title', $draftInput('edit', 'title', $item->title), ['id' => 'work-edit-title', 'required' => true, 'maxlength' => 255]) ?>
+<?= Html::label('Beschreibung', 'work-edit-description') ?><?= Html::textarea('description', $draftInput('edit', 'description', $item->description), ['id' => 'work-edit-description', 'required' => true, 'maxlength' => 20000, 'rows' => 5]) ?>
+<?= Html::label('Themen', 'work-edit-topics') ?><?= Html::textInput('topics', $draftInput('edit', 'topics', implode(', ', array_map(static fn($topic) => $topic->name, $item->topics))), ['id' => 'work-edit-topics', 'maxlength' => 1000]) ?>
+<?= Html::submitButton('Änderung speichern', ['class' => 'sg-button']) ?><?= Html::endForm() ?></details>
+<?php endif ?>
+<?php if ($item->kind === 'task'): ?>
+<section class="sg-card"><h2>Ressourcen für dieses Vorhaben</h2>
+<p>Der Arbeitskreis schätzt den Bedarf. Persönliche Zusagen zählen nur im Gesamtstand; sichtbar sind ausschließlich die Mitwirkenden am Vorhaben.</p>
+<?php foreach ($item->resources as $resource): ?>
+<article class="sg-resource"><h3><?= Html::encode($resource->label) ?> <span class="sg-muted">· <?= Html::encode(\humhub\modules\sociocraticGovernance\models\WorkResource::TYPES[$resource->resource_type]) ?></span></h3>
+<?php if ($resource->resource_type === 'time' && $resource->time_mode): ?><p class="sg-muted"><strong><?= Html::encode(\humhub\modules\sociocraticGovernance\models\WorkResource::TIME_MODES[$resource->time_mode]) ?>:</strong> <?= Html::encode($resource->time_pattern) ?></p><?php endif ?>
+<?php if ($resource->required_amount !== null): ?><p><strong><?= Html::encode((string) $resource->totalCommittedAmount) ?></strong> von <?= Html::encode((string) $resource->required_amount) ?> <?= Html::encode($resource->unit) ?> zugesagt</p>
+<div class="sg-progress" role="progressbar" aria-label="Ressourcenstand" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<?= Html::encode((string) $resource->progress) ?>"><span style="width:<?= Html::encode((string) $resource->progress) ?>%"></span></div><?php endif ?>
+<?php if ($resource->details): ?><div class="sg-text"><?= $rich($resource->details) ?></div><?php endif ?>
+<?php if (!$item->archived_at && $member && $item->status !== 'rejected'): ?>
+<details><summary>Ressourcenbedarf bearbeiten</summary>
+<?= $formStart('resource') ?><?= Html::hiddenInput('resource_id', $resource->id) ?>
+<?= Html::label('Art', 'resource-type-' . $resource->id) ?><?= Html::dropDownList('resource_type', $resource->resource_type, \humhub\modules\sociocraticGovernance\models\WorkResource::TYPES, ['id' => 'resource-type-' . $resource->id]) ?>
+<?= Html::label('Was wird gebraucht?', 'resource-label-' . $resource->id) ?><?= Html::textInput('label', $resource->label, ['id' => 'resource-label-' . $resource->id, 'required' => true, 'maxlength' => 255]) ?>
+<?= Html::label('Geschätzte Menge', 'resource-required-' . $resource->id) ?><?= Html::textInput('required_amount', $resource->required_amount, ['id' => 'resource-required-' . $resource->id, 'inputmode' => 'decimal']) ?>
+<?= Html::label('Einheit', 'resource-unit-' . $resource->id) ?><?= Html::textInput('unit', $resource->unit, ['id' => 'resource-unit-' . $resource->id, 'maxlength' => 32]) ?>
+<?= Html::label('Nur bei Arbeitszeit: Form', 'resource-time-mode-' . $resource->id) ?><?= Html::dropDownList('time_mode', $resource->time_mode ?: 'async', \humhub\modules\sociocraticGovernance\models\WorkResource::TIME_MODES, ['id' => 'resource-time-mode-' . $resource->id]) ?>
+<?= Html::label('Nur bei Arbeitszeit: zeitlicher Rahmen', 'resource-time-pattern-' . $resource->id) ?><?= Html::textInput('time_pattern', $resource->time_pattern, ['id' => 'resource-time-pattern-' . $resource->id, 'maxlength' => 255, 'placeholder' => 'z. B. Lesen und Kommentieren oder alle 2 Wochen donnerstags, 3 Stunden']) ?>
+<?= Html::label('Bereits vorhandene, nicht personenbezogene Menge', 'resource-available-' . $resource->id) ?><?= Html::textInput('available_amount', $resource->committed_amount, ['id' => 'resource-available-' . $resource->id, 'inputmode' => 'decimal']) ?>
+<?= Html::label('Hinweise', 'resource-details-' . $resource->id) ?><?= Html::textarea('details', $resource->details, ['id' => 'resource-details-' . $resource->id, 'rows' => 3, 'maxlength' => 20000]) ?>
+<?= Html::submitButton('Bedarf speichern', ['class' => 'sg-button']) ?><?= Html::endForm() ?></details><?php endif ?>
+<?php if ($canContribute): $ownContribution = null; foreach ($resource->contributions as $contribution) { if ((int) $contribution->user_id === $actor) { $ownContribution = $contribution; break; } } ?>
+<details><summary><?= $ownContribution && (float) $ownContribution->amount > 0 ? 'Meine Zusage ändern' : 'Ich möchte beitragen' ?></summary>
+<?= $formStart('contribute') ?><?= Html::hiddenInput('resource_id', $resource->id) ?>
+<?= Html::label('Ich gebe', 'contribution-amount-' . $resource->id) ?><?= Html::textInput('amount', $ownContribution?->amount ?? '', ['id' => 'contribution-amount-' . $resource->id, 'inputmode' => 'decimal', 'required' => true]) ?> <?= Html::encode($resource->unit) ?>
+<p class="sg-muted">Die Art und Menge deines Beitrags werden nicht angezeigt. Mit 0 nimmst du deine Zusage zurück.</p>
+<?= Html::submitButton('Meine Zusage speichern', ['class' => 'sg-button']) ?><?= Html::endForm() ?></details><?php endif ?>
+</article><?php endforeach ?>
+<?php if (!$item->resources): ?><p class="sg-muted">Bisher ist kein Ressourcenbedarf eingetragen.</p><?php endif ?>
+<?php if (!$item->archived_at && $member && $item->status !== 'rejected'): ?><details><summary>Ressource hinzufügen</summary>
+<?= $formStart('resource') ?>
+<?= Html::label('Art', 'resource-type') ?><?= Html::dropDownList('resource_type', 'time', \humhub\modules\sociocraticGovernance\models\WorkResource::TYPES, ['id' => 'resource-type']) ?>
+<?= Html::label('Was wird gebraucht?', 'resource-label') ?><?= Html::textInput('label', '', ['id' => 'resource-label', 'required' => true, 'maxlength' => 255, 'placeholder' => 'z. B. Moderation für den Workshop']) ?>
+<?= Html::label('Geschätzte Menge', 'resource-required') ?><?= Html::textInput('required_amount', '', ['id' => 'resource-required', 'inputmode' => 'decimal', 'placeholder' => 'z. B. 12']) ?>
+<?= Html::label('Einheit', 'resource-unit') ?><?= Html::textInput('unit', '', ['id' => 'resource-unit', 'maxlength' => 32, 'placeholder' => 'z. B. Stunden oder EUR']) ?>
+<?= Html::label('Nur bei Arbeitszeit: Form', 'resource-time-mode') ?><?= Html::dropDownList('time_mode', 'async', \humhub\modules\sociocraticGovernance\models\WorkResource::TIME_MODES, ['id' => 'resource-time-mode']) ?>
+<?= Html::label('Nur bei Arbeitszeit: zeitlicher Rahmen', 'resource-time-pattern') ?><?= Html::textInput('time_pattern', '', ['id' => 'resource-time-pattern', 'maxlength' => 255, 'placeholder' => 'z. B. Lesen und Kommentieren oder alle 2 Wochen donnerstags, 3 Stunden']) ?>
+<?= Html::label('Bereits vorhandene, nicht personenbezogene Menge', 'resource-available-new') ?><?= Html::textInput('available_amount', '0', ['id' => 'resource-available-new', 'inputmode' => 'decimal']) ?>
+<?= Html::label('Hinweise', 'resource-details') ?><?= Html::textarea('details', '', ['id' => 'resource-details', 'rows' => 3, 'maxlength' => 20000]) ?>
+<?= Html::submitButton('Bedarf erfassen', ['class' => 'sg-button']) ?><?= Html::endForm() ?></details><?php endif ?>
+</section><?php endif ?>
+<?php if (!$item->archived_at && ($item->kind === 'idea' || $member || (int) $item->author_id === $actor)): ?>
+<section class="sg-card"><h2>Kommentieren</h2><?= $formStart('comment') ?>
+<?= Html::label('Kommentar', 'work-comment') ?><?= Html::textarea('note', $draftInput('comment', 'note'), ['id' => 'work-comment', 'rows' => 3, 'required' => true, 'maxlength' => 20000]) ?>
+<?= Html::submitButton('Kommentar veröffentlichen', ['class' => 'sg-button']) ?><?= Html::endForm() ?></section>
+<?php endif ?>
+<section class="sg-card"><h2>Verlauf</h2><ol class="sg-work-history">
+<?php foreach ($item->events as $event): ?>
+<li><p><strong><?= Html::encode(WorkEvent::LABELS[$event->action] ?? $event->action) ?></strong> · <?= Html::encode(gmdate('d.m.Y H:i', $event->created_at)) ?> UTC · <?= Html::encode($event->actor?->displayName ?? 'Gelöschtes Konto') ?> · <?= Html::encode($event->space->name) ?></p>
+<?php if ($event->note): ?><div class="sg-text"><?= $rich($event->note) ?></div><?php endif ?>
+<?php $before = Json::decode($event->before_json); $after = Json::decode($event->after_json); ?>
+<details><summary>Änderungen ansehen</summary><dl>
+<?php foreach ($after as $field => $value): if (in_array($field, ['revision', 'updated_at', 'created_at', 'id'], true) || ($before[$field] ?? null) === $value) { continue; } ?>
+<dt><?= Html::encode(['space_id' => 'Zuständiger Kreis (ID)', 'author_id' => 'Urheberschaft (ID)', 'assignee_id' => 'Verantwortlich (ID)', 'title' => 'Titel', 'description' => 'Beschreibung', 'kind' => 'Art', 'status' => 'Status', 'leader_approval_id' => 'Abnahme Kreisleitung (ID)', 'delegate_approval_id' => 'Abnahme Delegierte*r (ID)'][$field] ?? $field) ?></dt>
+<dd><span class="sg-work-before"><?= Html::encode((string) ($before[$field] ?? '–')) ?></span> → <?= Html::encode((string) ($value ?? '–')) ?></dd>
+<?php endforeach ?></dl></details></li>
+<?php endforeach ?></ol></section>
+</div>

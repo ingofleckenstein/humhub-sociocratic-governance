@@ -41,3 +41,35 @@ Die Links verweisen auf HumHub-Routen und funktionieren in der statischen Vorsch
 
 Backend-Autorisierung und HTTP-/CSRF-Verhalten auf HumHub mit Testkonten prüfen;
 siehe [Abnahmeliste](../docs/INSTALLATION.md).
+
+## VCard-Templates und optionale Ereignisse
+
+    TEST_VENDOR=/pfad/zum/humhub/protected/vendor YII_FRAMEWORK=/pfad/zu/yii2/framework HUMHUB_SOURCE=/pfad/zu/humhub VCARD_SOURCE=/pfad/zu/popover-vcard php tests/vcard.php
+
+Prüft echte Twig-Sandbox, Escaping, HTMLPurifier, einfache Platzhalter, bedingte
+Vorlagen und fehlerhafte Templates. Mit HUMHUB_SOURCE und VCARD_SOURCE werden
+auch die echten Widget-Erstellungsereignisse geprüft. Keine Datenbank erforderlich.
+Für die Kompatibilitätsprüfung kann ebenfalls VCARD_SOURCE gesetzt werden;
+ohne VCard werden dessen optionale Ereignisse übersprungen.
+
+Die Komponentenprüfungen erfassen alle Mitglieder einschließlich Doppelrollen,
+deaktivierte Personen, archivierte Kreise und wiederholbare Pflichtmoduleinrichtung
+mit fehlenden/veralteten Modulen sowie Aktivierungsfehlern. Dabei bleiben HumHub-
+Modulmanager Test-Doubles; die tatsächliche Aktivierung braucht die Testinstanz.
+Der Renderer prüft, dass Mitgliedslinks nach HTML-Parsing innerhalb der Bubble
+bleiben und keine Links ineinander verschachtelt sind.
+
+## Vorhaben-Board
+
+    YII_FRAMEWORK=/pfad/zu/yii2/framework php tests/work.php
+
+Prüfungen für Ideen, Aufgaben, Kommentare, Themen, Ressourcen, persönliche Zusagen,
+Archivierung, Selbstzuweisung, Abnahme,
+Rollenwechsel, direkte Delegation, private Historien, veraltete Requests und
+atomaren Rollback bei fehlschlagendem Historieneintrag. Die neue Migration wird
+im gemeinsamen Harness ebenfalls ausgeführt. `tests/render.php` rendert jetzt
+acht Ansichten, einschließlich Board, Idee und Abnahme, und prüft sichere
+HTML-Ausgabe sowie POST/CSRF/Revision der neuen Formulare.
+
+Diese isolierten Tests ersetzen keine HumHub-HTTP- und MySQL-Abnahme. Die echten
+parallel laufenden MySQL-Verbindungen und das Theme sind weiterhin separat zu prüfen.

@@ -31,6 +31,10 @@ use yii\helpers\Html;
 <?php else: ?><?= Html::activeTextarea($form, 'mandate', ['rows' => 5, 'maxlength' => 20000]) ?><?php endif ?>
 <?= Html::activeLabel($form, 'parent_space_id') ?>
 <?= Html::activeDropDownList($form, 'parent_space_id', $parents, ['prompt' => 'Kein Oberkreis']) ?>
+<h2 style="margin-top:24px">Wiedererkennbarkeit</h2>
+<p class="sg-muted">Die Farbe markiert diesen Arbeitskreis in seiner Ansicht, auf der Kreislandkarte und auf zugehörigen Vorhaben. Die Palette bleibt bewusst ruhig und gut lesbar.</p>
+<?= Html::activeLabel($form, 'color') ?>
+<?= Html::activeDropDownList($form, 'color', \humhub\modules\sociocraticGovernance\models\Circle::COLORS) ?>
 <h2 style="margin-top:24px">Rollen zuordnen</h2>
 <p>Kreisleitung und Delegierte*r sind immer verschiedene Personen. Nur vorhandene aktive Kreismitglieder können zugeordnet werden. Die Kreisleitung wird Space-Besitzer*in; diese Änderung darf nur durch Besitzer*innen oder Administrator*innen erfolgen. Beim Rollenwechsel entsteht noch keine automatische Mitgliedschaft im Oberkreis.</p>
 <div class="sg-grid">

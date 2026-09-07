@@ -2,8 +2,27 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.2.1 – erweiterte Kreisorientierung, bereit für den Installationstest.**
-Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
+**Status: Version 0.4.0 – Mitwirkungs-Dashboard, Themen, persönliche Ressourcenzusagen und Archivierung, bereit für den Installationstest.**
+Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie, aufklappbaren Kreisdetails, Mitgliedern und sichtbarer Doppelbindung. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
+
+Im unveröffentlichten Arbeitsstand ergänzt: vollständiger Mitgliederring in der
+Kreisgrafik, VCard-Platzhalter für Popover VCard 1.2.x ab 1.2.1 und Einrichtung
+der verfügbaren Pflichtmodule. Konfiguration und Grenzen stehen in
+[Installation](docs/INSTALLATION.md). Die Live-Abnahme bleibt offen.
+
+Das Mitwirkungs-Dashboard „Wie kann ich mich einbringen?“ bündelt alle jeweils
+sichtbaren Ideen und Aufgaben. Es lässt sich nach Themen oder nach benötigten
+Ressourcen orientieren. Arbeitskreise pflegen Themen direkt am Vorhaben und schätzen
+bei Aufgaben den Bedarf. Angemeldete Personen können persönlich zusagen; sichtbar
+sind nur die Mitwirkenden und der aggregierte Stand, nicht Art oder Höhe einzelner
+Zusagen. Zeitressourcen unterscheiden asynchron leistbare Stunden von
+termingebundener Zeit. Umgesetzte oder abgelehnte Aufgaben lassen sich manuell und
+optional nach einer Backend-Frist archivieren; sie werden nicht gelöscht.
+
+Jeder Arbeitskreis hat außerdem eine aus sechs ruhigen, veränderbaren Akzentfarben
+gewählte Kennung. Sie erscheint als schmale Kante und helle Hintergrundtönung in
+der Kreisansicht, auf der Karte und auf zugehörigen Vorhaben – als Orientierung,
+nicht als Vollflächen-Farbcode.
 
 - [Installation und Abnahme](docs/INSTALLATION.md)
 - [Manuelles Deployment](docs/DEPLOYMENT.md)
@@ -235,6 +254,19 @@ Das Vorhabensystem wird selbst entwickelt. Bestehende Aufgabenmodule werden nich
 Der gewählte Nutzername lautet **„Vorhaben“**. Ein Vorhaben führt von der Idee über Mandatsprüfung, Aufgabe und Konsent zur Umsetzung und zum Review. „Aufgabe“ bleibt die Bezeichnung des konkreten Arbeitsauftrags innerhalb dieses Verlaufs. Das Vorhabensystem ist ein zentraler Bestandteil neben Kreisstruktur und Entscheidungsverfahren.
 
 Technische Richtung: eine eigene Domäne innerhalb der Governance-Erweiterung auf Basis von HumHub/Yii2. Ein vorhandenes Aufgabenmodul wird nicht zur vorausgesetzten Grundlage, da Vorhaben kreisübergreifende Zuständigkeiten, Konsent und eine durchgehende Historie benötigen. Die genaue HumHub-Anbindung wird bei der Implementierung geprüft. Fremder Modul- oder Anwendungscode wird nicht übernommen; bestehende Lösungen können als konzeptionelle Inspiration dienen. Die vorgesehenen HumHub-/Yii2-Schnittstellen bleiben die technische Plattform.
+
+### Erster Vorhaben-Board-Ablauf (unveröffentlicht)
+
+Ein erstes Kanban-Board ist lokal implementiert: Ideen einreichen und kommentieren,
+Annahme durch Kreisleitung oder Delegierte*n, „Mir zuweisen“, Bearbeitung,
+Ergebnisvorlage und Abnahme. Derzeit bestätigen beide Rollen die Abnahme; ein
+Konsentbeschluss ist damit nicht verbunden. Aufgaben können Mitglieder an den
+direkten Oberkreis oder direkte Unterkreise delegieren. Der vollständige Verlauf
+bleibt erhalten; bei Kreiswechsel setzt Lesen Zugang zu allen beteiligten Kreisen
+voraus. Die HTTP-/MySQL-Abnahme steht aus.
+
+[Arbeitsstand und offene M2-Pakete](docs/VORHABEN-PLAN.md). Konsentrunden,
+Sitzungszuordnung und Beschlussregister sind noch nicht implementiert.
 
 ### Ideen → Mandatsprüfung → Aufgaben (verbindlicher Umfang von M2)
 

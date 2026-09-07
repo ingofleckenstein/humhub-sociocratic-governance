@@ -12,7 +12,7 @@ class AdminController extends \humhub\components\Controller
     public function behaviors()
     {
         return array_merge(parent::behaviors(), ['verbs' => [
-            'class' => \yii\filters\VerbFilter::class, 'actions' => ['remove' => ['POST']],
+            'class' => \yii\filters\VerbFilter::class, 'actions' => ['remove' => ['POST'], 'required-modules' => ['POST']],
         ]]);
     }
     public function beforeAction($action)
@@ -77,6 +77,23 @@ class AdminController extends \humhub\components\Controller
         return $this->render('index', ['config' => $config, 'permanent' => $permanent, 'spaces' => $spaces,
             'users' => $users, 'declarations' => PermanentMembership::find()->with(['space', 'user'])->all()]);
     }
+    public function actionRequiredModules()
+    {
+        if (!Yii::$app->user->isAdmin()) {
+            throw new \yii\web\ForbiddenHttpException('Nur Systemadministrator*innen dürfen Module einrichten.');
+        }
+        $messages = [];
+        foreach (Circle::find()->with('space')->all() as $circle) {
+            if (!Access::enabled($circle->space) || $circle->space->isArchived()) { continue; }
+            foreach (\humhub\modules\sociocraticGovernance\services\RequiredModules::enable($circle->space) as $message) {
+                $messages[] = $circle->space->name . ': ' . $message;
+            }
+        }
+        Yii::$app->session->setFlash($messages ? 'warning' : 'success',
+            $messages ? \yii\helpers\Html::encode(implode(' ', $messages)) : 'Pflichtmodule sind in allen bestehenden Arbeitskreisen aktiviert.');
+        return $this->redirect(['index']);
+    }
+
     public function actionRemove($id)
     {
         $item = PermanentMembership::findOne((int) $id);

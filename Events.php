@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 namespace humhub\modules\sociocraticGovernance;
 use humhub\modules\sociocraticGovernance\services\Access;
+use humhub\modules\sociocraticGovernance\services\WorkArchiver;
 use humhub\modules\sociocraticGovernance\widgets\{CircleBadge, ProfileRoles, VCardGovernance};
 use humhub\modules\ui\menu\MenuLink;
 use humhub\helpers\ControllerHelper;
@@ -17,6 +18,10 @@ class Events
             'label' => 'Arbeitskreis', 'icon' => 'users', 'sortOrder' => 210,
             'url' => $space->createUrl('/sociocratic-governance/circle/index'),
             'isActive' => \Yii::$app->controller && \Yii::$app->controller->module->id === 'sociocratic-governance',
+        ]));
+        $event->sender->addEntry(new MenuLink([
+            'label' => 'Vorhaben', 'icon' => 'columns', 'sortOrder' => 211,
+            'url' => $space->createUrl('/sociocratic-governance/work/index'),
         ]));
     }
     public static function spaceSidebar($event)
@@ -39,6 +44,11 @@ class Events
             'url' => ['/sociocratic-governance/directory/index'], 'sortOrder' => 245,
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'directory'),
         ]));
+        $event->sender->addEntry(new MenuLink([
+            'id' => 'sociocratic-governance-dashboard', 'label' => 'Mitwirken', 'icon' => 'hand-paper-o',
+            'url' => ['/sociocratic-governance/dashboard/index'], 'sortOrder' => 246,
+            'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'dashboard'),
+        ]));
     }
     public static function filterSpaceDirectory($event)
     {
@@ -49,6 +59,19 @@ class Events
         ]);
         $event->query->andWhere(['not in', 'space.contentcontainer_id', $enabledCircles]);
     }
+    public static function archiveDueWork($event)
+    {
+        (new WorkArchiver())->archiveDue();
+    }
+    public static function vCardCreate($event)
+    {
+        $module = \Yii::$app->getModule('popover-vcard');
+        if (!$module || version_compare($module->getVersion(), '1.2.1', '<')
+            || version_compare($module->getVersion(), '1.3.0', '>=')) { return; }
+        if (!in_array($event->config['class'] ?? '', [\humhub\modules\popovervcard\widgets\VCardUser::class, \humhub\modules\popovervcard\widgets\VCardSpace::class], true)) { return; }
+        $event->config['class'] = \humhub\modules\sociocraticGovernance\widgets\GovernanceVCard::class;
+    }
+
     public static function vCardAddons($event)
     {
         $vCardModule = \Yii::$app->getModule('popover-vcard');

@@ -33,6 +33,19 @@ $child = new CircleForm(['parent_space_id' => 1]);
 check($service->save(Space::findOne(2), $child), 'Child circle can reference parent');
 $directory = (new CircleDirectory())->data();
 check(count($directory['rows']) === 2 && $directory['rows'][0]['depth'] === 0 && $directory['rows'][1]['depth'] === 1, 'Directory returns visible circles as an indented hierarchy');
+$people = CircleDirectory::people(Circle::findOne(1));
+check(count($people) === 2 && $people[0]['label'] === 'Kreisleitung', 'Map includes the active circle roles');
+Space::$members[1][] = 3;
+$extraRole = new Role(['space_id' => 1, 'user_id' => 2, 'role_key' => 'facilitator']);
+$extraRole->save(false);
+$people = CircleDirectory::people(Circle::findOne(1));
+check(count($people) === 3 && $people[2]['label'] === 'Kreismitglied', 'Map includes members without roles');
+check(str_contains($people[1]['label'], 'Moderation') && str_contains($people[1]['label'], 'Delegierte'), 'Multiple roles share one member image');
+Yii::$app->db->createCommand()->update('{{%user}}', ['status' => 0], ['id' => 3])->execute();
+check(count(CircleDirectory::people(Circle::findOne(1))) === 2, 'Inactive members are excluded');
+Yii::$app->db->createCommand()->update('{{%user}}', ['status' => 1], ['id' => 3])->execute();
+Space::$members[1] = [1, 2];
+$extraRole->delete();
 $cycle = CircleForm::forCircle(Circle::findOne(1));
 $cycle->parent_space_id = 2;
 check(!$service->save($space, $cycle), 'Indirect circle cycle rejected');
@@ -50,6 +63,7 @@ check(!Access::read($space), 'Guest cannot read even visible circle');
 Yii::$app->user->isGuest = false; Yii::$app->user->id = 1;
 Space::$archived = [1];
 check(!Access::write($space), 'Archived space cannot be edited');
+check(!Access::read($space) && CircleDirectory::people(Circle::findOne(1)) === [], 'Archived circle and members are hidden');
 Space::$archived = []; Space::$disabled = [1];
 check(!Access::read($space), 'Disabled module hides circle data');
 Space::$disabled = []; Space::$blocked = [1];
@@ -60,6 +74,17 @@ $vCardRoles = VCardData::roles(\humhub\modules\user\models\User::findOne(1));
 check($vCardRoles === 'Kern:Kreisleitung', 'VCard role value is ordered from the configured core circle');
 check(VCardData::purpose($space) === 'Neuer Stand', 'VCard purpose value respects circle visibility');
 check(VCardData::mandate($space) === 'Gesamtmandat', 'VCard mandate value uses the short mandate');
+$cardClass = \humhub\modules\sociocraticGovernance\widgets\VCardGovernance::class;
+$cardClass::$renderedDescription = 'Kern:Kreisleitung';
+check((new $cardClass(['container' => \humhub\modules\user\models\User::findOne(1)]))->run() === '', 'User role data already rendered by template is not duplicated');
+$cardClass::$renderedDescription = 'Neuer Stand';
+$card = (new $cardClass(['container' => $space]))->run();
+check(!str_contains($card, '<strong>Zweck') && str_contains($card, '<strong>Mandat'), 'Only the already-rendered space field is suppressed');
+$cardClass::$renderedDescription = 'Neuer Stand Gesamtmandat';
+check((new $cardClass(['container' => $space]))->run() === '', 'Fully rendered space data adds no duplicate addon or separator');
+$cardClass::$renderedDescription = null;
+check(str_contains((new $cardClass(['container' => $space]))->run(), '<strong>Zweck'), 'Cards without template fields retain the addon fallback');
+
 $root = CircleForm::forCircle(Circle::findOne(1)); $root->parent_space_id = 2;
 check(!$service->save($space, $root), 'Root cannot acquire parent');
 $user = \humhub\modules\user\models\User::findOne(1);
@@ -78,4 +103,25 @@ check($service->save($space, $transfer), 'Space owner can assign a new circle le
 check(Space::$owners[1] === 2, 'Circle leader becomes space owner');
 Yii::$app->db->createCommand()->delete('{{%user}}', ['id' => 2])->execute();
 check(!Role::find()->where(['user_id' => 2])->exists(), 'User deletion cascades role references');
+class RequiredModuleDouble extends \yii\base\Module {
+    public $version = '3.0.0';
+    public $enabled = true;
+    public function getVersion() { return $this->version; }
+    public function getIsEnabled() { return $this->enabled; }
+}
+$required = \humhub\modules\sociocraticGovernance\services\RequiredModules::class;
+check(count($required::enable($space)) === 3, 'Missing required modules are reported');
+foreach ($required::MODULES as $id => [$label, $version]) {
+    Yii::$app->setModule($id, new RequiredModuleDouble($id, Yii::$app, ['version' => $version]));
+}
+Space::$activationFailures = ['wiki'];
+check(count($required::enable($space)) === 1, 'Failed module activation is reported');
+Space::$activationFailures = [];
+check($required::enable($space) === [] && count(Space::$requiredEnabled[1]) === 3, 'Available required modules can be activated after a failure');
+check($required::enable($space) === [] && count(Space::$requiredEnabled[1]) === 3, 'Repeated setup does not reactivate modules');
+Yii::$app->getModule('wiki')->version = '1.0.0';
+check(count($required::enable($space)) === 1, 'Outdated required module is reported even when enabled');
+Yii::$app->getModule('wiki')->version = '2.5.12';
+Yii::$app->getModule('wiki')->enabled = false;
+check(count($required::enable($space)) === 1, 'Globally disabled required module is reported');
 echo "$count checks passed.\n";

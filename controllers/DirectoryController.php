@@ -12,9 +12,9 @@ class DirectoryController extends \humhub\components\Controller
         if (Yii::$app->user->isGuest) { throw new \yii\web\ForbiddenHttpException('Bitte anmelden.'); }
         return true;
     }
-    public function actionIndex()
+    public function actionIndex($view = 'table')
     {
         $directory = (new CircleDirectory())->data();
-        return $this->render('index', $directory + ['circles' => Access::visibleCircles()]);
+        return $this->render('index', $directory + ['circles' => Access::visibleCircles(), 'activeView' => $view === 'map' ? 'map' : 'table']);
     }
 }

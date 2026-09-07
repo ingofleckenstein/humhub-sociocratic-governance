@@ -11,6 +11,8 @@ use yii\helpers\Html;
 class VCardGovernance extends \humhub\components\Widget
 {
     public $container;
+    /** Scoped by GovernanceVCard while the original view renders its addon stack. */
+    public static ?string $renderedDescription = null;
 
     public function run()
     {
@@ -26,13 +28,22 @@ class VCardGovernance extends \humhub\components\Widget
             }
             $content = ($purpose === '' ? '' : $this->block('Zweck', $purpose)) .
                 ($mandate === '' ? '' : $this->block('Mandat', $mandate));
-            return Html::tag('div', $content, ['class' => 'sg-vcard-details']);
+            return $content === '' ? '' : Html::tag('div', $content, ['class' => 'sg-vcard-details']);
         }
         return '';
     }
 
+    public static function alreadyRendered(string $value): bool
+    {
+        if (self::$renderedDescription === null || trim($value) === '') { return false; }
+        $plain = html_entity_decode(strip_tags(self::$renderedDescription), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $normalize = static fn($text) => preg_replace('/\s+/u', ' ', trim($text));
+        return str_contains($normalize($plain), $normalize($value));
+    }
+
     private function block(string $label, string $value): string
     {
+        if (self::alreadyRendered($value)) { return ''; }
         return Html::tag('div', Html::tag('strong', Html::encode($label)) . '<br>' . Html::encode($value), ['class' => 'sg-vcard-detail']);
     }
 }

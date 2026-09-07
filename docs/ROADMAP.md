@@ -17,7 +17,15 @@ Version 0.2.0 erweitert den Kern von Ausbaustufe 1 um strukturierte Mandate und 
 
 Keine automatischen Wahlen, Mitgliedschaftsübernahmen oder Krisenaktionen in M1.
 
+Umsetzungsvorschlag und offene Entscheidungen: [Vorhaben-Plan](VORHABEN-PLAN.md).
+
 ## M2 — Vorhaben: Ideen, Mandatsprüfung, Aufgaben, Konsent und Beschlüsse
+
+Erstes lokales Teilpaket implementiert: Kanban-Board mit Ideen, Kommentaren,
+rollenbasierter Annahme, Selbstzuweisung, direkter Nachbarkreis-Delegation,
+Arbeitsabnahme und transaktionaler Historie. Die MySQL-/HTTP-Abnahme steht aus.
+Die folgenden vollständigen M2-Kriterien bleiben bis zum jeweiligen Gesamtnachweis offen.
+
 M2 gehört zur Ausbaustufe 2 (gezielte Werkzeuge), nicht zur KI-Integration. Der gesamte Weg von der Idee bis zum Beschluss ist Bestandteil dieses Meilensteins.
 
 - [ ] Zentrales Vorhabensystem als eigene Domäne: Idee → Aufgabe → Konsent → Umsetzung → Review. Beschluss und Umsetzung bleiben getrennt.
@@ -49,7 +57,8 @@ Abnahme: Vollständige Wahl vom Rollenprofil bis zum befristeten Mandat;
 Rückzug und gescheiterter Konsent; Protokoll mit Versionsbezug.
 
 ## M4 — Alltag und Pilot
-- [ ] Benachrichtigungen ohne Informationsleck und Review-Erinnerungen.
+- [x] In-App-Benachrichtigungen für neue Ideen sowie direkt beteiligte Personen bei Vorhabenänderungen; Empfängerzugriff wird vor der Zustellung erneut geprüft. Review-Erinnerungen stehen noch aus.
+- [x] Mitwirkungs-Dashboard für alle sichtbaren Ideen und Aufgaben, nach Themen oder Ressourcenbedarf; Arbeitskreise schätzen den Bedarf, Personen geben private Zusagen ab. Zeitressourcen unterscheiden asynchron und termingebunden; umgesetzte oder abgelehnte Aufgaben sind manuell sowie optional fristgesteuert archiviert, nie löschbar. Arbeitskreise tragen eine veränderbare, zurückhaltende Akzentfarbe, die Kreis- und Vorhabenkarten verbindet.
 - [ ] Suche, Filter und berechtigungsgeschützte Exporte.
 - [ ] Deutsche und englische Oberfläche, Tastaturbedienung und barrierearme Formulare.
 - [ ] Installation, Updates, Backup/Restore und dokumentierte Versionsmatrix.

@@ -48,6 +48,7 @@ final class CircleService
             $circle->budget = $form->budget;
             $circle->reelection_interval = $form->reelection_interval;
             $circle->review = $form->review;
+            $circle->color = $form->color;
             $circle->parent_space_id = $parentId;
             $circle->revision = (int) $circle->revision + 1;
             $circle->updated_at = time();

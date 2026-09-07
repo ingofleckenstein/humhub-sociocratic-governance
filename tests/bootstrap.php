@@ -18,17 +18,28 @@ namespace humhub\modules\space\models {
         public static array $blocked = [];
         public static array $archived = [];
         public static array $owners = [];
+        public static array $requiredEnabled = [];
+        public static array $activationFailures = [];
         public static function tableName() { return '{{%space}}'; }
         public function isMember($id = null) { return in_array((int) ($id ?? \Yii::$app->user->id), self::$members[$this->id] ?? [], true); }
         public function isArchived() { return in_array((int) $this->id, self::$archived, true); }
         public function isSpaceOwner($userId = null) { return (int) (self::$owners[$this->id] ?? 0) === (int) ($userId ?? \Yii::$app->user->id); }
         public function isAdmin($userId = null) { return $this->isSpaceOwner($userId); }
         public function setSpaceOwner($userId) { self::$owners[$this->id] = (int) $userId; return true; }
-        public function isBlockedForUser() { return in_array((int) $this->id, self::$blocked, true); }
+        public function isBlockedForUser($user = null) { return in_array((int) $this->id, self::$blocked, true); }
         public function getModuleManager() {
             return new class($this->id) {
                 public function __construct(private $id) {}
-                public function isEnabled($module) { return !in_array((int) $this->id, Space::$disabled, true); }
+                public function isEnabled($module) {
+                    return $module === 'sociocratic-governance' ? !in_array((int) $this->id, Space::$disabled, true)
+                        : in_array($module, Space::$requiredEnabled[$this->id] ?? [], true);
+                }
+                public function canEnable($module) { return !$this->isEnabled($module); }
+                public function enable($module) {
+                    if (in_array($module, Space::$activationFailures, true)) { return false; }
+                    Space::$requiredEnabled[$this->id][] = $module;
+                    return true;
+                }
             };
         }
         public function getMemberListService() {
@@ -37,7 +48,7 @@ namespace humhub\modules\space\models {
                 public function getQuery() { return \humhub\modules\user\models\User::find()->where(['id' => Space::$members[$this->id] ?? [], 'status' => 1]); }
             };
         }
-        public function createUrl($route) { return '/index.php?r=' . urlencode($route) . '&cguid=' . $this->id; }
+        public function createUrl($route, $params = []) { return '/index.php?' . http_build_query(array_merge(['r' => $route, 'cguid' => $this->id], $params)); }
     }
 }
 namespace humhub\modules\user\models {
@@ -72,10 +83,22 @@ namespace {
     $db->createCommand()->createTable('{{%user}}', ['id' => 'pk', 'name' => 'string', 'status' => 'integer'])->execute();
     require dirname(__DIR__) . '/migrations/m260906_120000_initial.php';
     require dirname(__DIR__) . '/migrations/m260906_130000_expand_circle_mandate.php';
+    require dirname(__DIR__) . '/migrations/m260906_180000_work_board.php';
+    require dirname(__DIR__) . '/migrations/m260907_153000_participation_dashboard.php';
+    require dirname(__DIR__) . '/migrations/m260907_210000_personal_resource_contributions.php';
+    require dirname(__DIR__) . '/migrations/m260907_220000_work_archiving.php';
+    require dirname(__DIR__) . '/migrations/m260907_230000_circle_colors.php';
+    require dirname(__DIR__) . '/migrations/m260907_240000_balance_circle_colors.php';
     ob_start();
     (new \m260906_120000_initial())->up();
     ob_start();
     (new \m260906_130000_expand_circle_mandate())->up();
+    if ((new \m260906_180000_work_board())->up() === false) { throw new \RuntimeException('Work migration failed: ' . ob_get_contents()); }
+    if ((new \m260907_153000_participation_dashboard())->up() === false) { throw new \RuntimeException('Participation migration failed: ' . ob_get_contents()); }
+    if ((new \m260907_210000_personal_resource_contributions())->up() === false) { throw new \RuntimeException('Personal contributions migration failed: ' . ob_get_contents()); }
+    if ((new \m260907_220000_work_archiving())->up() === false) { throw new \RuntimeException('Work archiving migration failed: ' . ob_get_contents()); }
+    if ((new \m260907_230000_circle_colors())->up() === false) { throw new \RuntimeException('Circle colors migration failed: ' . ob_get_contents()); }
+    if ((new \m260907_240000_balance_circle_colors())->up() === false) { throw new \RuntimeException('Balanced circle colors migration failed: ' . ob_get_contents()); }
     ob_end_clean();
     ob_end_clean();
     foreach ([1 => 'Kern', 2 => 'Technik', 3 => 'Privater Kreis'] as $id => $name) {

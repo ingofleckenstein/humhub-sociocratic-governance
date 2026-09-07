@@ -55,11 +55,12 @@ final class VCardData
         if ($summary !== '') {
             return $summary;
         }
-        return trim(implode(' ', array_filter([
+        $structured = trim(implode(' ', array_filter([
             (string) $circle->responsibility,
             (string) $circle->authority,
             (string) $circle->boundaries,
         ])));
+        return $structured !== '' ? $structured : trim((string) $circle->mandate);
     }
 
     private static function visibleCircle(Space $space): ?Circle

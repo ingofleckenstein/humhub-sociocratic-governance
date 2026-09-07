@@ -1,7 +1,56 @@
 # Änderungen
 
+## Unveröffentlicht
+
+### Mitwirkungs-Dashboard und zuverlässige Ideenhinweise – 2026-09-07
+
+- Neues Dashboard „Wie kann ich mich einbringen?“ bündelt alle sichtbaren Ideen
+  und Aufgaben, wahlweise nach Themen oder offenem Ressourcenbedarf.
+- Themen sind am Vorhaben pflegbar und damit übergreifend nachvollziehbar.
+  Aufgaben erfassen Commons-Ressourcen (Geld, Zeit, Expertise, Material oder
+  andere Beiträge) mit Bedarf, Einheit und zugesagtem Stand.
+- Neue Idee-Hinweise werden nach dem Commit unmittelbar im HumHub-
+  Benachrichtigungsdienst angelegt, statt auf einen späteren Queue-Lauf zu warten.
+- Versionierte Migration `m260907_153000_participation_dashboard` ergänzt die
+  Tabellen für Themen und Ressourcen ohne vorhandene Vorhaben zu verändern.
+
+### Vorhaben-Board und VCard-Korrektur – 2026-09-07
+
+- Erstes Kanban-Board: Idee, offene Aufgabe, Bearbeitung, Abnahme und Ablehnung.
+  Ideen durch Communitymitglieder mit Lesezugang; Annahme durch Kreisleitung oder
+  Delegierte*n. Selbstzuweisung, Kommentare und nachvollziehbare Textänderungen.
+- Delegation nur an direkte Nachbarkreise; frühere private Historie bleibt geschützt.
+- Ergebnisabnahme mit beiden aktiven Verbindungsrollen und Rückgabe zur Nacharbeit.
+  Keine Gleichsetzung von Abnahme mit Konsent. Konsent-/Sitzungswerkzeuge bleiben offen.
+- Neue Migration für Vorhaben und Historie; atomare Änderungen mit Revision und
+  MySQL-Sperre. Bestehende Historie verhindert endgültige Löschung beteiligter Spaces.
+- Doppelte VCard-Angaben feldweise unterdrückt; Addon ergänzt nur fehlende Werte.
+- Gestaltungsvorschlag für gruppierte Kreisvisualisierung dokumentiert.
+
+### Bisherige Korrekturen
+
+- Kreis- und Profil-Links getrennt; alle aktiven sichtbaren Kreismitglieder auf
+  einem inneren Ring, Doppelrollen an einem Bild. Kreisgröße wächst mit der
+  Mitgliederzahl; Kurzmandat bei Hover/Fokus.
+- VCard-Template-Adapter für 1.2.x ab 1.2.1: `user.rolls`, `space.purpose` und
+  `space.mandate`, einschließlich einfacher Klammern, mit Sandbox und Sanitizing.
+  Ereignisregistrierung unabhängig von der Ladereihenfolge des optionalen Moduls.
+- VCard-Mandat greift bei fehlenden strukturierten Angaben auf Altmandat zurück.
+- Archivierte Kreise aus Governance-Leseansichten ausgeschlossen.
+- Pflichtmodule bei neuer Kreisaktivierung einrichten; POST/CSRF-geschützte
+  Nachholeinrichtung im Backend für bestehende Kreise, mit Versions-/Verfügbarkeitsprüfung.
+- Vorhaben-Plan in `VORHABEN-PLAN.md` dokumentiert; M2 bleibt Planung.
+- Lokal 41 Komponentenprüfungen, 11 VCard-Prüfungen, fünf gerenderte Ansichten
+  und Kompatibilitätsprüfung gegen HumHub 1.18.5/Popover VCard 1.2.1 bestanden.
+  HTTP-, Theme- und MySQL-Abnahme stehen aus.
+
 ## 0.2.1 – 2026-09-06
 
+- Die Kreisübersicht rendert die sichtbaren Kreise nun als lokale,
+  datengetriebene JavaScript-Karte. Karten lassen sich verschieben und zoomen;
+  Details, Rollen und Mitglieder werden auf Wunsch direkt an der jeweiligen
+  Karte eingeblendet. Die Doppelbindung bleibt als Profilbild-Verbindung
+  sichtbar.
 - Bubble-Karte lesbar skaliert und Kreisleitung sowie Delegierte*r klar
   gekennzeichnet.
 - Optionales Virtual-Card-Popover-Addon für Version 1.2.1+ ergänzt. Es zeigt
