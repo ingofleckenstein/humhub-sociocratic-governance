@@ -34,40 +34,64 @@ final class CircleDirectory
         $byId = [];
         foreach ($visible as $circle) { $byId[(int) $circle->space_id] = $circle; }
 
-        $children = [];
+        // Project and competence circles have different purposes. Keep their
+        // hierarchies independent so the operational project structure can
+        // start with the configured core circle and the competence circles
+        // form a clearly separate section at the end of the directory.
+        $children = ['project' => [], 'competence' => []];
         foreach ($byId as $id => $circle) {
             $parentId = (int) $circle->parent_space_id;
-            if ($parentId && isset($byId[$parentId])) { $children[$parentId][] = $id; }
-        }
-        foreach ($children as &$ids) {
-            usort($ids, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
-        }
-        unset($ids);
-
-        $rootId = (int) (Configuration::findOne(1)?->root_space_id ?? 0);
-        $roots = isset($byId[$rootId]) ? [$rootId] : [];
-        foreach ($byId as $id => $circle) {
-            if ((!$circle->parent_space_id || !isset($byId[(int) $circle->parent_space_id])) && !in_array($id, $roots, true)) {
-                $roots[] = $id;
+            $type = $circle->isCompetenceCircle() ? 'competence' : 'project';
+            if ($parentId && isset($byId[$parentId])
+                && ($byId[$parentId]->isCompetenceCircle() ? 'competence' : 'project') === $type) {
+                $children[$type][$parentId][] = $id;
             }
         }
-        usort($roots, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
+        foreach ($children as &$childrenByParent) {
+            foreach ($childrenByParent as &$ids) {
+                usort($ids, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
+            }
+            unset($ids);
+        }
+        unset($childrenByParent);
 
-        $rows = [];
+        $rootId = (int) (Configuration::findOne(1)?->root_space_id ?? 0);
+        $projectRoots = isset($byId[$rootId]) && !$byId[$rootId]->isCompetenceCircle() ? [$rootId] : [];
+        $additionalProjectRoots = [];
+        $competenceRoots = [];
+        foreach ($byId as $id => $circle) {
+            $type = $circle->isCompetenceCircle() ? 'competence' : 'project';
+            $parent = $byId[(int) $circle->parent_space_id] ?? null;
+            $hasSameTypeParent = $parent && ($parent->isCompetenceCircle() ? 'competence' : 'project') === $type;
+            if ($hasSameTypeParent) { continue; }
+            if ($type === 'competence') {
+                $competenceRoots[] = $id;
+            } elseif (!in_array($id, $projectRoots, true)) {
+                $additionalProjectRoots[] = $id;
+            }
+        }
+        usort($additionalProjectRoots, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
+        usort($competenceRoots, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
+        $projectRoots = array_merge($projectRoots, $additionalProjectRoots);
+
+        $projectRows = [];
+        $competenceRows = [];
         $nodes = [];
         $leaf = 0;
-        $visit = function (int $id, int $depth) use (&$visit, &$rows, &$nodes, &$leaf, $byId, $children): float {
+        $visit = function (int $id, int $depth, string $type, array &$rows) use (&$visit, &$nodes, &$leaf, $byId, $children): float {
             $circle = $byId[$id];
             $rows[] = ['circle' => $circle, 'depth' => $depth];
-            $childIds = $children[$id] ?? [];
+            $childIds = $children[$type][$id] ?? [];
             $childX = [];
-            foreach ($childIds as $childId) { $childX[] = $visit($childId, $depth + 1); }
+            foreach ($childIds as $childId) { $childX[] = $visit($childId, $depth + 1, $type, $rows); }
             $x = $childX ? array_sum($childX) / count($childX) : $leaf++;
             $people = self::people($circle);
             $nodes[$id] = ['people' => $people, 'diameter' => max(260, (int) ceil(count($people) * 46 / M_PI + 64)), 'circle' => $circle, 'depth' => $depth, 'x' => $x, 'parentId' => (int) $circle->parent_space_id];
             return $x;
         };
-        foreach ($roots as $root) { $visit($root, 0); }
+        foreach ($projectRoots as $root) { $visit($root, 0, 'project', $projectRows); }
+        foreach ($competenceRoots as $root) { $visit($root, 0, 'competence', $competenceRows); }
+        $rows = array_merge($projectRows, $competenceRows);
 
         $roleSpaceIds = [];
         $userId = Yii::$app->user->id;
@@ -76,6 +100,6 @@ final class CircleDirectory
                 if ((int) $role->user_id === (int) $userId) { $roleSpaceIds[] = $id; break; }
             }
         }
-        return ['rows' => $rows, 'nodes' => $nodes, 'focusSpaceIds' => $roleSpaceIds, 'hasConfiguredRoot' => isset($byId[$rootId])];
+        return ['rows' => $rows, 'projectRows' => $projectRows, 'competenceRows' => $competenceRows, 'nodes' => $nodes, 'focusSpaceIds' => $roleSpaceIds, 'hasConfiguredRoot' => isset($byId[$rootId])];
     }
 }

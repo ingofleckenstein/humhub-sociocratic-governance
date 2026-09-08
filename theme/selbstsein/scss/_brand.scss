@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Shared visual language for selbstsein.events: warm, spacious and participatory.
+
+:root {
+    --ss-forest: #285953;
+    --ss-coral: #c96d5c;
+    --ss-sun: #b77a23;
+    --ss-cream: #f5f1eb;
+    --ss-paper: #fffdfa;
+    --ss-line: #ded5ca;
+    --ss-shadow: 0 10px 28px rgba(47, 65, 57, 0.09);
+}
+
+body {
+    background:
+        radial-gradient(circle at 4% 0%, rgba(201, 109, 92, 0.10), transparent 26rem),
+        radial-gradient(circle at 96% 12%, rgba(40, 89, 83, 0.09), transparent 29rem),
+        var(--ss-cream);
+    letter-spacing: 0.002em;
+}
+
+a { text-underline-offset: 0.16em; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 3px solid rgba(183, 122, 35, 0.75) !important;
+    outline-offset: 3px;
+}
+
+#topbar-first {
+    background: linear-gradient(110deg, #214a45, var(--ss-forest)) !important;
+    box-shadow: 0 4px 16px rgba(26, 56, 51, 0.20);
+
+    .navbar-brand-text, .nav > li > a { font-weight: 650; letter-spacing: 0.01em; }
+    .nav > li > a:hover, .nav > li.open > a { background-color: rgba(255, 255, 255, 0.13) !important; }
+}
+
+#topbar-second {
+    background: rgba(255, 253, 250, 0.96);
+    border-bottom: 1px solid rgba(222, 213, 202, 0.9);
+    box-shadow: 0 4px 14px rgba(58, 65, 57, 0.05);
+
+    .nav > li > a {
+        color: #49605a;
+        font-size: 0.76rem;
+        font-weight: 750;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+    }
+
+    .nav > li.active > a, .nav > li > a:hover, .nav > li > a:focus {
+        color: var(--ss-forest);
+        background: #f5ece5;
+    }
+}
+
+.panel, .card .card-panel, .modal-content, .dropdown-menu, .popover {
+    border: 1px solid var(--ss-line);
+    border-radius: 1rem;
+    box-shadow: var(--ss-shadow);
+}
+
+.panel { background-color: var(--ss-paper); }
+.panel > .panel-heading, .card .card-panel > .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(222, 213, 202, 0.82);
+}
+.wall-entry .panel, .contentForm .panel { overflow: hidden; }
+.wall-entry .wall-entry-header { border-bottom-color: rgba(222, 213, 202, 0.82); }
+
+.btn { border-radius: 0.7rem; box-shadow: none; }
+.btn-primary, .btn-success { box-shadow: 0 4px 10px rgba(40, 89, 83, 0.18); }
+.btn-primary:hover, .btn-primary:focus, .btn-success:hover, .btn-success:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(40, 89, 83, 0.22);
+}
+
+.form-control, .form-select, .select2-container .select2-selection { border-radius: 0.65rem !important; }
+.form-control:focus, .form-select:focus, .select2-container--default.select2-container--focus .select2-selection {
+    box-shadow: 0 0 0 3px rgba(201, 109, 92, 0.14) !important;
+}
+
+.nav-pills .nav-link, .nav-tabs .nav-link, .badge { border-radius: 999px; }
+.badge { font-weight: 700; letter-spacing: 0.015em; }
+
+.layout-sidebar-container .panel, .layout-nav-container .panel { box-shadow: 0 6px 20px rgba(47, 65, 57, 0.06); }
+.layout-sidebar-container .panel-heading, .layout-nav-container .panel-heading { color: var(--ss-forest); font-weight: 750; }
+.table > :not(caption) > * > * { border-bottom-color: rgba(222, 213, 202, 0.85); }
+.pagination > li > a, .pagination > li > span { border-radius: 0.55rem; margin: 0 2px; }
+.alert { border-radius: 0.85rem; border-width: 1px; }
+
+@media (max-width: 767px) {
+    body { background: var(--ss-cream); }
+    #topbar-second .nav > li > a { letter-spacing: 0.02em; }
+    .panel, .card .card-panel { border-radius: 0.8rem; }
+}

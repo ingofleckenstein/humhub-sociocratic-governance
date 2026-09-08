@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// selbstsein.events community theme – a child of the HumHub core theme.
+$baseTheme: "HumHub";
+
+// A calm, grounded palette: orientation, encounter, attention and care.
+$primary: #285953;
+$secondary: #65746d;
+$accent: #c96d5c;
+$success: #3f785d;
+$warning: #b77a23;
+$danger: #ad4d4d;
+$info: #39748a;
+$light: #f4efe8;
+$dark: #23332f;
+
+$link-color: #285953;
+$body-color: #24332f;
+$body-bg: #f5f1eb;
+$background-color-main: #fffdfa;
+$background-color-secondary: #f8f3ec;
+$background-color-page: #e7e0d7;
+$background-color-highlight: rgba($accent, 0.16);
+$background-color-highlight-soft: #f8e8e3;
+$background3: #d2c9bd;
+$background4: #aaa095;
+
+$text-color-main: #24332f;
+$text-color-default: #384943;
+$text-color-secondary: #65746d;
+$text-color-highlight: #1d302b;
+$text-color-soft: #64716c;
+$text-color-soft2: #89918c;
+$text-color-soft3: #a4aaa5;
+
+$font-family-base: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+$font-size-root: 15px;
+$line-height-base: 1.55;
+$border-radius: 0.85rem;
+$border-radius-sm: 0.6rem;
+$border-radius-lg: 1.1rem;
+$enable-shadows: true;
+
+$container-max-widths: (
+    sm: 768px,
+    md: 900px,
+    lg: 1140px,
+    xl: 1320px,
+    xxl: 1440px
+);

@@ -44,6 +44,9 @@
 .sg table { width:100%; }
 .sg th,.sg td { text-align:left; vertical-align:top; padding:10px; border-bottom:1px solid #e2eae7; }
 .sg .sg-directory-table tr[class*="sg-tone-"] td:first-child { border-left:5px solid var(--sg-accent); }
+.sg .sg-directory-section-divider th { padding:18px 10px 12px; border-top:3px solid var(--sg-accent); border-bottom:1px solid #c9dbd6; background:var(--sg-soft); color:var(--sg-ink); text-align:left; }
+.sg .sg-directory-section-divider span { display:block; font-size:15px; letter-spacing:.04em; text-transform:uppercase; }
+.sg .sg-directory-section-divider small { display:block; margin-top:3px; color:var(--sg-muted); font-size:12px; font-weight:400; text-transform:none; letter-spacing:0; }
 .sg .sg-circle-color-dot { display:inline-block; width:12px; height:12px; margin:0 8px 0 2px; border-radius:50%; background:var(--sg-accent); box-shadow:0 0 0 2px #fff,0 0 0 3px var(--sg-circle-line); vertical-align:middle; }
 .sg .sg-directory-switch { display:flex; gap:8px; margin:0 0 16px; }
 .sg .sg-button-secondary { background:#526d70; }

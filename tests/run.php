@@ -46,8 +46,16 @@ check(Circle::findOne(1)->color !== Circle::findOne(2)->color, 'New circles auto
 $duplicateColor = CircleForm::forCircle(Circle::findOne(2));
 $duplicateColor->color = Circle::findOne(1)->color;
 check(!$service->save(Space::findOne(2), $duplicateColor), 'A circle cannot take a color already assigned to another circle');
+$configuration->root_space_id = 1;
+$configuration->save(false);
+Space::$members[3][] = 1;
+$competenceForm = new CircleForm(['type' => 'competence']);
+check($service->save(Space::findOne(3), $competenceForm), 'Visible competence circle can be created for directory grouping');
 $directory = (new CircleDirectory())->data();
-check(count($directory['rows']) === 2 && $directory['rows'][0]['depth'] === 0 && $directory['rows'][1]['depth'] === 1, 'Directory returns visible circles as an indented hierarchy');
+check(array_map(static fn(array $row): int => (int) $row['circle']->space_id, $directory['projectRows']) === [1, 2]
+    && array_map(static fn(array $row): int => (int) $row['circle']->space_id, $directory['competenceRows']) === [3]
+    && $directory['projectRows'][0]['depth'] === 0 && $directory['projectRows'][1]['depth'] === 1,
+    'Directory starts with the configured core hierarchy and separates competence circles');
 $people = CircleDirectory::people(Circle::findOne(1));
 check(count($people) === 2 && $people[0]['label'] === 'Kreisleitung', 'Map includes the active circle roles');
 Space::$members[1][] = 3;
