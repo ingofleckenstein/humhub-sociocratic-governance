@@ -18,12 +18,16 @@ class CircleController extends ContentContainerController
         if (!Access::read($this->contentContainer)) { throw new NotFoundHttpException(); }
         return true;
     }
-    public function actionIndex()
+    public function actionIndex($section = 'overview')
     {
         $circle = Circle::findOne($this->contentContainer->id);
+        if ($circle && $circle->isCompetenceCircle()) {
+            return $this->redirect($this->contentContainer->createUrl('/space/space/home'));
+        }
         return $this->render('index', [
             'space' => $this->contentContainer, 'circle' => $circle,
             'circles' => Access::visibleCircles(), 'canWrite' => Access::write($this->contentContainer),
+            'section' => $this->section($section),
         ]);
     }
     public function actionEdit()
@@ -42,5 +46,9 @@ class CircleController extends ContentContainerController
         return $this->render('edit', ['space' => $space, 'form' => $form, 'parents' => $parents, 'members' => Access::memberOptions($space)]);
     }
     public function actionGuide() { return $this->render('guide', ['space' => $this->contentContainer]); }
+    private function section($section): string
+    {
+        return is_string($section) && in_array($section, ['overview', 'mandate', 'roles', 'connections'], true)
+            ? $section : 'overview';
+    }
 }
-

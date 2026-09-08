@@ -75,6 +75,16 @@ $item = $service->change($item->id, 9, 'approve');
 checkWork($item->status === 'done', 'Both independent reviewer confirmations close the task');
 deniedWork(fn() => $service->change($item->id, 10, 'edit', ['title' => 'Anders', 'description' => 'Neu']), DomainException::class, 'Accepted result cannot be silently edited');
 
+$coverageTask = $service->create(Space::findOne(1), 'Ressourcen vor dem Start', 'Die Zusagen müssen vorliegen.', 'task');
+$coverageTask = $service->change($coverageTask->id, 0, 'resource', ['resource_type' => 'time', 'label' => 'Vorbereitung', 'required_amount' => '2', 'available_amount' => '0', 'unit' => 'Stunden', 'time_mode' => 'async', 'time_pattern' => 'Im eigenen Rhythmus', 'details' => 'Vor dem Beginn einplanen']);
+$coverageTask = $service->change($coverageTask->id, 1, 'claim');
+deniedWork(fn() => $service->change($coverageTask->id, 2, 'start'), DomainException::class, 'Tasks with uncovered resources cannot enter working state');
+$coverageResource = WorkResource::findOne(['work_item_id' => $coverageTask->id]);
+$coverageTask = $service->change($coverageTask->id, 2, 'contribute', ['resource_id' => $coverageResource->id, 'amount' => '2']);
+checkWork((bool) $coverageTask->resources_covered_at, 'Fully covered task resources record their one-time celebration');
+$coverageTask = $service->change($coverageTask->id, 3, 'start');
+checkWork($coverageTask->status === 'working', 'Fully covered tasks can enter working state');
+
 $task = $service->create(Space::findOne(2), 'Delegation', 'Arbeitsauftrag', 'task');
 $task = $service->change($task->id, 0, 'resource', ['resource_type' => 'time', 'label' => 'Moderation', 'required_amount' => '12', 'available_amount' => '0', 'unit' => 'Stunden', 'time_mode' => 'async', 'time_pattern' => 'Vorbereitung und Nachbereitung im eigenen Rhythmus', 'details' => 'Für die erste Runde']);
 checkWork(WorkResource::find()->where(['work_item_id' => $task->id])->count() === 1 && $task->resources[0]->progress === 0.0, 'Circle members estimate a differentiated time resource without faking a pledge');

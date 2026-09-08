@@ -4,6 +4,7 @@ namespace humhub\modules\sociocraticGovernance\models;
 
 class CircleForm extends \yii\base\Model
 {
+    public $type = 'project';
     public $purpose = '';
     public $mandate = '';
     public $mandate_summary = '';
@@ -13,7 +14,7 @@ class CircleForm extends \yii\base\Model
     public $budget = '';
     public $reelection_interval = 'Alle 6 Monate';
     public $review = '';
-    public $color = 'teal';
+    public $color = '';
     public $parent_space_id;
     public $revision = -1;
     public $leader;
@@ -28,6 +29,7 @@ class CircleForm extends \yii\base\Model
             [['purpose', 'mandate', 'responsibility', 'authority', 'boundaries', 'budget', 'review'], 'string', 'max' => 20000],
             [['mandate_summary', 'reelection_interval'], 'string', 'max' => 255],
             ['color', 'in', 'range' => array_keys(Circle::COLORS)],
+            ['type', 'in', 'range' => array_keys(Circle::TYPES)],
             [['parent_space_id', 'leader', 'delegate', 'facilitator', 'secretary'], 'default', 'value' => null],
             [['parent_space_id', 'leader', 'delegate', 'facilitator', 'secretary'], 'integer', 'min' => 1],
             ['revision', 'required'], ['revision', 'integer', 'min' => -1],
@@ -37,6 +39,7 @@ class CircleForm extends \yii\base\Model
     {
         return array_merge(Role::LABELS, [
             'purpose' => 'Zweck – warum gibt es diesen Kreis?',
+            'type' => 'Kreistyp',
             'mandate' => 'Zusätzliche Mandatsbeschreibung',
             'mandate_summary' => 'Mandat in Kürze',
             'responsibility' => 'Verantwortung',
@@ -45,14 +48,18 @@ class CircleForm extends \yii\base\Model
             'budget' => 'Budget / Ressourcen',
             'reelection_interval' => 'Wiederwahl',
             'review' => 'Review',
-            'color' => 'Farbe des Arbeitskreises',
+            'color' => 'Farbe des Kreises',
             'parent_space_id' => 'Oberkreis',
         ]);
     }
     public static function forCircle(?Circle $circle): self
     {
         $form = new self();
+        if (!$circle) {
+            $form->color = Circle::suggestedColor();
+        }
         if ($circle) {
+            $form->type = array_key_exists((string) $circle->type, Circle::TYPES) ? $circle->type : 'project';
             $form->purpose = $circle->purpose;
             $form->mandate = $circle->mandate;
             $form->mandate_summary = $circle->mandate_summary;
@@ -62,7 +69,7 @@ class CircleForm extends \yii\base\Model
             $form->budget = $circle->budget;
             $form->reelection_interval = $circle->reelection_interval ?: 'Alle 6 Monate';
             $form->review = $circle->review;
-            $form->color = array_key_exists((string) $circle->color, Circle::COLORS) ? $circle->color : 'teal';
+            $form->color = array_key_exists((string) $circle->color, Circle::COLORS) ? $circle->color : Circle::suggestedColor($circle->space_id);
             $form->parent_space_id = $circle->parent_space_id;
             $form->revision = $circle->revision;
             foreach ($circle->roles as $role) { $form->{$role->role_key} = $role->user_id; }

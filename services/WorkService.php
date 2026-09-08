@@ -3,8 +3,10 @@
 namespace humhub\modules\sociocraticGovernance\services;
 
 use Yii;
-use humhub\modules\sociocraticGovernance\models\{Circle, WorkItem, WorkEvent, WorkResource, WorkResourceContribution, WorkTopic};
+use humhub\modules\sociocraticGovernance\models\{Circle, Configuration, WorkItem, WorkEvent, WorkResource, WorkResourceContribution, WorkTopic};
+use humhub\modules\post\models\Post;
 use humhub\modules\space\models\Space;
+use humhub\modules\user\models\User;
 use yii\helpers\Json;
 use yii\web\{ForbiddenHttpException, NotFoundHttpException, ConflictHttpException};
 
@@ -46,6 +48,7 @@ final class WorkService
             if ($item->archived_at) { throw new \DomainException('Dieses Vorhaben ist archiviert und kann nicht mehr geändert werden.'); }
             $before = $item->getAttributes();
             $space = $item->space;
+            $announceResourcesCovered = false;
             $actor = (int) Yii::$app->user->id;
             $member = Access::write($space);
             $reviewer = WorkAccess::reviewer($space);
@@ -93,6 +96,9 @@ final class WorkService
                 case 'start':
                     $this->permit($member && (int) $item->assignee_id === $actor);
                     $this->state($item, ['open']);
+                    if (!$this->resourcesCovered($item)) {
+                        throw new \DomainException($this->resourceCoverageMessage($item));
+                    }
                     $item->status = 'working';
                     break;
                 case 'submit':
@@ -157,6 +163,11 @@ final class WorkService
             if ($action === 'edit' && array_key_exists('topics', $input)) {
                 $this->syncTopics($item, $this->text($input['topics'], 1000));
             }
+            if (in_array($action, ['resource', 'contribute'], true)
+                && !$item->resources_covered_at && $this->resourcesCovered($item)) {
+                $item->resources_covered_at = time();
+                $announceResourcesCovered = true;
+            }
             $item->updated_at = time();
             $item->revision = $revision + 1;
             if (!$item->save(false)) { throw new \RuntimeException('Vorhaben konnte nicht gespeichert werden.'); }
@@ -168,6 +179,9 @@ final class WorkService
                 'return' => 'returned', 'reject' => 'rejected', 'delegate' => 'delegated',
                 'edit' => 'edited', 'resource' => 'resource', 'contribute' => 'updated', 'archive' => 'updated', default => 'updated',
             }, $before);
+            if ($announceResourcesCovered) {
+                $this->announceResourcesCovered($item);
+            }
             return $item;
         } catch (\Throwable $e) { $tx->rollBack(); throw $e; }
     }
@@ -254,6 +268,57 @@ final class WorkService
         $contribution->updated_at = time();
         if (!$contribution->validate() || !$contribution->save(false)) { throw new \DomainException(implode(' ', $contribution->getFirstErrors())); }
         return 'Eine Ressourcenzusage wurde angepasst.';
+    }
+    private function resourcesCovered(WorkItem $item): bool
+    {
+        foreach ($item->resources as $resource) {
+            if ($resource->required_amount === null
+                || $resource->totalCommittedAmount + 0.00001 < (float) $resource->required_amount) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private function resourceCoverageMessage(WorkItem $item): string
+    {
+        $missing = [];
+        foreach ($item->resources as $resource) {
+            if ($resource->required_amount === null) {
+                $missing[] = '„' . $resource->label . '“ (Menge noch offen)';
+            } elseif ($resource->totalCommittedAmount + 0.00001 < (float) $resource->required_amount) {
+                $unit = $resource->unit ? ' ' . $resource->unit : '';
+                $missing[] = '„' . $resource->label . '“ (' . $resource->totalCommittedAmount . ' von '
+                    . $resource->required_amount . $unit . ')';
+            }
+        }
+        return 'Die Aufgabe kann erst in Bearbeitung gehen, wenn alle Ressourcen gedeckt sind: '
+            . implode(', ', $missing) . '.';
+    }
+    private function announceResourcesCovered(WorkItem $item): void
+    {
+        $companyAccount = $this->companyAccount();
+        try {
+            $post = new Post($item->space);
+            if ($companyAccount) {
+                $post->content->created_by = $companyAccount->id;
+                $post->content->updated_by = $companyAccount->id;
+            }
+            $post->message = '🎉 **Ressourcen gedeckt!** Für „' . $item->title
+                . '“ sind alle vereinbarten Ressourcen vorhanden. Die Aufgabe kann jetzt starten.';
+            if (!$post->save()) {
+                Yii::error(['message' => 'Feiermeldung konnte nicht gespeichert werden.', 'errors' => $post->getFirstErrors()], __METHOD__);
+            }
+        } catch (\Throwable $error) {
+            // A non-essential stream message must never undo a confirmed resource commitment.
+            Yii::error($error, __METHOD__);
+        }
+    }
+    private function companyAccount(): ?User
+    {
+        $config = Configuration::findOne(1);
+        if (!$config || !$config->company_user_id) { return null; }
+        $account = User::findOne((int) $config->company_user_id);
+        return $account && (int) $account->status === User::STATUS_ENABLED ? $account : null;
     }
     private function amount($value, bool $allowEmpty): ?float
     {

@@ -46,9 +46,11 @@ class AdminController extends \humhub\components\Controller
                     if ($config->root_space_id && (!$root || $root->parent_space_id || !Access::enabled($root->space))) {
                         $config->addError('root_space_id', 'Bitte einen eingerichteten Kreis ohne Oberkreis wählen.');
                     }
-                    $authority = $config->authority_user_id ? User::findOne($config->authority_user_id) : null;
-                    if ($authority && (int) $authority->status !== User::STATUS_ENABLED) {
-                        $config->addError('authority_user_id', 'Bitte eine aktive Person wählen.');
+                    foreach (['authority_user_id', 'company_user_id'] as $field) {
+                        $user = $config->$field ? User::findOne($config->$field) : null;
+                        if ($user && (int) $user->status !== User::STATUS_ENABLED) {
+                            $config->addError($field, 'Bitte ein aktives Konto wählen.');
+                        }
                     }
                     if (!$config->hasErrors() && $config->save(false)) {
                         $tx->commit();

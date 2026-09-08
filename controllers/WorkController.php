@@ -27,7 +27,11 @@ class WorkController extends ContentContainerController
     }
     public function actionIndex()
     {
-        return $this->render('index', ['space' => $this->contentContainer, 'items' => $this->boardItems(), 'error' => '', 'draft' => new WorkItem(), 'draftTopics' => '']);
+        return $this->render('index', ['space' => $this->contentContainer, 'items' => $this->boardItems()]);
+    }
+    public function actionNew()
+    {
+        return $this->render('new', ['space' => $this->contentContainer, 'error' => '', 'draft' => new WorkItem(), 'draftTopics' => '']);
     }
     private function boardItems(): array
     {
@@ -38,10 +42,14 @@ class WorkController extends ContentContainerController
         return $items;
     }
 
-    public function actionView($id)
+    public function actionView($id, $section = 'overview')
     {
         $item = $this->findItem($id);
-        return $this->render('view', ['space' => $this->contentContainer, 'item' => $item, 'error' => '']);
+        $section = $this->section($section);
+        if ($section === 'resources' && $item->kind !== 'task') {
+            $section = 'overview';
+        }
+        return $this->render('view', ['space' => $this->contentContainer, 'item' => $item, 'error' => '', 'section' => $section]);
     }
     public function actionCreate()
     {
@@ -57,7 +65,7 @@ class WorkController extends ContentContainerController
             return $this->redirect($this->contentContainer->createUrl('/sociocratic-governance/work/view', ['id' => $item->id]));
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 422;
-            return $this->render('index', ['space' => $this->contentContainer, 'items' => $this->boardItems(), 'error' => $e->getMessage(), 'draft' => $draft, 'draftTopics' => is_string($input['topics'] ?? null) ? $input['topics'] : '']);
+            return $this->render('new', ['space' => $this->contentContainer, 'error' => $e->getMessage(), 'draft' => $draft, 'draftTopics' => is_string($input['topics'] ?? null) ? $input['topics'] : '']);
         }
     }
     public function actionChange($id)
@@ -70,10 +78,15 @@ class WorkController extends ContentContainerController
         }
         try {
             $changed = (new WorkService())->change((int) $item->id, (int) $revision, $action, Yii::$app->request->post());
-            return $this->redirect(Space::findOne($changed->space_id)->createUrl('/sociocratic-governance/work/view', ['id' => $changed->id]));
+            $section = $this->section(Yii::$app->request->post('section', 'overview'));
+            if ($section === 'resources' && $changed->kind !== 'task') { $section = 'overview'; }
+            return $this->redirect(Space::findOne($changed->space_id)->createUrl('/sociocratic-governance/work/view', ['id' => $changed->id, 'section' => $section]));
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 422;
-            return $this->render('view', ['space' => $this->contentContainer, 'item' => $this->findItem($id), 'error' => $e->getMessage(), 'submitted' => Yii::$app->request->post()]);
+            $freshItem = $this->findItem($id);
+            $section = $this->section(Yii::$app->request->post('section', 'overview'));
+            if ($section === 'resources' && $freshItem->kind !== 'task') { $section = 'overview'; }
+            return $this->render('view', ['space' => $this->contentContainer, 'item' => $freshItem, 'error' => $e->getMessage(), 'submitted' => Yii::$app->request->post(), 'section' => $section]);
         }
     }
     private function findItem($id): WorkItem
@@ -82,5 +95,10 @@ class WorkController extends ContentContainerController
         $item = WorkItem::findOne(['id' => (int) $id, 'space_id' => $this->contentContainer->id]);
         if (!$item || !WorkAccess::read($item)) { throw new \yii\web\NotFoundHttpException(); }
         return $item;
+    }
+    private function section($section): string
+    {
+        return is_string($section) && in_array($section, ['overview', 'resources', 'collaboration', 'history'], true)
+            ? $section : 'overview';
     }
 }

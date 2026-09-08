@@ -9,7 +9,7 @@ class CircleBadge extends \humhub\components\Widget
     public function run()
     {
         if (!Access::read($this->space)) { return ''; }
-        return Html::tag('div', Html::tag('div', '<strong>Arbeitskreis</strong>', ['class' => 'panel-heading']) .
+        return Html::tag('div', Html::tag('div', '<strong>Projektkreis</strong>', ['class' => 'panel-heading']) .
             Html::tag('div', 'Verantwortung im vereinbarten Mandat. ' .
                 Html::a('Kreis öffnen', $this->space->createUrl('/sociocratic-governance/circle/index')),
                 ['class' => 'panel-body']), ['class' => 'panel panel-default']);

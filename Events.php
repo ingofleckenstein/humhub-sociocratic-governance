@@ -8,17 +8,21 @@ use humhub\modules\ui\menu\MenuLink;
 use humhub\helpers\ControllerHelper;
 use humhub\modules\content\models\ContentContainerModuleState;
 use humhub\modules\space\components\SpaceDirectoryQuery;
+use humhub\modules\sociocraticGovernance\models\Circle;
 class Events
 {
     public static function spaceMenu($event)
     {
         $space = $event->sender->space;
         if (!Access::read($space)) { return; }
-        $event->sender->addEntry(new MenuLink([
-            'label' => 'Arbeitskreis', 'icon' => 'users', 'sortOrder' => 210,
-            'url' => $space->createUrl('/sociocratic-governance/circle/index'),
-            'isActive' => \Yii::$app->controller && \Yii::$app->controller->module->id === 'sociocratic-governance',
-        ]));
+        $circle = Circle::findOne($space->id);
+        if (!$circle || !$circle->isCompetenceCircle()) {
+            $event->sender->addEntry(new MenuLink([
+                'label' => 'Projektkreis', 'icon' => 'users', 'sortOrder' => 210,
+                'url' => $space->createUrl('/sociocratic-governance/circle/index'),
+                'isActive' => \Yii::$app->controller && \Yii::$app->controller->module->id === 'sociocratic-governance',
+            ]));
+        }
         $event->sender->addEntry(new MenuLink([
             'label' => 'Vorhaben', 'icon' => 'columns', 'sortOrder' => 211,
             'url' => $space->createUrl('/sociocratic-governance/work/index'),
@@ -26,7 +30,8 @@ class Events
     }
     public static function spaceSidebar($event)
     {
-        if (Access::read($event->sender->space)) {
+        $circle = Circle::findOne($event->sender->space->id);
+        if (Access::read($event->sender->space) && (!$circle || !$circle->isCompetenceCircle())) {
             $event->sender->addWidget(CircleBadge::class, ['space' => $event->sender->space], ['sortOrder' => 20]);
         }
     }
@@ -40,7 +45,7 @@ class Events
     {
         if (\Yii::$app->user->isGuest) { return; }
         $event->sender->addEntry(new MenuLink([
-            'id' => 'sociocratic-governance-directory', 'label' => 'Arbeitskreise', 'icon' => 'sitemap',
+            'id' => 'sociocratic-governance-directory', 'label' => 'Kreise', 'icon' => 'sitemap',
             'url' => ['/sociocratic-governance/directory/index'], 'sortOrder' => 245,
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'directory'),
         ]));
@@ -53,11 +58,15 @@ class Events
     public static function filterSpaceDirectory($event)
     {
         if (!$event->sender instanceof SpaceDirectoryQuery) { return; }
-        $enabledCircles = ContentContainerModuleState::find()->select('contentcontainer_id')->where([
+        $enabledCircleIds = ContentContainerModuleState::find()->select('contentcontainer_id')->where([
             'module_id' => 'sociocratic-governance',
             'module_state' => [ContentContainerModuleState::STATE_ENABLED, ContentContainerModuleState::STATE_FORCE_ENABLED],
-        ]);
-        $event->query->andWhere(['not in', 'space.contentcontainer_id', $enabledCircles]);
+        ])->column();
+        $competenceCircleIds = Circle::find()->select('space_id')->where(['type' => 'competence'])->column();
+        $projectCircleIds = array_values(array_diff(array_map('intval', $enabledCircleIds), array_map('intval', $competenceCircleIds)));
+        if ($projectCircleIds) {
+            $event->query->andWhere(['not in', 'space.contentcontainer_id', $projectCircleIds]);
+        }
     }
     public static function archiveDueWork($event)
     {

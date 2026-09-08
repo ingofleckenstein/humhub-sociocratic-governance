@@ -29,7 +29,7 @@ $workIdea = $workService->create($space, '<script>Idee</script>', 'Ein Vorschlag
 $workTask = $workService->create($space, 'Ein konkreter Arbeitsauftrag', 'Beschreibung', 'task', 'Technik');
 $workTask = $workService->change($workTask->id, 0, 'resource', ['resource_type' => 'time', 'label' => 'Moderation', 'required_amount' => '8', 'available_amount' => '0', 'unit' => 'Stunden', 'time_mode' => 'scheduled', 'time_pattern' => 'Alle zwei Wochen donnerstags, 3 Stunden', 'details' => 'Für die erste Runde']);
 Yii::$app->user->id = 3;
-$workTask = $workService->change($workTask->id, 1, 'contribute', ['resource_id' => $workTask->resources[0]->id, 'amount' => '2']);
+$workTask = $workService->change($workTask->id, 1, 'contribute', ['resource_id' => $workTask->resources[0]->id, 'amount' => '8']);
 Yii::$app->user->id = 1;
 $workTask = $workService->change($workTask->id, 2, 'claim');
 $workTask = $workService->change($workTask->id, 3, 'start');
@@ -37,8 +37,10 @@ $workTask = $workService->change($workTask->id, 4, 'submit', ['note' => 'Das Erg
 $dashboardData = (new ParticipationDashboard())->data();
 $pages = [
     'work-board' => ['work/index', ['space' => $space, 'items' => [$workIdea, $workTask], 'error' => '', 'draft' => new \humhub\modules\sociocraticGovernance\models\WorkItem(), 'draftTopics' => '']],
-    'work-idea' => ['work/view', ['space' => $space, 'item' => $workIdea, 'error' => '']],
-    'work-review' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '']],
+    'work-new' => ['work/new', ['space' => $space, 'error' => '', 'draft' => new \humhub\modules\sociocraticGovernance\models\WorkItem(), 'draftTopics' => '']],
+    'work-idea' => ['work/view', ['space' => $space, 'item' => $workIdea, 'error' => '', 'section' => 'overview']],
+    'work-review' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '', 'section' => 'overview']],
+    'work-resources' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '', 'section' => 'resources']],
     'circle' => ['circle/index', compact('space', 'circle', 'circles') + ['canWrite' => true]],
     'guide' => ['circle/guide', compact('space')],
     'edit' => ['circle/edit', ['space' => $space, 'form' => CircleForm::forCircle($circle), 'parents' => [2 => 'Technik'], 'members' => [1 => 'Alex', 2 => 'Robin']]],
@@ -59,7 +61,7 @@ foreach ($pages as $name => [$template, $params]) {
     echo '</body></html>';
     $view->endPage();
     $html = ob_get_clean();
-    if (in_array($name, ['edit', 'admin', 'work-board', 'work-idea', 'work-review'], true) && !str_contains($html, 'name="_csrf"')) {
+    if (in_array($name, ['edit', 'admin', 'work-new', 'work-idea', 'work-review', 'work-resources'], true) && !str_contains($html, 'name="_csrf"')) {
         throw new RuntimeException('Missing CSRF field: ' . $name);
     }
     if (str_starts_with($name, 'work-')) {

@@ -6,13 +6,14 @@ use yii\helpers\Html;
 <header class="sg-hero"><span class="sg-eyebrow">Backend · Governance</span><h1>Organisation einrichten</h1><p>Universelle Einstellungen ohne fest eingebaute Personen oder Organisationen.</p></header>
 <section class="sg-card">
 <?= Html::beginForm('', 'post') ?><?= Html::errorSummary($config, ['class' => 'alert alert-danger']) ?>
-<?php foreach (['root_space_id' => $spaces, 'authority_user_id' => $users] as $key => $options): ?>
+<?php foreach (['root_space_id' => $spaces, 'authority_user_id' => $users, 'company_user_id' => $users] as $key => $options): ?>
 <?= Html::activeLabel($config, $key) ?><?= Html::activeDropDownList($config, $key, $options, ['prompt' => 'Nicht festgelegt']) ?>
 <?php endforeach ?>
 <?= Html::activeLabel($config, 'organisation') ?><?= Html::activeTextInput($config, 'organisation', ['maxlength' => 255]) ?>
 <?= Html::activeLabel($config, 'work_auto_archive_days') ?><?= Html::activeTextInput($config, 'work_auto_archive_days', ['type' => 'number', 'min' => 0]) ?>
 <p class="sg-note">Abgelehnte und abgenommene Aufgaben werden nach dieser Anzahl von Tagen automatisch archiviert. <strong>0</strong> bedeutet: niemals automatisch archivieren. Archivieren entfernt keine Daten.</p>
 <p class="sg-note">Nach Benennung der Admin-Sonderrolle darf nur diese Person diese Seite bearbeiten. Ohne Benennung dürfen Systemadministrator*innen die Ersteinrichtung vornehmen. Diese Zuordnung verleiht keine technischen HumHub-Adminrechte.</p>
+<p class="sg-note">Optional: Das Unternehmenskonto veröffentlicht die Feiermeldung, wenn ein Vorhaben vollständig gedeckt ist. Ohne Auswahl veröffentlicht weiterhin die Person, die die letzte Ressource zusagt.</p>
 <?= Html::submitButton('Einstellungen speichern', ['class' => 'sg-button']) ?><?= Html::endForm() ?>
 </section>
 <?php if (Yii::$app->user->isAdmin()): ?>

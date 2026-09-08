@@ -3,12 +3,15 @@ use yii\helpers\Html;
 \humhub\modules\sociocraticGovernance\assets\GovernanceAsset::register($this);
 ?>
 <div class="sg">
-<header class="sg-hero"><span class="sg-eyebrow">Arbeitskreis pflegen</span><h1><?= Html::encode($space->name) ?></h1>
+<header class="sg-hero"><span class="sg-eyebrow">Kreis pflegen</span><h1><?= Html::encode($space->name) ?></h1>
 <p>Dokumentiere die gemeinsam vereinbarten Angaben. Das Speichern ersetzt keinen Konsentbeschluss.</p></header>
 <section class="sg-card">
 <?= Html::beginForm('', 'post') ?>
 <?= Html::errorSummary($form, ['class' => 'alert alert-danger', 'header' => 'Bitte prüfen:']) ?>
 <?= Html::activeHiddenInput($form, 'revision') ?>
+<?= Html::activeLabel($form, 'type') ?>
+<?= Html::activeDropDownList($form, 'type', \humhub\modules\sociocraticGovernance\models\Circle::TYPES) ?>
+<p class="sg-muted">Projektkreise organisieren konkrete Vorhaben. Kompetenzkreise sind thematische Räume für Wissensaustausch und verwenden die normale HumHub-Space-Ansicht.</p>
 <?= Html::activeLabel($form, 'purpose') ?>
 <?php if (class_exists(\humhub\modules\content\widgets\richtext\RichTextField::class)): ?>
 <?= \humhub\modules\content\widgets\richtext\RichTextField::widget(['model' => $form, 'attribute' => 'purpose', 'preset' => 'markdown', 'exclude' => ['upload', 'oembed', 'mention'], 'placeholder' => 'Wofür gibt es diesen Kreis?']) ?>
@@ -32,7 +35,7 @@ use yii\helpers\Html;
 <?= Html::activeLabel($form, 'parent_space_id') ?>
 <?= Html::activeDropDownList($form, 'parent_space_id', $parents, ['prompt' => 'Kein Oberkreis']) ?>
 <h2 style="margin-top:24px">Wiedererkennbarkeit</h2>
-<p class="sg-muted">Die Farbe markiert diesen Arbeitskreis in seiner Ansicht, auf der Kreislandkarte und auf zugehörigen Vorhaben. Die Palette bleibt bewusst ruhig und gut lesbar.</p>
+<p class="sg-muted">Die Farbe markiert diesen Kreis in seiner Ansicht, auf der Kreislandkarte und auf zugehörigen Vorhaben. Die Palette bleibt bewusst ruhig und gut lesbar.</p>
 <?= Html::activeLabel($form, 'color') ?>
 <?= Html::activeDropDownList($form, 'color', \humhub\modules\sociocraticGovernance\models\Circle::COLORS) ?>
 <h2 style="margin-top:24px">Rollen zuordnen</h2>

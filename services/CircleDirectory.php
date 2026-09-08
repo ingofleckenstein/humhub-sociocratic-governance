@@ -46,12 +46,12 @@ final class CircleDirectory
 
         $rootId = (int) (Configuration::findOne(1)?->root_space_id ?? 0);
         $roots = isset($byId[$rootId]) ? [$rootId] : [];
-        if (!$roots) {
-            foreach ($byId as $id => $circle) {
-                if (!$circle->parent_space_id || !isset($byId[(int) $circle->parent_space_id])) { $roots[] = $id; }
+        foreach ($byId as $id => $circle) {
+            if ((!$circle->parent_space_id || !isset($byId[(int) $circle->parent_space_id])) && !in_array($id, $roots, true)) {
+                $roots[] = $id;
             }
-            usort($roots, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
         }
+        usort($roots, fn(int $a, int $b): int => strnatcasecmp($byId[$a]->space->name, $byId[$b]->space->name));
 
         $rows = [];
         $nodes = [];

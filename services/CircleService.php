@@ -39,6 +39,14 @@ final class CircleService
             $roles = $form->roleValues();
             Rules::assertRoles($roles, array_keys(Access::memberOptions($space)));
             $circle = $circle ?? new Circle(['space_id' => $space->id, 'revision' => -1]);
+            $color = $form->color ?: Circle::suggestedColor((int) $space->id);
+            if ($color === '') {
+                throw new \DomainException('Alle Kreisfarben sind vergeben. Bitte zuerst eine weitere Farbe ergänzen.');
+            }
+            if (Circle::find()->where(['color' => $color])->andWhere(['<>', 'space_id', $space->id])->exists()) {
+                throw new \DomainException('Diese Farbe ist bereits einem anderen Kreis zugeordnet. Bitte eine freie Farbe wählen.');
+            }
+            $circle->type = $form->type;
             $circle->purpose = $form->purpose;
             $circle->mandate = $form->mandate;
             $circle->mandate_summary = $form->mandate_summary;
@@ -48,7 +56,7 @@ final class CircleService
             $circle->budget = $form->budget;
             $circle->reelection_interval = $form->reelection_interval;
             $circle->review = $form->review;
-            $circle->color = $form->color;
+            $circle->color = $color;
             $circle->parent_space_id = $parentId;
             $circle->revision = (int) $circle->revision + 1;
             $circle->updated_at = time();

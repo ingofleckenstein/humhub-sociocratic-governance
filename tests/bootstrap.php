@@ -89,6 +89,9 @@ namespace {
     require dirname(__DIR__) . '/migrations/m260907_220000_work_archiving.php';
     require dirname(__DIR__) . '/migrations/m260907_230000_circle_colors.php';
     require dirname(__DIR__) . '/migrations/m260907_240000_balance_circle_colors.php';
+    require dirname(__DIR__) . '/migrations/m260908_090000_circle_type.php';
+    require dirname(__DIR__) . '/migrations/m260908_100000_resource_coverage_celebration.php';
+    require dirname(__DIR__) . '/migrations/m260908_110000_company_account.php';
     ob_start();
     (new \m260906_120000_initial())->up();
     ob_start();
@@ -99,6 +102,9 @@ namespace {
     if ((new \m260907_220000_work_archiving())->up() === false) { throw new \RuntimeException('Work archiving migration failed: ' . ob_get_contents()); }
     if ((new \m260907_230000_circle_colors())->up() === false) { throw new \RuntimeException('Circle colors migration failed: ' . ob_get_contents()); }
     if ((new \m260907_240000_balance_circle_colors())->up() === false) { throw new \RuntimeException('Balanced circle colors migration failed: ' . ob_get_contents()); }
+    if ((new \m260908_090000_circle_type())->up() === false) { throw new \RuntimeException('Circle type migration failed: ' . ob_get_contents()); }
+    if ((new \m260908_100000_resource_coverage_celebration())->up() === false) { throw new \RuntimeException('Resource coverage migration failed: ' . ob_get_contents()); }
+    if ((new \m260908_110000_company_account())->up() === false) { throw new \RuntimeException('Company account migration failed: ' . ob_get_contents()); }
     ob_end_clean();
     ob_end_clean();
     foreach ([1 => 'Kern', 2 => 'Technik', 3 => 'Privater Kreis'] as $id => $name) {

@@ -16,7 +16,7 @@
         return link;
     }
     function createNode(node) {
-        var safeColor = ['teal', 'moss', 'terracotta', 'plum', 'ochre', 'blue'].indexOf(node.color) !== -1 ? node.color : 'teal', size = Math.max(220, Math.min(290, Number(node.diameter) || 240));
+        var safeColor = ['teal', 'moss', 'terracotta', 'plum', 'ochre', 'blue', 'coral', 'indigo', 'raspberry', 'jade', 'amber', 'slate'].indexOf(node.color) !== -1 ? node.color : 'teal', size = Math.max(220, Math.min(290, Number(node.diameter) || 240));
         if (!node.parentId) { size = 310; }
         var card = element('article', 'sg-map-node sg-tone-' + safeColor + (node.focus ? ' is-focus' : '') + (!node.parentId ? ' sg-map-root' : '')); card.dataset.sgNodeId = String(node.id); card.style.width = size + 'px'; card.style.height = size + 'px';
         var header = element('header', 'sg-map-node-header'), title = document.createElement('a'); title.className = 'sg-map-node-title'; title.href = node.url; title.textContent = node.name; header.appendChild(title); header.appendChild(element('span', 'sg-map-member-count', String(node.members.length) + ' Mitglied' + (node.members.length === 1 ? '' : 'er'))); card.appendChild(header);

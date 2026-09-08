@@ -1,7 +1,7 @@
 <?php
 // SPDX-License-Identifier: AGPL-3.0-only
 require __DIR__ . '/bootstrap.php';
-use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Role};
+use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Configuration, Role};
 use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService, VCardData};
 use humhub\modules\space\models\Space;
 
@@ -13,10 +13,21 @@ function check($condition, string $message): void {
 }
 $service = new CircleService();
 $space = Space::findOne(1);
+$configuration = Configuration::findOne(1);
+$configuration->company_user_id = 3;
+check($configuration->save() && (int) Configuration::findOne(1)->company_user_id === 3, 'Optional company account persists for stream announcements');
+$configuration->company_user_id = null;
+$configuration->save(false);
 $form = new CircleForm(['purpose' => 'Gemeinschaft stärken', 'mandate' => 'Gesamtmandat', 'leader' => 1, 'delegate' => 2]);
 check($service->save($space, $form), 'First circle and roles persist through migration with table prefix');
 check(Role::find()->count() == 2, 'Both linking roles stored');
 check(Circle::findOne(1)->reelection_interval === 'Alle 6 Monate', 'New circles default to six-month reelection');
+$competence = CircleForm::forCircle(Circle::findOne(1));
+$competence->type = 'competence';
+check($service->save($space, $competence) && Circle::findOne(1)->isCompetenceCircle(), 'Competence circle type persists');
+$project = CircleForm::forCircle(Circle::findOne(1));
+$project->type = 'project';
+check($service->save($space, $project) && !Circle::findOne(1)->isCompetenceCircle(), 'Project circle remains the default type');
 $stale = CircleForm::forCircle(Circle::findOne(1));
 $fresh = CircleForm::forCircle(Circle::findOne(1));
 $fresh->purpose = 'Neuer Stand';
@@ -31,6 +42,10 @@ $invalid->leader = 3;
 check(!$service->save($space, $invalid), 'Nonmember cannot receive a role');
 $child = new CircleForm(['parent_space_id' => 1]);
 check($service->save(Space::findOne(2), $child), 'Child circle can reference parent');
+check(Circle::findOne(1)->color !== Circle::findOne(2)->color, 'New circles automatically receive distinct colors');
+$duplicateColor = CircleForm::forCircle(Circle::findOne(2));
+$duplicateColor->color = Circle::findOne(1)->color;
+check(!$service->save(Space::findOne(2), $duplicateColor), 'A circle cannot take a color already assigned to another circle');
 $directory = (new CircleDirectory())->data();
 check(count($directory['rows']) === 2 && $directory['rows'][0]['depth'] === 0 && $directory['rows'][1]['depth'] === 1, 'Directory returns visible circles as an indented hierarchy');
 $people = CircleDirectory::people(Circle::findOne(1));
