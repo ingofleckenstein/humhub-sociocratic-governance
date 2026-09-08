@@ -2,7 +2,7 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.4.0 – Mitwirkungs-Dashboard, Themen, persönliche Ressourcenzusagen und Archivierung, bereit für den Installationstest.**
+**Status: Version 0.5.0 – Mitwirkungs-Dashboard, Themen, persönliche Ressourcenzusagen, Ressourcen-Freigabe und Archivierung, bereit für den Installationstest.**
 Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Tabellenansicht beginnt beim konfigurierten Kernkreis, folgt der Projektkreis-Hierarchie und trennt Kompetenzkreise sichtbar ab. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie, aufklappbaren Kreisdetails, Mitgliedern und sichtbarer Doppelbindung. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 
 Im unveröffentlichten Arbeitsstand ergänzt: vollständiger Mitgliederring in der
@@ -499,7 +499,7 @@ Versionsnummern ersetzen keine Datenbankmigrationen und keine dokumentierten Upg
 
 ## 13. Aktueller Repository- und Teststand
 
-**Version 0.2.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
+**Version 0.5.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
 
 Implementiert:
 

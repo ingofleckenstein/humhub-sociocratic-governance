@@ -1,6 +1,6 @@
 # Änderungen
 
-## 0.4.1 – 2026-09-08
+## 0.5.0 – 2026-09-08
 
 
 ### Ressourcen als Startvoraussetzung – 2026-09-08
@@ -28,24 +28,6 @@
   Gold für Aufmerksamkeit.
 - Navigation, Karten, Stream, Formulare, Buttons, Tabellen und Fokuszustände
   erhalten ein gemeinsames, barrierebewusstes Erscheinungsbild ohne Core-Patch.
-
-### Ressourcen als Startvoraussetzung – 2026-09-08
-
-- Aufgaben mit definierten Ressourcen können erst in „In Bearbeitung“ wechseln,
-  wenn jede Ressource eine Menge hat und vollständig zugesagt ist.
-- Sobald die letzte Ressource eines Vorhabens gedeckt ist, erscheint einmalig
-  eine Feiermeldung im Stream des zugehörigen Kreises.
-- Die versionierte Migration `m260908_100000_resource_coverage_celebration`
-  hält den Zeitpunkt fest, damit wiederholte Änderungen keine doppelten
-  Feiermeldungen erzeugen.
-
-### Optionales Unternehmenskonto für Feiermeldungen – 2026-09-08
-
-- Das Backend kann ein aktives Unternehmenskonto wählen. Es veröffentlicht
-  Feiermeldungen im Kreis-Stream; ohne Auswahl bleibt die auslösende Person
-  die Autorin beziehungsweise der Autor.
-- Die versionierte Migration `m260908_110000_company_account` speichert die
-  optionale Zuordnung und entfernt sie automatisch, falls das Konto gelöscht wird.
 
 ### Mitwirkungs-Dashboard und zuverlässige Ideenhinweise – 2026-09-07
 
