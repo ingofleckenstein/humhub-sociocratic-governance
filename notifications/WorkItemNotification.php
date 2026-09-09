@@ -20,6 +20,9 @@ final class WorkItemNotification extends BaseNotification
     public function event(string $eventType): self
     {
         $this->eventType = $eventType;
+        // Notification records are reconstructed later from the database. Keep
+        // the concrete workflow event in HumHub's persisted payload as well.
+        $this->payload = ['eventType' => $eventType];
         return $this;
     }
 
@@ -62,7 +65,8 @@ final class WorkItemNotification extends BaseNotification
 
     private function eventLabel(): string
     {
-        return match ($this->eventType) {
+        $eventType = $this->payload['eventType'] ?? $this->eventType;
+        return match ($eventType) {
             'created_idea' => Yii::t('SociocraticGovernanceModule.base', 'hat eine neue Idee eingereicht:'),
             'created_task' => Yii::t('SociocraticGovernanceModule.base', 'hat eine neue Aufgabe angelegt:'),
             'accepted' => Yii::t('SociocraticGovernanceModule.base', 'hat die Idee als Aufgabe übernommen:'),

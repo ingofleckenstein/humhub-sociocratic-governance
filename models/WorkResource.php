@@ -13,7 +13,7 @@ class WorkResource extends \yii\db\ActiveRecord
     {
         return [
             [['resource_type', 'label', 'unit', 'time_mode', 'time_pattern'], 'trim'],
-            [['work_item_id', 'resource_type', 'label'], 'required'],
+            [['work_item_id', 'resource_type', 'label', 'unit'], 'required'],
             ['work_item_id', 'integer', 'min' => 1],
             ['resource_type', 'in', 'range' => array_keys(self::TYPES)],
             ['time_mode', 'in', 'range' => array_merge([''], array_keys(self::TIME_MODES))],

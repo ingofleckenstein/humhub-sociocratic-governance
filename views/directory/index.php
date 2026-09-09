@@ -59,18 +59,15 @@ $person = static function ($user, string $roles, string $roleKey = '') use ($ava
 $circleUrl = static function ($circle): string {
     return (string) $circle->space->createUrl($circle->isCompetenceCircle() ? '/space/space/home' : '/sociocratic-governance/circle/index');
 };
+$membersUrl = static fn($circle): string => (string) $circle->space->createUrl('/space/membership/members-list');
+$workUrl = static fn($circle): string => (string) $circle->space->createUrl('/sociocratic-governance/work/index');
 $graph = ['nodes' => [], 'links' => []];
 foreach ($nodes as $id => $node) {
     $circle = $node['circle'];
-    $members = [];
-    foreach ($node['people'] as $member) { $members[] = $person($member['user'], $member['label']); }
-    $roles = [];
-    foreach ($activeRoles($circle) as $role) { $roles[] = $person($role->user, Role::LABELS[$role->role_key] ?? $role->role_key, $role->role_key); }
     $graph['nodes'][] = [
         'id' => (int) $id, 'name' => (string) $circle->space->name,
-        'url' => $circleUrl($circle),
-        'purpose' => trim((string) $circle->purpose), 'mandate' => $circle->mandateSummary(),
-        'members' => $members, 'roles' => $roles, 'diameter' => (int) $node['diameter'],
+        'url' => $circleUrl($circle), 'membersUrl' => $membersUrl($circle), 'workUrl' => $workUrl($circle),
+        'mandate' => $circle->mandateSummary(), 'memberCount' => count($node['people']), 'diameter' => (int) $node['diameter'],
         'x' => (float) $node['x'], 'depth' => (int) $node['depth'],
         'parentId' => (int) $node['parentId'], 'focus' => in_array($id, $focusSpaceIds, true),
         'color' => (string) $circle->color,

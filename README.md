@@ -2,8 +2,8 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.5.0 – Mitwirkungs-Dashboard, Themen, persönliche Ressourcenzusagen, Ressourcen-Freigabe und Archivierung, bereit für den Installationstest.**
-Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Tabellenansicht beginnt beim konfigurierten Kernkreis, folgt der Projektkreis-Hierarchie und trennt Kompetenzkreise sichtbar ab. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie, aufklappbaren Kreisdetails, Mitgliedern und sichtbarer Doppelbindung. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
+**Status: Version 0.5.3 – Vorhaben-Board mit Ideen, Ressourcen, unveränderlichen Vorschlagsversionen und Archivierung, bereit für den Installationstest.**
+Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Tabellenansicht beginnt beim konfigurierten Kernkreis, folgt der Projektkreis-Hierarchie und trennt Kompetenzkreise sichtbar ab. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie und sichtbarer Doppelbindung; ihre Schaltflächen führen zu Kreisinfos, Mitgliederseite und Vorhaben-Board. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 
 Im unveröffentlichten Arbeitsstand ergänzt: vollständiger Mitgliederring in der
 Kreisgrafik, VCard-Platzhalter für Popover VCard 1.2.x ab 1.2.1 und Einrichtung
@@ -260,10 +260,11 @@ Technische Richtung: eine eigene Domäne innerhalb der Governance-Erweiterung au
 Ein erstes Kanban-Board ist lokal implementiert: Ideen einreichen und kommentieren,
 Annahme durch Kreisleitung oder Delegierte*n, „Mir zuweisen“, Bearbeitung,
 Ergebnisvorlage und Abnahme. Derzeit bestätigen beide Rollen die Abnahme; ein
-Konsentbeschluss ist damit nicht verbunden. Aufgaben können Mitglieder an den
-direkten Oberkreis oder direkte Unterkreise delegieren. Der vollständige Verlauf
-bleibt erhalten; bei Kreiswechsel setzt Lesen Zugang zu allen beteiligten Kreisen
-voraus. Die HTTP-/MySQL-Abnahme steht aus.
+Konsentbeschluss ist damit nicht verbunden. Kreisleitung oder Delegierte*r können
+Vorschläge und Aufgaben an den direkten Oberkreis oder direkte Unterkreise
+delegieren. Der aktuelle Stand wird im Zielkreis weiterbearbeitet; geschützte
+frühere Diskussionen und Fassungen bleiben dort verborgen. Die HTTP-/MySQL-
+Abnahme steht aus.
 
 [Arbeitsstand und offene M2-Pakete](docs/VORHABEN-PLAN.md). Konsentrunden,
 Sitzungszuordnung und Beschlussregister sind noch nicht implementiert.

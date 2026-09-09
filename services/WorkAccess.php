@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 namespace humhub\modules\sociocraticGovernance\services;
 
-use humhub\modules\sociocraticGovernance\models\{Circle, WorkItem};
+use humhub\modules\sociocraticGovernance\models\{Circle, WorkEvent, WorkItem};
 use humhub\modules\space\models\Space;
 use humhub\modules\user\models\User;
 
@@ -16,12 +16,9 @@ final class WorkAccess
     }
     public static function read(WorkItem $item): bool
     {
-        if (!self::activeUser() || !Access::read($item->space)) { return false; }
-        // A transfer never declassifies earlier private discussions or text versions.
-        foreach (array_unique(array_column($item->events, 'space_id')) as $id) {
-            if (!Access::read(Space::findOne($id))) { return false; }
-        }
-        return true;
+        // A deliberate delegation transfers the current work item into the
+        // receiving circle. Earlier private history remains separately guarded.
+        return self::activeUser() && Access::read($item->space);
     }
     /**
      * Equivalent of read() for a notification recipient. A transferred item
@@ -29,9 +26,18 @@ final class WorkAccess
      */
     public static function readForUser(WorkItem $item, User $user): bool
     {
-        if (!Access::readForUser($item->space, $user)) { return false; }
+        return Access::readForUser($item->space, $user);
+    }
+    /** Whether the active person may see one historical entry of a work item. */
+    public static function canReadEvent(WorkEvent $event): bool
+    {
+        return Access::read($event->space);
+    }
+    /** Older proposal versions remain protected when a private circle delegated the item. */
+    public static function canReadFullHistory(WorkItem $item): bool
+    {
         foreach (array_unique(array_column($item->events, 'space_id')) as $id) {
-            if (!Access::readForUser(Space::findOne($id), $user)) { return false; }
+            if (!Access::read(Space::findOne($id))) { return false; }
         }
         return true;
     }

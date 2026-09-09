@@ -19,17 +19,10 @@
         var safeColor = ['teal', 'moss', 'terracotta', 'plum', 'ochre', 'blue', 'coral', 'indigo', 'raspberry', 'jade', 'amber', 'slate'].indexOf(node.color) !== -1 ? node.color : 'teal', size = Math.max(220, Math.min(290, Number(node.diameter) || 240));
         if (!node.parentId) { size = 310; }
         var card = element('article', 'sg-map-node sg-tone-' + safeColor + (node.focus ? ' is-focus' : '') + (!node.parentId ? ' sg-map-root' : '')); card.dataset.sgNodeId = String(node.id); card.style.width = size + 'px'; card.style.height = size + 'px';
-        var header = element('header', 'sg-map-node-header'), title = document.createElement('a'); title.className = 'sg-map-node-title'; title.href = node.url; title.textContent = node.name; header.appendChild(title); header.appendChild(element('span', 'sg-map-member-count', String(node.members.length) + ' Mitglied' + (node.members.length === 1 ? '' : 'er'))); card.appendChild(header);
+        var header = element('header', 'sg-map-node-header'), title = document.createElement('a'); title.className = 'sg-map-node-title'; title.href = node.url; title.textContent = node.name; header.appendChild(title); header.appendChild(element('span', 'sg-map-member-count', String(node.memberCount) + ' Mitglied' + (node.memberCount === 1 ? '' : 'er'))); card.appendChild(header);
         card.appendChild(element('p', 'sg-map-node-mandate', node.mandate || 'Mandat noch nicht beschrieben.'));
-        var actions = element('div', 'sg-map-node-actions'), detailsButton = element('button', 'sg-map-node-action', 'Infos'), membersButton = element('button', 'sg-map-node-action', 'Mitglieder'); detailsButton.type = membersButton.type = 'button'; actions.append(detailsButton, membersButton); card.appendChild(actions);
-        var details = element('section', 'sg-map-details'); details.hidden = true; details.appendChild(element('h3', '', 'Kreisprofil'));
-        if (node.purpose) { details.appendChild(element('h4', '', 'Zweck')); details.appendChild(element('p', '', node.purpose)); }
-        details.appendChild(element('h4', '', 'Mandat')); details.appendChild(element('p', '', node.mandate || 'Noch nicht beschrieben.'));
-        if (node.roles.length) { details.appendChild(element('h4', '', 'Rollen')); var roles = element('div', 'sg-map-role-list'); node.roles.forEach(function (role) { roles.appendChild(personRow(role, false)); }); details.appendChild(roles); } card.appendChild(details);
-        var members = element('section', 'sg-map-members'); members.hidden = true; members.appendChild(element('h3', '', 'Mitglieder'));
-        if (node.members.length) { var list = element('div', 'sg-map-member-list'); node.members.forEach(function (member) { list.appendChild(personRow(member, false)); }); members.appendChild(list); } else { members.appendChild(element('p', 'sg-muted', 'Keine aktiven Mitglieder sichtbar.')); } card.appendChild(members);
-        function toggle(panel, button) { var willOpen = panel.hidden; panel.hidden = !willOpen; button.setAttribute('aria-expanded', willOpen ? 'true' : 'false'); card.dispatchEvent(new CustomEvent('sg:node-size-changed', {bubbles: true})); }
-        detailsButton.setAttribute('aria-expanded', 'false'); membersButton.setAttribute('aria-expanded', 'false'); detailsButton.addEventListener('click', function () { toggle(details, detailsButton); }); membersButton.addEventListener('click', function () { toggle(members, membersButton); }); return card;
+        var actions = element('div', 'sg-map-node-actions'); [['Infos', node.url], ['Mitglieder', node.membersUrl], ['Vorhaben', node.workUrl]].forEach(function (action) { var link = document.createElement('a'); link.className = 'sg-map-node-action'; link.href = action[1]; link.textContent = action[0]; actions.appendChild(link); }); card.appendChild(actions);
+        return card;
     }
     function initTabs() {
         document.querySelectorAll('[data-sg-directory-tab]').forEach(function (button) {
@@ -193,7 +186,36 @@
         map.addEventListener('keydown', function (event) { if (event.key === '+' || event.key === '=') { event.preventDefault(); changeZoom(1.18); } if (event.key === '-') { event.preventDefault(); changeZoom(0.85); } if (event.key === 'Home') { event.preventDefault(); position(); } });
         var drag = null; map.addEventListener('pointerdown', function (event) { if (event.target.closest('a, button')) { return; } drag = {x: event.clientX, y: event.clientY, tx: tx, ty: ty}; map.setPointerCapture(event.pointerId); }); map.addEventListener('pointermove', function (event) { if (!drag) { return; } tx = drag.tx + event.clientX - drag.x; ty = drag.ty + event.clientY - drag.y; positioned = true; apply(); }); map.addEventListener('pointerup', function () { drag = null; }); window.requestAnimationFrame(function () { if (!positioned) { position(); } });
     }
-    function init() { initTabs(); document.querySelectorAll('[data-sg-circle-map]').forEach(initMap); }
+    function initWorkActions() {
+        document.querySelectorAll('[data-sg-work-action]').forEach(function (select) {
+            if (select.dataset.sgWorkActionInitialized) { return; }
+            var target = document.getElementById(select.dataset.sgWorkAction);
+            if (!target) { return; }
+            select.dataset.sgWorkActionInitialized = '1';
+            function update() { target.hidden = select.value !== 'delegate'; }
+            select.addEventListener('change', update); update();
+        });
+    }
+    function initResourceForms() {
+        document.querySelectorAll('[data-sg-resource-type]').forEach(function (select) {
+            if (select.dataset.sgResourceTypeInitialized) { return; }
+            var form = select.closest('form'), panel = form && form.querySelector('[data-sg-resource-participation]');
+            if (!panel) { return; }
+            var mode = panel.querySelector('[data-sg-resource-mode]'), pattern = panel.querySelector('[data-sg-resource-pattern]'),
+                modeLabel = panel.querySelector('[data-sg-resource-mode-label]'), patternLabel = panel.querySelector('[data-sg-resource-pattern-label]');
+            select.dataset.sgResourceTypeInitialized = '1';
+            function update() {
+                var required = select.value === 'time' || select.value === 'expertise', optional = select.value === 'other', visible = required || optional;
+                panel.hidden = !visible;
+                mode.disabled = pattern.disabled = !visible;
+                mode.required = pattern.required = required;
+                modeLabel.textContent = required ? 'Form der Mitwirkung (Pflicht)' : 'Form der Mitwirkung (optional)';
+                patternLabel.textContent = required ? 'Zeitlicher Rahmen oder Termin (Pflicht)' : 'Zeitlicher Rahmen oder Termin (optional)';
+            }
+            select.addEventListener('change', update); update();
+        });
+    }
+    function init() { initTabs(); initWorkActions(); initResourceForms(); document.querySelectorAll('[data-sg-circle-map]').forEach(initMap); }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
     if (window.jQuery) { window.jQuery(document).on('humhub:ready', init); }
 }());

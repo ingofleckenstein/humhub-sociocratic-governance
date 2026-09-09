@@ -1,4 +1,4 @@
-# Installation von Version 0.5.0
+# Installation von Version 0.5.9
 
 Erste Entwicklungsfassung für HumHub Community Edition 1.18.5.
 Vollständiger Installationstest auf MySQL/MariaDB steht noch aus.
@@ -24,6 +24,12 @@ HumHub-Befehle laufen unter diesem Benutzer. Siehe [Deployment](DEPLOYMENT.md).
 5. Den Kernkreis zuerst ohne Oberkreis speichern. Weitere Kreise danach einrichten.
 6. In der globalen Modulkonfiguration Kernkreis, Trägerorganisation und bei Bedarf
    Admin-Sonderrolle festlegen.
+7. Unter Administration → Nutzer*innen → Profilattribute verwalten erscheint die
+   Kategorie „Rollen & Zuständigkeiten“. Das optionale Feld „Form der Mitarbeit“
+   unterscheidet hauptamtliche, hauptamtliche unentgeltliche und ehrenamtliche
+   Mitarbeit und erläutert die Abgrenzung über den regelmäßigen Wochenumfang. Der
+   Reiter listet außerdem die sichtbaren Projekt- und Kompetenzkreise der Person
+   sowie die dort übernommenen Rollen.
 
 Manuelle Direktlinks, falls die Navigation noch nicht angezeigt wird:
 
@@ -157,7 +163,10 @@ bestehender Historie nicht endgültig löschen (Fremdschlüssel mit RESTRICT).
 Stattdessen archivieren. Beim Kreiswechsel bleiben alte Zugriffsgrenzen bestehen;
 Personen ohne Zugang zu einem früheren Kreis sehen das gesamte Vorhaben nicht.
 Konsentverfahren und Sitzungszuordnung sind noch nicht Bestandteil des Boards.
-Neue Ideen benachrichtigen Kreisleitung und Delegierte*n im HumHub-Benachrichtigungsmenü.
+Neue Ideen benachrichtigen Kreisleitung und Delegierte*n im HumHub-Benachrichtigungsmenü
+und erscheinen im Stream des adressierten Kreises. Bei Annahme, Rückmeldung,
+Statuswechsel und Abnahme erhält die einreichende Person – soweit sie weiterhin
+zugriffsberechtigt ist – ebenfalls eine In-App-Benachrichtigung.
 Bei Annahme, Rückmeldung, Statuswechsel und Abnahme werden nur direkt beteiligte,
 weiterhin zugriffsberechtigte Personen informiert. Die Kategorie ist standardmäßig
 eine reine In-App-Benachrichtigung; sie versendet keine E-Mails. Siehe

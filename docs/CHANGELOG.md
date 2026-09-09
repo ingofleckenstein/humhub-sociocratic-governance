@@ -1,5 +1,121 @@
 # Änderungen
 
+## 0.5.9 – 2026-09-09
+
+### Abnahmeprüfung und klare Rückmeldungen
+
+- Das Begründungsfeld ist bei Annahme, Delegation, Rückgabe und Ergebnisvorlage
+  immer sichtbar; nur die Auswahl des Zielkreises wird bei einer Delegation
+  eingeblendet.
+- Benachrichtigungen speichern den konkreten Schritt dauerhaft. Neue Vorschläge
+  erscheinen dadurch als „hat eine neue Idee eingereicht“ statt nur als
+  unspezifische Aktualisierung.
+- Nach einer eigenen Abnahme verschwindet deren Schaltfläche. Erst die andere
+  erforderliche Rolle kann die zweite Bestätigung abgeben.
+- Beim Übergang aus einem geschützten Kreis wird dessen Name nicht mehr über
+  die Detailansicht des Übergabeereignisses preisgegeben.
+
+## 0.5.8 – 2026-09-09
+
+### Sichere Übergaben und klare Zuständigkeit
+
+- Kreisleitung und Delegierte*r entscheiden einheitlich über jede Delegation.
+  Normale Mitglieder sehen stattdessen ihren sinnvollen nächsten Beitrag.
+- Eine Delegation überträgt den aktuellen Stand in den Zielkreis und startet
+  dort einen neuen gemeinsamen Streambeitrag. Geschützte frühere Diskussionen,
+  Ereignisse und Vorschlagsfassungen bleiben im Ursprungskreis verborgen.
+- Einzelansichten verwenden jetzt „Vorschlag“ beziehungsweise „Aufgabe“ und
+  verständliche Bearbeitungsstände statt der pluralen Board-Spaltenüberschrift.
+
+## 0.5.7 – 2026-09-09
+
+### Zuständigkeit beim nächsten Schritt
+
+- Für Vorschläge können die Kreisleitung und die delegierte Person annehmen
+  oder an einen direkt benachbarten Kreis delegieren. Alle anderen sehen eine
+  verständliche Erklärung ihres nächsten möglichen Beitrags statt einer
+  nicht ausführbaren Entscheidungsauswahl.
+
+## 0.5.6 – 2026-09-09
+
+### Verlinkte Streambeiträge
+
+- Streambeiträge zu Vorhaben verwenden nun HumHubs Markdown-Links statt
+  sichtbar ausgegebenem HTML. Bereits erzeugte Systembeiträge werden bei der
+  Aktualisierung ebenfalls repariert.
+
+## 0.5.5 – 2026-09-09
+
+### Gemeinsame Diskussion und kompakte Aktionen
+
+- Jedes neue Vorhaben erhält einen eigenen Streambeitrag. Seine HumHub-
+  Kommentarleiste ist zugleich die Diskussion im Vorhaben – mit Markdown,
+  Antworten, Erwähnungen und Benachrichtigungen, ohne doppelte Kommentare.
+- Bereits bestehende Vorhaben können die gemeinsame Diskussion gezielt im
+  Vorhaben anlegen. So werden alte Streams nicht ungefragt mit Beiträgen gefüllt.
+- Die Karten für „Nächster Schritt“ und „… präzisieren“ sind einklappbar.
+  Bei einer offenen Aufgabe ist „Nächster Schritt“ zunächst geschlossen.
+- Unter „Worum geht es?“ zeigt eine kompakte Ressourcenübersicht jeden Bedarf
+  und den Anteil der vollständig gedeckten Ressourcen in Prozent.
+
+## 0.5.4 – 2026-09-09
+
+### Ressourcen verständlicher erfassen
+
+- Die Form der Mitwirkung und der zeitliche Rahmen sind bei Arbeitszeit und
+  Expertise verpflichtend. Bei „Anderes“ können sie optional ergänzt werden;
+  bei Geld und Material bleiben sie ausgeblendet.
+- Jede Ressource braucht nun eine Einheit. Ist keine passend, wird ausdrücklich
+  „o. E.“ (ohne Einheit) eingetragen.
+
+## 0.5.3 – 2026-09-09
+
+### Vorschläge, Delegation und Kreis-Karte
+
+- Jede neue Idee beginnt als Vorschlagsversion 1. Jede inhaltliche
+  Präzisierung erstellt eine unveränderliche nächste Version mit Titel,
+  Beschreibung und Themen; alle Fassungen sind im Verlauf direkt lesbar.
+- Ideen können durch Kreisleitung oder Delegierte*n nun ebenso an einen
+  direkten Unterkreis wie an den Oberkreis delegiert werden. Die Zielauswahl
+  erscheint nur, wenn „An einen anderen Kreis delegieren“ gewählt ist.
+- Die Schaltflächen „Infos“, „Mitglieder“ und „Vorhaben“ auf der Kreis-Karte
+  führen zu den jeweiligen Seiten, statt Informationen innerhalb der Karte
+  aufzuklappen.
+
+## 0.5.2 – 2026-09-09
+
+### Entscheidungen und Rollen verständlich bündeln
+
+- „Nächster Schritt“ befindet sich unter „Mitmachen & umsetzen“. Die Annahme
+  im Mandat und die Delegation sind dort eine gemeinsame Auswahl; Delegationen
+  bleiben auf den direkt höheren oder niedrigeren Kreis beschränkt.
+- „Inhalt bearbeiten“ heißt nun kontextgerecht „Aufgabe präzisieren“ oder
+  „Vorschlag präzisieren“.
+- Die Profilkategorie heißt „Rollen & Zuständigkeiten“. Ein virtuelles,
+  schreibgeschütztes Profilfeld zeigt darin alle sichtbaren Projekt- und
+  Kompetenzkreise einer Person sowie die dort ausgeübten Rollen.
+
+## 0.5.1 – 2026-09-09
+
+### Verständlichere Vorhabenkommunikation
+
+- Neue Ideen werden zusätzlich im Stream des zuständigen Kreises angekündigt.
+- Die Meldung über vollständig gedeckte Ressourcen und die Ideenmeldung verlinken
+  direkt auf das jeweilige Vorhaben.
+- Das im Backend wählbare Konto heißt nun „Unternehmenskonto für allgemeine
+  Kommunikation“ und veröffentlicht beide Arten von Streammeldungen.
+- Einreichende erhalten bei späteren Änderungen weiterhin zugriffsberechtigte
+  In-App-Benachrichtigungen. Die Detailansicht fasst Einreichung, Kreis und
+  zuständige Person zusammen, gruppiert alle Mitwirkungsaktionen an einer Stelle
+  und zeigt den Verlauf ohne technische Kennungen.
+
+### Profilangaben zum soziokratischen Modell
+
+- Die Migration `m260909_170000_sociocratic_profile_fields` ergänzt im HumHub-
+  Profilattribute-Management die Kategorie „Soziokratisches Modell“ und das
+  Auswahlfeld „Form der Mitarbeit“ mit hauptamtlich, hauptamtlich
+  (unentgeltlich) und ehrenamtlich.
+
 ## 0.5.0 – 2026-09-08
 
 

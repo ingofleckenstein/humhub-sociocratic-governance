@@ -15,6 +15,8 @@ class WorkItem extends \yii\db\ActiveRecord
             ['title', 'string', 'max' => 255], ['description', 'string', 'max' => 20000],
             ['kind', 'in', 'range' => ['idea', 'task']],
             ['status', 'in', 'range' => array_keys(self::STATUSES)],
+            ['proposal_version', 'integer', 'min' => 0],
+            ['stream_post_id', 'integer', 'min' => 1],
             [['archived_at', 'archived_by'], 'integer', 'min' => 1],
         ];
     }
@@ -22,6 +24,10 @@ class WorkItem extends \yii\db\ActiveRecord
     public function getAuthor() { return $this->hasOne(\humhub\modules\user\models\User::class, ['id' => 'author_id']); }
     public function getAssignee() { return $this->hasOne(\humhub\modules\user\models\User::class, ['id' => 'assignee_id']); }
     public function getEvents() { return $this->hasMany(WorkEvent::class, ['work_item_id' => 'id'])->orderBy(['id' => SORT_ASC]); }
+    /** Immutable snapshots of an idea, including its initial submitted text. */
+    public function getProposalRevisions() { return $this->hasMany(WorkProposalRevision::class, ['work_item_id' => 'id'])->orderBy(['version' => SORT_DESC]); }
+    /** The one stream entry whose comment thread is shared with this work item. */
+    public function getStreamPost() { return $this->hasOne(\humhub\modules\post\models\Post::class, ['id' => 'stream_post_id']); }
     public function getTopics() { return $this->hasMany(WorkTopic::class, ['work_item_id' => 'id'])->orderBy(['name' => SORT_ASC]); }
     public function getResources() { return $this->hasMany(WorkResource::class, ['work_item_id' => 'id'])->orderBy(['id' => SORT_ASC]); }
     public function getCircle() { return $this->hasOne(Circle::class, ['space_id' => 'space_id']); }

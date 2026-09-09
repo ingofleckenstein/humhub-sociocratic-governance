@@ -18,7 +18,7 @@ class Configuration extends \yii\db\ActiveRecord
     }
     public function attributeLabels()
     {
-        return ['root_space_id' => 'Kernkreis', 'authority_user_id' => 'Person mit Admin-Sonderrolle', 'company_user_id' => 'Unternehmenskonto für Feiermeldungen', 'organisation' => 'Übergeordnete Trägerorganisation',
+        return ['root_space_id' => 'Kernkreis', 'authority_user_id' => 'Person mit Admin-Sonderrolle', 'company_user_id' => 'Unternehmenskonto für allgemeine Kommunikation', 'organisation' => 'Übergeordnete Trägerorganisation',
             'work_auto_archive_days' => 'Abgelehnte und abgenommene Aufgaben automatisch archivieren nach Tagen'];
     }
 }

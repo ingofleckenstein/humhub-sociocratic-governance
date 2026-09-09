@@ -12,9 +12,10 @@ auf HumHub/MySQL und im tatsächlichen Theme steht aus. M2 ist damit nicht volls
 - Kreisleitung oder Delegierte*r nehmen Ideen mit dokumentiertem Mandatsbezug
   als Aufgabe an. Nummer, Urheberschaft, ursprüngliche Idee und Verlauf bleiben
   durchgängig erhalten. Der Ideenstatus ist keine Sinnhaftigkeitsabstimmung.
-- Außerhalb des Mandats leitet eine der beiden Rollen an den direkten Oberkreis
-  weiter. Am obersten Kreis ist ein begründeter Abschluss außerhalb des
-  Gesamtmandats möglich. Eine Weiterleitung ist keine inhaltliche Ablehnung.
+- Eine der beiden Rollen kann einen Vorschlag an den direkten Oberkreis oder
+  einen direkten Unterkreis weiterleiten, wenn dort das passende Mandat liegt.
+  Am obersten Kreis ist ein begründeter Abschluss außerhalb des Gesamtmandats
+  möglich. Eine Weiterleitung ist keine inhaltliche Ablehnung.
 - Mitglieder dürfen Aufgaben direkt im bestehenden Mandat erstellen und offene
   Aufgaben über „Mir zuweisen“ übernehmen. Bereits übernommene Aufgaben können
   nicht von anderen Mitgliedern über diese Aktion umverteilt werden.
@@ -25,11 +26,15 @@ auf HumHub/MySQL und im tatsächlichen Theme steht aus. M2 ist damit nicht volls
   Bestätigungen erforderlich** (aus dem Auftrag abgeleitete Voreinstellung).
   Rollenwechsel entwerten eine noch offene Bestätigung der früheren Rollenperson.
   Zurückgeben zur Nacharbeit setzt die Bestätigungen zurück.
-- Aufgaben lassen sich durch Mitglieder ausschließlich an den direkten Oberkreis
-  oder direkte Unterkreise delegieren. Im Zielkreis beginnen sie offen und ohne
-  Zuweisung. Andere Kreise und übersprungene Hierarchieebenen sind ausgeschlossen.
+- Kreisleitung oder Delegierte*r können Vorschläge und Aufgaben ausschließlich
+  an den direkten Oberkreis oder direkte Unterkreise delegieren. Im Zielkreis
+  beginnen Aufgaben offen und ohne Zuweisung; gleichzeitig startet dort eine
+  neue gemeinsame Diskussion. Andere Kreise und übersprungene Hierarchieebenen
+  sind ausgeschlossen.
 - Titel, Beschreibung, Kommentare und alle Prozessschritte erscheinen im Verlauf
-  mit Zeitpunkt, Akteur, damaligem Kreis und vorherigem/neuem Stand.
+  mit Zeitpunkt, Akteur, damaligem Kreis und vorherigem/neuem Stand. Jede
+  inhaltliche Präzisierung einer Idee erzeugt zusätzlich eine unveränderliche
+  Vorschlagsversion mit Titel, Beschreibung und Themen.
 - Themen können beim Erstellen und Bearbeiten vergeben werden. Das globale
   Mitwirkungs-Dashboard fasst alle zugriffsberechtigten Ideen und Aufgaben nach
   Themen zusammen.
@@ -39,10 +44,18 @@ auf HumHub/MySQL und im tatsächlichen Theme steht aus. M2 ist damit nicht volls
   ab; sichtbar sind nur die Mitwirkenden sowie der aggregierte Stand, niemals Art
   oder Höhe der einzelnen Zusage. Zeit wird als asynchron leistbare Stunden oder
   als termingebundene Zeit mit Rhythmus beschrieben. Das Dashboard kann darauf
-  fokussieren.
+  fokussieren. Sobald alles gedeckt ist, verlinkt die Streammeldung direkt auf das
+  betreffende Vorhaben.
 - Neue Ideen werden nach dem erfolgreichen Speichern sofort als reine In-App-
-  Benachrichtigung an Kreisleitung und Delegierte*n zugestellt. Die Zustellung
-  erstellt nicht erst einen separaten Warteschlangenauftrag.
+  Benachrichtigung an Kreisleitung und Delegierte*n zugestellt. Der zugehörige
+  Streambeitrag ist zugleich die gemeinsame Diskussion: Kommentare, Antworten,
+  Erwähnungen und Markdown erscheinen identisch im Stream und im Vorhaben.
+- Die einreichende Person erhält bei jeder späteren, weiterhin zugriffsberechtigten
+  Änderung eine In-App-Benachrichtigung. Die Detailansicht fasst Einreichung,
+  zuständigen Kreis und verantwortliche Person zusammen und trennt verständlich
+  zwischen „Worum geht es?“, „Mitmachen & umsetzen“ und „Bisheriger Weg“. Die
+  Entscheidung „im Mandat annehmen“ und die Delegation an einen direkt höheren
+  oder niedrigeren Kreis sind gemeinsam unter „Nächster Schritt“ zu finden.
 
 ## Rechte und technische Grenzen
 
@@ -51,11 +64,10 @@ Statuswechsel erfolgen über beschriftete Formulare; Drag-and-drop ist nicht
 implementiert. Markdown in Beschreibung und Kommentaren wird mit HumHubs
 Rich-Text-Ausgabe dargestellt; im isolierten Renderer wird escaped ausgegeben.
 
-Nach einer Delegation setzt Lesen zusätzlich Zugang zu allen früher beteiligten
-Kreisen voraus. Diese konservative Voreinstellung verhindert, dass interne Texte
-oder Kommentare durch Verschieben in einen öffentlichen Kreis offengelegt werden.
-Sie kann die Zusammenarbeit mit Mitgliedern eines Zielkreises einschränken;
-eine gezielte Freigabe von Übergabetexten ist noch zu gestalten.
+Eine Delegation überträgt den aktuellen Stand ausdrücklich in den Zielkreis.
+Frühere Streamdiskussionen, Ereignisse und Vorschlagsfassungen aus geschützten
+Kreisen bleiben für Personen ohne deren Zugriffsrecht verborgen. Dadurch ist die
+Übergabe arbeitsfähig, ohne alte private Beratungen offenzulegen.
 
 Alle Mutationen laufen über POST/CSRF und serverseitige Rechteprüfung. Status und
 Revision werden in einer Transaktion geprüft, der Vorhabensatz auf MySQL vor

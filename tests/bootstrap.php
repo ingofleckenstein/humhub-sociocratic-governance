@@ -59,6 +59,17 @@ namespace humhub\modules\user\models {
         public function getUrl() { return '/user/' . $this->id; }
     }
 }
+namespace humhub\modules\post\models {
+    class Post extends \yii\db\ActiveRecord {
+        public $content;
+        public function __construct($space = null, $config = []) {
+            parent::__construct($config);
+            $this->content = (object) ['created_by' => null, 'updated_by' => null];
+        }
+        public static function tableName() { return '{{%post}}'; }
+        public function rules() { return [['message', 'required']]; }
+    }
+}
 namespace humhub\components {
     class Widget extends \yii\base\Widget {}
 }
@@ -81,6 +92,7 @@ namespace {
     $db->createCommand('PRAGMA foreign_keys=ON')->execute();
     $db->createCommand()->createTable('{{%space}}', ['id' => 'pk', 'name' => 'string', 'visibility' => 'integer'])->execute();
     $db->createCommand()->createTable('{{%user}}', ['id' => 'pk', 'name' => 'string', 'status' => 'integer'])->execute();
+    $db->createCommand()->createTable('{{%post}}', ['id' => 'pk', 'message' => 'text'])->execute();
     require dirname(__DIR__) . '/migrations/m260906_120000_initial.php';
     require dirname(__DIR__) . '/migrations/m260906_130000_expand_circle_mandate.php';
     require dirname(__DIR__) . '/migrations/m260906_180000_work_board.php';
@@ -92,6 +104,8 @@ namespace {
     require dirname(__DIR__) . '/migrations/m260908_090000_circle_type.php';
     require dirname(__DIR__) . '/migrations/m260908_100000_resource_coverage_celebration.php';
     require dirname(__DIR__) . '/migrations/m260908_110000_company_account.php';
+    require dirname(__DIR__) . '/migrations/m260909_180000_proposal_versions.php';
+    require dirname(__DIR__) . '/migrations/m260909_200000_work_discussion_posts.php';
     ob_start();
     (new \m260906_120000_initial())->up();
     ob_start();
@@ -105,6 +119,8 @@ namespace {
     if ((new \m260908_090000_circle_type())->up() === false) { throw new \RuntimeException('Circle type migration failed: ' . ob_get_contents()); }
     if ((new \m260908_100000_resource_coverage_celebration())->up() === false) { throw new \RuntimeException('Resource coverage migration failed: ' . ob_get_contents()); }
     if ((new \m260908_110000_company_account())->up() === false) { throw new \RuntimeException('Company account migration failed: ' . ob_get_contents()); }
+    if ((new \m260909_180000_proposal_versions())->up() === false) { throw new \RuntimeException('Proposal versions migration failed: ' . ob_get_contents()); }
+    if ((new \m260909_200000_work_discussion_posts())->up() === false) { throw new \RuntimeException('Discussion post migration failed: ' . ob_get_contents()); }
     ob_end_clean();
     ob_end_clean();
     foreach ([1 => 'Kern', 2 => 'Technik', 3 => 'Privater Kreis'] as $id => $name) {

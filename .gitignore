@@ -1,6 +1,8 @@
 /vendor/
 /.idea/
 /.vscode/
+/.vs/
+/temp/
 .env
 .env.*
 !.env.example

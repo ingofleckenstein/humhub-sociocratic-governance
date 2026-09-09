@@ -14,7 +14,7 @@ class WorkController extends ContentContainerController
     public function behaviors()
     {
         return array_merge(parent::behaviors(), ['verbs' => [
-            'class' => \yii\filters\VerbFilter::class, 'actions' => ['create' => ['POST'], 'change' => ['POST']],
+            'class' => \yii\filters\VerbFilter::class, 'actions' => ['create' => ['POST'], 'change' => ['POST'], 'discussion' => ['POST']],
         ]]);
     }
     public function beforeAction($action)
@@ -46,9 +46,6 @@ class WorkController extends ContentContainerController
     {
         $item = $this->findItem($id);
         $section = $this->section($section);
-        if ($section === 'resources' && $item->kind !== 'task') {
-            $section = 'overview';
-        }
         return $this->render('view', ['space' => $this->contentContainer, 'item' => $item, 'error' => '', 'section' => $section]);
     }
     public function actionCreate()
@@ -79,26 +76,33 @@ class WorkController extends ContentContainerController
         try {
             $changed = (new WorkService())->change((int) $item->id, (int) $revision, $action, Yii::$app->request->post());
             $section = $this->section(Yii::$app->request->post('section', 'overview'));
-            if ($section === 'resources' && $changed->kind !== 'task') { $section = 'overview'; }
             return $this->redirect(Space::findOne($changed->space_id)->createUrl('/sociocratic-governance/work/view', ['id' => $changed->id, 'section' => $section]));
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 422;
             $freshItem = $this->findItem($id);
             $section = $this->section(Yii::$app->request->post('section', 'overview'));
-            if ($section === 'resources' && $freshItem->kind !== 'task') { $section = 'overview'; }
             return $this->render('view', ['space' => $this->contentContainer, 'item' => $freshItem, 'error' => $e->getMessage(), 'submitted' => Yii::$app->request->post(), 'section' => $section]);
         }
+    }
+    public function actionDiscussion($id)
+    {
+        $item = $this->findItem($id);
+        $changed = (new WorkService())->startDiscussion($item);
+        return $this->redirect($this->contentContainer->createUrl('/sociocratic-governance/work/view', ['id' => $changed->id, 'section' => 'collaboration']));
     }
     private function findItem($id): WorkItem
     {
         if (!is_scalar($id) || filter_var($id, FILTER_VALIDATE_INT) === false || (int) $id < 1) { throw new \yii\web\NotFoundHttpException(); }
-        $item = WorkItem::findOne(['id' => (int) $id, 'space_id' => $this->contentContainer->id]);
+        $item = WorkItem::find()->with(['events.space', 'events.actor', 'space', 'author', 'assignee', 'topics', 'resources.contributions.user', 'proposalRevisions.author', 'streamPost'])
+            ->where(['id' => (int) $id, 'space_id' => $this->contentContainer->id])->one();
         if (!$item || !WorkAccess::read($item)) { throw new \yii\web\NotFoundHttpException(); }
         return $item;
     }
     private function section($section): string
     {
-        return is_string($section) && in_array($section, ['overview', 'resources', 'collaboration', 'history'], true)
+        // Keep old resource links usable while grouping every contribution action in one place.
+        if ($section === 'resources') { return 'collaboration'; }
+        return is_string($section) && in_array($section, ['overview', 'collaboration', 'history'], true)
             ? $section : 'overview';
     }
 }

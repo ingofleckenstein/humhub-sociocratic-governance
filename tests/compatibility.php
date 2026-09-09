@@ -11,7 +11,7 @@ $vcard = getenv('VCARD_SOURCE');
 if ($vcard) { Yii::setAlias('@humhub/modules/popovervcard', $vcard); }
 foreach ([
     'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController',
-    'controllers\AdminController', 'controllers\WorkController', 'controllers\DashboardController', 'models\WorkItem', 'models\WorkEvent', 'models\WorkTopic', 'models\WorkResource', 'models\WorkResourceContribution', 'services\WorkAccess', 'services\WorkArchiver', 'services\ParticipationDashboard', 'services\WorkNotificationRecipients', 'services\WorkNotifier', 'services\WorkService', 'notifications\WorkItemNotificationCategory', 'notifications\WorkItemNotification', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
+    'controllers\AdminController', 'controllers\WorkController', 'controllers\DashboardController', 'models\WorkItem', 'models\WorkEvent', 'models\WorkProposalRevision', 'models\WorkTopic', 'models\WorkResource', 'models\WorkResourceContribution', 'services\WorkAccess', 'services\WorkArchiver', 'services\ParticipationDashboard', 'services\WorkNotificationRecipients', 'services\WorkNotifier', 'services\WorkService', 'notifications\WorkItemNotificationCategory', 'notifications\WorkItemNotification', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
     'widgets\GovernanceVCard', 'services\VCardTemplate', 'services\RequiredModules', 'services\VCardData', 'assets\GovernanceAsset',
 ] as $class) {
     if (!class_exists('humhub\modules\sociocraticGovernance\\' . $class)) { throw new RuntimeException($class); }

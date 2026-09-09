@@ -9,8 +9,13 @@ use humhub\helpers\ControllerHelper;
 use humhub\modules\content\models\ContentContainerModuleState;
 use humhub\modules\space\components\SpaceDirectoryQuery;
 use humhub\modules\sociocraticGovernance\models\Circle;
+use humhub\modules\sociocraticGovernance\models\fieldtype\CircleResponsibilities;
 class Events
 {
+    public static function profileFieldTypes($event)
+    {
+        $event->sender->addFieldType(CircleResponsibilities::class, 'Kreise und Rollen');
+    }
     public static function spaceMenu($event)
     {
         $space = $event->sender->space;
