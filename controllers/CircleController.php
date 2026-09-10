@@ -63,10 +63,14 @@ class CircleController extends ContentContainerController
             (new CircleService())->publish($this->contentContainer);
             Yii::$app->session->setFlash('success', 'Der Space ist veröffentlicht. Die Willkommensnachricht wurde im Stream angelegt.');
         } catch (\DomainException $e) {
-            Yii::$app->session->setFlash('error', 'Veröffentlichung fehlgeschlagen: ' . $e->getMessage());
+            $message = 'Veröffentlichung fehlgeschlagen: ' . $e->getMessage();
+            Yii::$app->session->setFlash('error', $message);
+            Yii::$app->session->setFlash('sgPublicationError', $message);
         } catch (\Throwable $e) {
             Yii::error($e, __METHOD__);
-            Yii::$app->session->setFlash('error', 'Veröffentlichung fehlgeschlagen. Bitte versuche es erneut oder wende dich an die Administration.');
+            $message = 'Veröffentlichung fehlgeschlagen. Bitte versuche es erneut oder wende dich an die Administration.';
+            Yii::$app->session->setFlash('error', $message);
+            Yii::$app->session->setFlash('sgPublicationError', $message);
         }
         return $this->redirect($this->contentContainer->createUrl('/sociocratic-governance/circle/index'));
     }

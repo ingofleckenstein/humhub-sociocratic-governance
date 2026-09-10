@@ -124,3 +124,6 @@ foreach ($pages as $name => [$template, $params]) {
     file_put_contents($out . '/' . $name . '.html', $html);
     echo "Rendered $name\n";
 }
+if (!str_contains(file_get_contents(dirname(__DIR__) . '/views/circle/index.php'), 'sgPublicationError')) {
+    throw new RuntimeException('Circle view does not render publication failures.');
+}

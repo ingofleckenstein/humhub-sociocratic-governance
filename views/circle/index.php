@@ -16,8 +16,13 @@ $byId = [];
 foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 $canPublish = $canPublish ?? false;
 $permanentMemberships = $permanentMemberships ?? [];
+$publicationError = Yii::$app->session->getFlash('sgPublicationError');
+if (!$publicationError && $canPublish && (!$circle || trim($circle->mandateSummary()) === '')) {
+    $publicationError = 'Veröffentlichung fehlgeschlagen: Bitte hinterlege zuerst „Mandat in Kürze“, bevor du den Space veröffentlichst.';
+}
 ?>
 <div class="sg <?= Html::encode($toneClass) ?>">
+<?php if ($publicationError): ?><div class="alert alert-danger" role="alert"><strong>Fehler:</strong> <?= Html::encode($publicationError) ?></div><?php endif ?>
 <header class="sg-hero"><span class="sg-eyebrow">Projektkreis</span><h1><?= Html::encode($space->name) ?></h1>
 <p>Gemeinsam Verantwortung übernehmen – im vereinbarten Mandat selbstständig handeln.</p>
 <div class="sg-actions">
