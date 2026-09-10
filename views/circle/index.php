@@ -25,7 +25,7 @@ $permanentMemberships = $permanentMemberships ?? [];
 <?= Html::a('So arbeiten wir', $space->createUrl('/sociocratic-governance/circle/guide'), ['class' => 'sg-button sg-button-secondary']) ?>
 <?php if ($canWrite): ?><?= Html::a('Kreisprofil pflegen', $space->createUrl('/sociocratic-governance/circle/edit'), ['class' => 'sg-button sg-button-secondary']) ?><?php endif ?>
 <?php if ($canPublish): ?><?= Html::beginForm($space->createUrl('/sociocratic-governance/circle/publish'), 'post', ['class' => 'sg-inline-form']) ?>
-<?= Html::submitButton('Space veröffentlichen', ['class' => 'sg-button', 'data-confirm' => 'Den Space jetzt für alle angemeldeten Personen veröffentlichen und die Willkommensnachricht im Stream posten?']) ?>
+<?= Html::submitButton('Space veröffentlichen', ['class' => 'sg-button']) ?>
 <?= Html::endForm() ?><?php endif ?>
 </div></header>
 <nav class="sg-subnav" aria-label="Projektkreis-Bereiche">

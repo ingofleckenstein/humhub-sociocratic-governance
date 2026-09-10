@@ -118,7 +118,7 @@ foreach ($pages as $name => [$template, $params]) {
         }
     }
     if ($name === 'circle-roles' && (!str_contains($html, 'Dauerhafte Mitgliedschaft: dauerhafte Kreisleitung')
-        || !str_contains($html, 'Space veröffentlichen'))) {
+        || !str_contains($html, 'Space veröffentlichen') || str_contains($html, 'data-confirm'))) {
         throw new RuntimeException('Circle roles omit permanent membership or publication action.');
     }
     file_put_contents($out . '/' . $name . '.html', $html);

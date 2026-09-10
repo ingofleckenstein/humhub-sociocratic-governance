@@ -28,7 +28,10 @@ class CircleController extends ContentContainerController
     public function actionIndex($section = 'overview')
     {
         $circle = Circle::findOne($this->contentContainer->id);
-        if ($circle && $circle->isCompetenceCircle()) {
+        // A published competence circle opens the standard Space home. Before
+        // publication its admins need the circle view to finish the profile
+        // and use the publication action.
+        if ($circle && $circle->isCompetenceCircle() && $circle->is_published) {
             return $this->redirect($this->contentContainer->createUrl('/space/space/home'));
         }
         return $this->render('index', [
@@ -60,7 +63,10 @@ class CircleController extends ContentContainerController
             (new CircleService())->publish($this->contentContainer);
             Yii::$app->session->setFlash('success', 'Der Space ist veröffentlicht. Die Willkommensnachricht wurde im Stream angelegt.');
         } catch (\DomainException $e) {
-            Yii::$app->session->setFlash('warning', $e->getMessage());
+            Yii::$app->session->setFlash('error', 'Veröffentlichung fehlgeschlagen: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            Yii::error($e, __METHOD__);
+            Yii::$app->session->setFlash('error', 'Veröffentlichung fehlgeschlagen. Bitte versuche es erneut oder wende dich an die Administration.');
         }
         return $this->redirect($this->contentContainer->createUrl('/sociocratic-governance/circle/index'));
     }
