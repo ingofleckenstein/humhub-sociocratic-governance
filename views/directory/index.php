@@ -56,9 +56,7 @@ $avatarUrl = static function ($user): ?string {
 $person = static function ($user, string $roles, string $roleKey = '') use ($avatarUrl): array {
     return ['name' => (string) $user->displayName, 'roles' => $roles, 'roleKey' => $roleKey, 'url' => (string) $user->getUrl(), 'avatarUrl' => $avatarUrl($user)];
 };
-$circleUrl = static function ($circle): string {
-    return (string) $circle->space->createUrl($circle->isCompetenceCircle() ? '/space/space/home' : '/sociocratic-governance/circle/index');
-};
+$circleUrl = static fn($circle): string => (string) $circle->space->createUrl('/sociocratic-governance/circle/index');
 $membersUrl = static fn($circle): string => (string) $circle->space->createUrl('/space/membership/members-list');
 $workUrl = static fn($circle): string => (string) $circle->space->createUrl('/sociocratic-governance/work/index');
 $graph = ['nodes' => [], 'links' => []];

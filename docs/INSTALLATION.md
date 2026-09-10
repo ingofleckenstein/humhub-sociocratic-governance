@@ -1,4 +1,4 @@
-# Installation von Version 0.5.9
+# Installation von Version 0.5.11
 
 Erste Entwicklungsfassung für HumHub Community Edition 1.18.5.
 Vollständiger Installationstest auf MySQL/MariaDB steht noch aus.

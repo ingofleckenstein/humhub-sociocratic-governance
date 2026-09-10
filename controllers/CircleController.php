@@ -28,12 +28,6 @@ class CircleController extends ContentContainerController
     public function actionIndex($section = 'overview')
     {
         $circle = Circle::findOne($this->contentContainer->id);
-        // A published competence circle opens the standard Space home. Before
-        // publication its admins need the circle view to finish the profile
-        // and use the publication action.
-        if ($circle && $circle->isCompetenceCircle() && $circle->is_published) {
-            return $this->redirect($this->contentContainer->createUrl('/space/space/home'));
-        }
         return $this->render('index', [
             'space' => $this->contentContainer, 'circle' => $circle,
             'circles' => Access::visibleCircles(), 'canWrite' => Access::write($this->contentContainer),

@@ -20,18 +20,11 @@ class Events
     {
         $space = $event->sender->space;
         if (!Access::read($space)) { return; }
-        $circle = Circle::findOne($space->id);
-        // Competence circles normally use HumHub's standard Space home. While
-        // a circle is still a draft, its administrators must nevertheless be
-        // able to use the complete circle workflow from the Space menu.
-        $draftForAdmin = $circle && !$circle->is_published && Access::admin($space);
-        if (!$circle || !$circle->isCompetenceCircle() || $draftForAdmin) {
-            $event->sender->addEntry(new MenuLink([
-                'label' => 'Projektkreis', 'icon' => 'users', 'sortOrder' => 210,
-                'url' => $space->createUrl('/sociocratic-governance/circle/index'),
-                'isActive' => \Yii::$app->controller && \Yii::$app->controller->module->id === 'sociocratic-governance',
-            ]));
-        }
+        $event->sender->addEntry(new MenuLink([
+            'label' => 'Projektkreis', 'icon' => 'users', 'sortOrder' => 210,
+            'url' => $space->createUrl('/sociocratic-governance/circle/index'),
+            'isActive' => \Yii::$app->controller && \Yii::$app->controller->module->id === 'sociocratic-governance',
+        ]));
         $event->sender->addEntry(new MenuLink([
             'label' => 'Vorhaben', 'icon' => 'columns', 'sortOrder' => 211,
             'url' => $space->createUrl('/sociocratic-governance/work/index'),
@@ -39,9 +32,7 @@ class Events
     }
     public static function spaceSidebar($event)
     {
-        $circle = Circle::findOne($event->sender->space->id);
-        $draftForAdmin = $circle && !$circle->is_published && Access::admin($event->sender->space);
-        if (Access::read($event->sender->space) && (!$circle || !$circle->isCompetenceCircle() || $draftForAdmin)) {
+        if (Access::read($event->sender->space)) {
             $event->sender->addWidget(CircleBadge::class, ['space' => $event->sender->space], ['sortOrder' => 20]);
         }
     }

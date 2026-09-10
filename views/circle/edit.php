@@ -11,7 +11,7 @@ use yii\helpers\Html;
 <?= Html::activeHiddenInput($form, 'revision') ?>
 <?= Html::activeLabel($form, 'type') ?>
 <?= Html::activeDropDownList($form, 'type', \humhub\modules\sociocraticGovernance\models\Circle::TYPES) ?>
-<p class="sg-muted">Projektkreise organisieren konkrete Vorhaben. Kompetenzkreise sind thematische Räume für Wissensaustausch und verwenden die normale HumHub-Space-Ansicht.</p>
+<p class="sg-muted">Projektkreise organisieren konkrete Vorhaben. Kompetenzkreise sind thematische Räume für Wissensaustausch; ihr Kreisprofil, Mandat und ihre Rollen werden ebenso hier gepflegt.</p>
 <?= Html::activeLabel($form, 'purpose') ?>
 <?php if (class_exists(\humhub\modules\content\widgets\richtext\RichTextField::class)): ?>
 <?= \humhub\modules\content\widgets\richtext\RichTextField::widget(['model' => $form, 'attribute' => 'purpose', 'preset' => 'markdown', 'exclude' => ['upload', 'oembed', 'mention'], 'placeholder' => 'Wofür gibt es diesen Kreis?']) ?>

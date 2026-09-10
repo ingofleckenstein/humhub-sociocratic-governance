@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.5.11 – 2026-09-10
+
+### Klarer Zugang und Rückmeldung bei Kreisveröffentlichungen
+
+- Der Space-Menüpunkt „Projektkreis“ und die Kreisansicht bleiben bei
+  Kompetenzkreisen immer verfügbar, sobald die Person den Space sehen darf.
+- Ein nicht erfülltes Veröffentlichungs-Kriterium wird direkt in der
+  Kreisansicht als rote, verständliche Fehlermeldung angezeigt.
+- Der Veröffentlichungsbutton sendet ohne JavaScript-Zwischenschritt direkt
+  an die Veröffentlichungsaktion.
+
 ## 0.5.10 – 2026-09-10
 
 ### Kreisveröffentlichung und dauerhafte Mitgliedschaften
