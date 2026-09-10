@@ -21,6 +21,10 @@ $configuration->save(false);
 $form = new CircleForm(['purpose' => 'Gemeinschaft stärken', 'mandate' => 'Gesamtmandat', 'leader' => 1, 'delegate' => 2]);
 check($service->save($space, $form), 'First circle and roles persist through migration with table prefix');
 check(Role::find()->count() == 2, 'Both linking roles stored');
+check(!Circle::findOne(1)->is_published, 'A newly created circle starts as a private draft');
+$initialCircle = Circle::findOne(1);
+$initialCircle->is_published = 1;
+$initialCircle->save(false);
 check(Circle::findOne(1)->reelection_interval === 'Alle 6 Monate', 'New circles default to six-month reelection');
 $competence = CircleForm::forCircle(Circle::findOne(1));
 $competence->type = 'competence';
@@ -43,6 +47,26 @@ check(!$service->save($space, $invalid), 'Nonmember cannot receive a role');
 $child = new CircleForm(['parent_space_id' => 1]);
 check($service->save(Space::findOne(2), $child), 'Child circle can reference parent');
 check(Circle::findOne(1)->color !== Circle::findOne(2)->color, 'New circles automatically receive distinct colors');
+$draftChild = Circle::findOne(2);
+$draftChild->mandate_summary = 'Digitale Zusammenarbeit verlässlich ermöglichen.';
+$draftChild->save(false);
+Yii::$app->user->id = 3;
+check(!Access::read(Space::findOne(2)), 'A draft circle is hidden from non-admins');
+Yii::$app->user->id = 1;
+$configuration->company_user_id = 3;
+$configuration->save(false);
+$service->publish(Space::findOne(2));
+$publishedChild = Circle::findOne(2);
+check((bool) $publishedChild->is_published && (int) Space::findOne(2)->visibility === Space::VISIBILITY_REGISTERED_ONLY,
+    'Publishing makes a drafted circle visible to registered users');
+$announcement = \humhub\modules\post\models\Post::find()->orderBy(['id' => SORT_DESC])->one();
+check(str_contains($announcement->message, 'Digitale Zusammenarbeit verlässlich ermöglichen.')
+    && str_contains($announcement->message, 'Kreis ansehen') && str_contains($announcement->message, 'jederzeit beitreten'),
+    'Publishing creates the linked mandate announcement');
+try { $service->publish(Space::findOne(2)); check(false, 'A circle can only be published once'); }
+catch (\DomainException $e) { check(true, 'A circle can only be published once'); }
+$configuration->company_user_id = null;
+$configuration->save(false);
 $duplicateColor = CircleForm::forCircle(Circle::findOne(2));
 $duplicateColor->color = Circle::findOne(1)->color;
 check(!$service->save(Space::findOne(2), $duplicateColor), 'A circle cannot take a color already assigned to another circle');

@@ -1,5 +1,23 @@
 # Änderungen
 
+## 0.5.10 – 2026-09-10
+
+### Kreisveröffentlichung und dauerhafte Mitgliedschaften
+
+- Neue Arbeitskreise beginnen als private Entwürfe; ihre Governance-Ansichten
+  sind bis zur Veröffentlichung nur für Space-Administrator*innen zugänglich.
+- Neben „Kreisprofil pflegen“ können Space-Administrator*innen einen vollständig
+  beschriebenen Kreis einmalig veröffentlichen. Dabei werden Sichtbarkeit,
+  Beitrittsmodus und Standard-Inhaltssichtbarkeit gesetzt.
+- Die Veröffentlichung erzeugt atomar eine Streamnachricht des im Backend
+  gewählten Kommunikationskontos: Mandatskurzform, Link „Kreis ansehen“ sowie
+  Hinweise zu Beitritt, Austritt und Folgen.
+- Dokumentierte dauerhafte Mitgliedschaften stehen jetzt im jeweiligen Kreis
+  unter „Rollen“ direkt bei der Person beziehungsweise als eigenes dauerhaftes
+  Kreismitglied.
+- Sind alle Akzentfarben vergeben, werden sie für weitere Kreise kontrolliert
+  wiederverwendet, statt die Kreisgründung zu blockieren.
+
 ## 0.5.9 – 2026-09-09
 
 ### Abnahmeprüfung und klare Rückmeldungen

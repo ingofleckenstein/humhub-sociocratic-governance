@@ -10,7 +10,7 @@ Yii::setAlias('@humhub/modules/sociocraticGovernance', dirname(__DIR__));
 $vcard = getenv('VCARD_SOURCE');
 if ($vcard) { Yii::setAlias('@humhub/modules/popovervcard', $vcard); }
 foreach ([
-    'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController',
+    'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController', 'services\CircleService',
     'controllers\AdminController', 'controllers\WorkController', 'controllers\DashboardController', 'models\WorkItem', 'models\WorkEvent', 'models\WorkProposalRevision', 'models\WorkTopic', 'models\WorkResource', 'models\WorkResourceContribution', 'services\WorkAccess', 'services\WorkArchiver', 'services\ParticipationDashboard', 'services\WorkNotificationRecipients', 'services\WorkNotifier', 'services\WorkService', 'notifications\WorkItemNotificationCategory', 'notifications\WorkItemNotification', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
     'widgets\GovernanceVCard', 'services\VCardTemplate', 'services\RequiredModules', 'services\VCardData', 'assets\GovernanceAsset',
 ] as $class) {

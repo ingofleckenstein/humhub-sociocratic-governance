@@ -13,6 +13,9 @@ namespace {
 namespace humhub\modules\space\models {
     class Space extends \yii\db\ActiveRecord {
         public const VISIBILITY_NONE = 0;
+        public const VISIBILITY_REGISTERED_ONLY = 1;
+        public const JOIN_POLICY_NONE = 0;
+        public const JOIN_POLICY_APPLICATION = 1;
         public static array $members = [];
         public static array $disabled = [];
         public static array $blocked = [];
@@ -70,6 +73,12 @@ namespace humhub\modules\post\models {
         public function rules() { return [['message', 'required']]; }
     }
 }
+namespace humhub\modules\content\models {
+    class Content {
+        public const VISIBILITY_PRIVATE = 0;
+        public const VISIBILITY_PUBLIC = 1;
+    }
+}
 namespace humhub\components {
     class Widget extends \yii\base\Widget {}
 }
@@ -90,7 +99,9 @@ namespace {
     $db = \Yii::$app->db;
     $db->open();
     $db->createCommand('PRAGMA foreign_keys=ON')->execute();
-    $db->createCommand()->createTable('{{%space}}', ['id' => 'pk', 'name' => 'string', 'visibility' => 'integer'])->execute();
+    $db->createCommand()->createTable('{{%space}}', [
+        'id' => 'pk', 'name' => 'string', 'visibility' => 'integer', 'join_policy' => 'integer', 'default_content_visibility' => 'integer',
+    ])->execute();
     $db->createCommand()->createTable('{{%user}}', ['id' => 'pk', 'name' => 'string', 'status' => 'integer'])->execute();
     $db->createCommand()->createTable('{{%post}}', ['id' => 'pk', 'message' => 'text'])->execute();
     require dirname(__DIR__) . '/migrations/m260906_120000_initial.php';
@@ -106,6 +117,7 @@ namespace {
     require dirname(__DIR__) . '/migrations/m260908_110000_company_account.php';
     require dirname(__DIR__) . '/migrations/m260909_180000_proposal_versions.php';
     require dirname(__DIR__) . '/migrations/m260909_200000_work_discussion_posts.php';
+    require dirname(__DIR__) . '/migrations/m260910_090000_circle_publication.php';
     ob_start();
     (new \m260906_120000_initial())->up();
     ob_start();
@@ -121,10 +133,14 @@ namespace {
     if ((new \m260908_110000_company_account())->up() === false) { throw new \RuntimeException('Company account migration failed: ' . ob_get_contents()); }
     if ((new \m260909_180000_proposal_versions())->up() === false) { throw new \RuntimeException('Proposal versions migration failed: ' . ob_get_contents()); }
     if ((new \m260909_200000_work_discussion_posts())->up() === false) { throw new \RuntimeException('Discussion post migration failed: ' . ob_get_contents()); }
+    if ((new \m260910_090000_circle_publication())->up() === false) { throw new \RuntimeException('Circle publication migration failed: ' . ob_get_contents()); }
     ob_end_clean();
     ob_end_clean();
     foreach ([1 => 'Kern', 2 => 'Technik', 3 => 'Privater Kreis'] as $id => $name) {
-        $db->createCommand()->insert('{{%space}}', ['id' => $id, 'name' => $name, 'visibility' => $id === 3 ? 0 : 1])->execute();
+        $db->createCommand()->insert('{{%space}}', [
+            'id' => $id, 'name' => $name, 'visibility' => $id === 3 ? 0 : 1,
+            'join_policy' => $id === 3 ? 0 : 1, 'default_content_visibility' => $id === 3 ? 0 : 1,
+        ])->execute();
     }
     foreach ([1 => 'Alex', 2 => 'Robin', 3 => 'Sam'] as $id => $name) {
         $db->createCommand()->insert('{{%user}}', ['id' => $id, 'name' => $name, 'status' => 1])->execute();

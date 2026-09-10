@@ -511,7 +511,7 @@ Implementiert:
 - Backend für Kernkreis, zuständige Admin-Sonderrolle, Trägerorganisation und dokumentierte dauerhafte Mitgliedschaften.
 - Grafische Konsent-Anleitung, SMART-Beschlussvorlage und Erläuterung des Kreislebens.
 - Eigene Datenbanktabellen; Schutz vor Kreiszyklen, unzulässiger Personalunion und veralteten Formularständen.
-- Aktivierung setzt den Space auf sichtbar für angemeldete Personen, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte; Mitglieder dürfen öffentliche Inhalte erstellen.
+- Neue Kreise beginnen als private Entwürfe. Space-Administrator*innen veröffentlichen sie nach Pflege der Mandatskurzform; erst dann gelten Sichtbarkeit für angemeldete Personen, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte.
 - Die Kreisleitung wird bei der Rollenpflege als Space-Besitzer*in gesetzt; nur bestehende Space-Besitzer*innen oder -Administrator*innen dürfen diese Übertragung auslösen.
 - Globale Navigation sowie tabellarische und zoombare Kartenansicht der sichtbaren Kreisstruktur. Arbeitskreise erscheinen nicht im allgemeinen Space-Verzeichnis.
 - Optionales Addon für Virtual Card Popover 1.2.1+: Kreisrollen sowie Kreiszweck und Mandat erscheinen in den jeweiligen Karten; ohne VCard bleibt die Oberfläche unverändert.
@@ -519,10 +519,10 @@ Implementiert:
 Bewusste Grenzen der ersten Fassung:
 
 - Keine automatischen Wahlen, Amtszeitaktionen, Kriseneingriffe oder Kreisteilungen.
-- Dauerhafte Mitgliedschaften werden dokumentiert, nicht technisch gegen Austritt erzwungen.
+- Dauerhafte Mitgliedschaften werden dokumentiert, im Kreis unter Rollen bei der betreffenden Person angezeigt und nicht technisch gegen Austritt erzwungen.
 - Rollenänderungen erzeugen noch keine automatische Mitgliedschaft im Oberkreis.
 - Keine Vorhabenobjekte, Sitzungsverwaltung oder vollständige Änderungshistorie; diese folgen in M2.
-- Die Aktivierung setzt eine öffentliche Sichtbarkeit für angemeldete Personen. Diese kann anschließend im Space-Adminbereich geändert werden.
+- Die Aktivierung erzeugt einen privaten Entwurf. Erst die einmalige Veröffentlichung durch eine*n Space-Administrator*in macht ihn für angemeldete Personen sichtbar und erstellt die Streamankündigung über das konfigurierte Kommunikationskonto.
 - Die Detailrechte externer Module (Mediathek, Share Content, Wiki, Kalender, Let's Meet) sind noch nicht technisch gekoppelt.
 - Deutsche Oberfläche; weitere Sprachen folgen später.
 - Bei Deaktivierung bleiben Modultabellen erhalten. Endgültiges Löschen eines HumHub-Spaces entfernt über Fremdschlüssel dessen Moduldatensätze; für Wissenserhalt archivieren statt löschen.

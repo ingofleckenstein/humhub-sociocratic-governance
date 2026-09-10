@@ -4,7 +4,11 @@ namespace humhub\modules\sociocraticGovernance\services;
 
 use Yii;
 use humhub\modules\space\models\Space;
+use humhub\modules\content\models\Content;
+use humhub\modules\post\models\Post;
+use humhub\modules\user\models\User;
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Configuration, Role};
+use yii\helpers\Url;
 
 final class CircleService
 {
@@ -40,10 +44,8 @@ final class CircleService
             Rules::assertRoles($roles, array_keys(Access::memberOptions($space)));
             $circle = $circle ?? new Circle(['space_id' => $space->id, 'revision' => -1]);
             $color = $form->color ?: Circle::suggestedColor((int) $space->id);
-            if ($color === '') {
-                throw new \DomainException('Alle Kreisfarben sind vergeben. Bitte zuerst eine weitere Farbe ergänzen.');
-            }
-            if (Circle::find()->where(['color' => $color])->andWhere(['<>', 'space_id', $space->id])->exists()) {
+            if (Circle::hasAvailableColor((int) $space->id)
+                && Circle::find()->where(['color' => $color])->andWhere(['<>', 'space_id', $space->id])->exists()) {
                 throw new \DomainException('Diese Farbe ist bereits einem anderen Kreis zugeordnet. Bitte eine freie Farbe wählen.');
             }
             $circle->type = $form->type;
@@ -88,5 +90,79 @@ final class CircleService
             $tx->rollBack();
             throw $e;
         }
+    }
+
+    /** Publishes a completed circle and creates exactly one welcome post. */
+    public function publish(Space $space): void
+    {
+        if (!Access::admin($space)) {
+            throw new \yii\web\ForbiddenHttpException('Nur Space-Administrator*innen dürfen einen Kreis veröffentlichen.');
+        }
+        $db = Yii::$app->db;
+        $tx = $db->beginTransaction();
+        try {
+            $sql = 'SELECT [[space_id]] FROM {{%sg_circle}} WHERE [[space_id]]=:spaceId';
+            if ($db->driverName !== 'sqlite') { $sql .= ' FOR UPDATE'; }
+            $db->createCommand($sql, [':spaceId' => $space->id])->queryScalar();
+            $circle = Circle::findOne($space->id);
+            if (!$circle || trim($circle->mandateSummary()) === '') {
+                throw new \DomainException('Bitte hinterlege zuerst „Mandat in Kürze“, bevor du den Space veröffentlichst.');
+            }
+            if ($circle->is_published) {
+                throw new \DomainException('Dieser Space ist bereits veröffentlicht.');
+            }
+            $configSql = 'SELECT [[id]] FROM {{%sg_config}} WHERE [[id]]=1';
+            if ($db->driverName !== 'sqlite') { $configSql .= ' FOR UPDATE'; }
+            $db->createCommand($configSql)->queryScalar();
+            $config = Configuration::findOne(1);
+            $account = $config && $config->company_user_id ? User::findOne((int) $config->company_user_id) : null;
+            if (!$account || (int) $account->status !== User::STATUS_ENABLED) {
+                throw new \DomainException('Bitte wähle im Governance-Backend ein aktives Kommunikationskonto für die Veröffentlichungsnachricht.');
+            }
+
+            $space->visibility = Space::VISIBILITY_REGISTERED_ONLY;
+            $space->join_policy = Space::JOIN_POLICY_APPLICATION;
+            $space->default_content_visibility = Content::VISIBILITY_PUBLIC;
+            if (!$space->save(false, ['visibility', 'join_policy', 'default_content_visibility'])) {
+                throw new \RuntimeException('Die Sichtbarkeit des Space konnte nicht veröffentlicht werden.');
+            }
+            $circle->is_published = 1;
+            $circle->published_at = time();
+            $circle->published_by = Yii::$app->user->id;
+            if (!$circle->save(false, ['is_published', 'published_at', 'published_by'])) {
+                throw new \RuntimeException('Der Veröffentlichungsstatus konnte nicht gespeichert werden.');
+            }
+            $post = new Post($space);
+            $post->content->created_by = $account->id;
+            $post->content->updated_by = $account->id;
+            $post->message = $this->publicationMessage($space, $circle);
+            if (!$post->save()) {
+                throw new \RuntimeException('Die Veröffentlichungsnachricht konnte nicht gespeichert werden.');
+            }
+            $tx->commit();
+        } catch (\Throwable $e) {
+            $tx->rollBack();
+            throw $e;
+        }
+    }
+
+    private function publicationMessage(Space $space, Circle $circle): string
+    {
+        $name = $this->markdownText((string) $space->name);
+        $summary = $this->markdownText($circle->mandateSummary());
+        $url = Url::to($space->createUrl('/sociocratic-governance/circle/index'), true);
+        $link = '[Kreis ansehen](' . str_replace(['(', ')'], ['%28', '%29'], $url) . ')';
+        return "🎉 **Neuer Kreis: {$name}**\n\n**Mandat in Kürze:** {$summary}\n\n"
+            . 'Falls dieses Thema dich interessiert, kannst du dem Kreis jederzeit beitreten oder auch wieder austreten. '
+            . 'Wenn du nur über Aktivitäten informiert werden möchtest, kannst du dem Kreis folgen.'
+            . "\n\n{$link}";
+    }
+
+    private function markdownText(string $value): string
+    {
+        return strtr(trim(strip_tags($value)), [
+            '\\' => '\\\\', '*' => '\\*', '_' => '\\_', '[' => '\\[', ']' => '\\]',
+            '(' => '\\(', ')' => '\\)', '`' => '\\`', '<' => '\\<', '>' => '\\>',
+        ]);
     }
 }

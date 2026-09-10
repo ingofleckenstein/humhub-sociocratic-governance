@@ -30,11 +30,34 @@ final class Access
             || $space->isArchived() || $space->isBlockedForUser($user)) {
             return false;
         }
+        if (!self::isPublished($space)) {
+            return self::adminForUser($space, $user);
+        }
         return $space->visibility != Space::VISIBILITY_NONE || $space->isMember($user->id);
     }
     public static function write(?Space $space): bool
     {
         return self::read($space) && $space->isMember() && !$space->isArchived();
+    }
+    /** A draft circle is only available to the people administrating its Space. */
+    public static function admin(?Space $space): bool
+    {
+        return !Yii::$app->user->isGuest && self::enabled($space) && !$space->isArchived() && $space->isAdmin();
+    }
+    public static function isPublished(?Space $space): bool
+    {
+        if (!self::enabled($space)) { return false; }
+        $circle = \humhub\modules\sociocraticGovernance\models\Circle::findOne($space->id);
+        return $circle !== null && (bool) $circle->is_published;
+    }
+    private static function adminForUser(Space $space, User $user): bool
+    {
+        // isAdmin() without an argument also honors HumHub's global
+        // ManageSpaces permission for the current identity.
+        if ((int) $user->id === (int) Yii::$app->user->id) {
+            return self::admin($space);
+        }
+        return $space->isAdmin($user);
     }
     public static function memberOptions(Space $space): array
     {

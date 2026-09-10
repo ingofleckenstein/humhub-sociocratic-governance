@@ -5,13 +5,20 @@ namespace humhub\modules\sociocraticGovernance\controllers;
 use Yii;
 use humhub\modules\space\models\Space;
 use humhub\modules\content\components\ContentContainerController;
-use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm};
+use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, PermanentMembership};
 use humhub\modules\sociocraticGovernance\services\{Access, CircleService};
 use yii\web\{ForbiddenHttpException, NotFoundHttpException};
 
 class CircleController extends ContentContainerController
 {
     public $validContentContainerClasses = [Space::class];
+    public function behaviors()
+    {
+        return array_merge(parent::behaviors(), ['verbs' => [
+            'class' => \yii\filters\VerbFilter::class,
+            'actions' => ['publish' => ['POST']],
+        ]]);
+    }
     public function beforeAction($action)
     {
         if (!parent::beforeAction($action)) { return false; }
@@ -27,6 +34,8 @@ class CircleController extends ContentContainerController
         return $this->render('index', [
             'space' => $this->contentContainer, 'circle' => $circle,
             'circles' => Access::visibleCircles(), 'canWrite' => Access::write($this->contentContainer),
+            'canPublish' => Access::admin($this->contentContainer) && $circle && !$circle->is_published,
+            'permanentMemberships' => PermanentMembership::find()->where(['space_id' => $this->contentContainer->id])->with('user')->all(),
             'section' => $this->section($section),
         ]);
     }
@@ -44,6 +53,16 @@ class CircleController extends ContentContainerController
             if ((int) $circle->space_id !== (int) $space->id) { $parents[$circle->space_id] = $circle->space->name; }
         }
         return $this->render('edit', ['space' => $space, 'form' => $form, 'parents' => $parents, 'members' => Access::memberOptions($space)]);
+    }
+    public function actionPublish()
+    {
+        try {
+            (new CircleService())->publish($this->contentContainer);
+            Yii::$app->session->setFlash('success', 'Der Space ist veröffentlicht. Die Willkommensnachricht wurde im Stream angelegt.');
+        } catch (\DomainException $e) {
+            Yii::$app->session->setFlash('warning', $e->getMessage());
+        }
+        return $this->redirect($this->contentContainer->createUrl('/sociocratic-governance/circle/index'));
     }
     public function actionGuide() { return $this->render('guide', ['space' => $this->contentContainer]); }
     private function section($section): string

@@ -14,6 +14,8 @@ $circleUrl = static fn(string $name) => $space->createUrl('/sociocratic-governan
 $sections = ['overview' => 'Überblick', 'mandate' => 'Mandat', 'roles' => 'Rollen', 'connections' => 'Verbindungen'];
 $byId = [];
 foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
+$canPublish = $canPublish ?? false;
+$permanentMemberships = $permanentMemberships ?? [];
 ?>
 <div class="sg <?= Html::encode($toneClass) ?>">
 <header class="sg-hero"><span class="sg-eyebrow">Projektkreis</span><h1><?= Html::encode($space->name) ?></h1>
@@ -22,6 +24,9 @@ foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 <?= Html::a('Vorhaben', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-button']) ?>
 <?= Html::a('So arbeiten wir', $space->createUrl('/sociocratic-governance/circle/guide'), ['class' => 'sg-button sg-button-secondary']) ?>
 <?php if ($canWrite): ?><?= Html::a('Kreisprofil pflegen', $space->createUrl('/sociocratic-governance/circle/edit'), ['class' => 'sg-button sg-button-secondary']) ?><?php endif ?>
+<?php if ($canPublish): ?><?= Html::beginForm($space->createUrl('/sociocratic-governance/circle/publish'), 'post', ['class' => 'sg-inline-form']) ?>
+<?= Html::submitButton('Space veröffentlichen', ['class' => 'sg-button', 'data-confirm' => 'Den Space jetzt für alle angemeldeten Personen veröffentlichen und die Willkommensnachricht im Stream posten?']) ?>
+<?= Html::endForm() ?><?php endif ?>
 </div></header>
 <nav class="sg-subnav" aria-label="Projektkreis-Bereiche">
 <?php foreach ($sections as $key => $label): ?><?= Html::a($label, $circleUrl($key), ['class' => $section === $key ? 'is-active' : '']) ?><?php endforeach ?>
@@ -49,11 +54,18 @@ foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 <?php if ($section === 'roles'): ?>
 <section class="sg-card"><h2>Rollen</h2>
 <?php $assigned = []; if ($circle) { foreach ($circle->roles as $role) { $assigned[$role->role_key] = $role; } } ?>
+<?php $permanentByUser = []; foreach ($permanentMemberships as $membership): $member = $membership->user; if ($member && $space->isMember($member->id) && (int) $member->status === \humhub\modules\user\models\User::STATUS_ENABLED) { $permanentByUser[(int) $member->id][] = $membership; } endforeach ?>
+<?php $roleUserIds = []; ?>
 <?php foreach (Role::LABELS as $key => $label): $role = $assigned[$key] ?? null; $user = $role ? $role->user : null; ?>
 <div class="sg-role"><strong><?= Html::encode($label) ?></strong><br>
-<?php if ($user && $space->isMember($user->id) && (int) $user->status === \humhub\modules\user\models\User::STATUS_ENABLED): ?><?= Html::a(Html::encode($user->displayName), $user->getUrl()) ?>
+<?php if ($user && $space->isMember($user->id) && (int) $user->status === \humhub\modules\user\models\User::STATUS_ENABLED): $roleUserIds[(int) $user->id] = true; ?><?= Html::a(Html::encode($user->displayName), $user->getUrl()) ?>
+<?php foreach ($permanentByUser[(int) $user->id] ?? [] as $membership): ?><br><span class="sg-muted">Dauerhafte Mitgliedschaft: <?= Html::encode($membership->reason) ?></span><?php endforeach ?>
 <?php else: ?><span class="sg-muted">Nicht besetzt<?= $role ? ' – Zuordnung prüfen' : '' ?></span><?php endif ?></div>
 <?php endforeach ?>
+<?php $unassignedPermanent = array_diff_key($permanentByUser, $roleUserIds); if ($unassignedPermanent): ?><h3>Dauerhafte Kreismitglieder</h3>
+<?php foreach ($unassignedPermanent as $memberships): foreach ($memberships as $membership): $member = $membership->user; ?><div class="sg-role"><strong>Dauerhaftes Kreismitglied</strong><br>
+<?= Html::a(Html::encode($member->displayName), $member->getUrl()) ?><br><span class="sg-muted"><?= Html::encode($membership->reason) ?></span></div><?php endforeach; endforeach ?>
+<?php endif ?>
 <p class="sg-muted">Besetzungen werden hier dokumentiert. Wahlen und Amtszeiten werden noch nicht automatisch verwaltet.</p></section>
 <?php endif ?>
 

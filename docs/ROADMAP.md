@@ -6,11 +6,11 @@ Version 0.2.0 erweitert den Kern von Ausbaustufe 1 um strukturierte Mandate und 
 - [x] Space-Modul, Navigation, Kreisprofil und initiale Migration.
 - [x] Lesen entsprechend Space-Sichtbarkeit, Schreiben nur als Kreismitglied; keine Gäste.
 - [x] Zweck, Mandat, Oberkreis und vier manuell zugeordnete Rollen.
-- [x] Profilanzeige, Kernkreis und Backend für dauerhafte Mitgliedschaften als dokumentierte Vereinbarungen.
+- [x] Profilanzeige, Kreisrollenansicht, Kernkreis und Backend für dauerhafte Mitgliedschaften als dokumentierte Vereinbarungen.
 - [x] Grafische Konsent-Anleitung, SMART und Beschlussvorlage.
 - [x] Komponententests, PHP-Syntax und Klassenkompatibilitätsprüfung.
 - [x] Strukturierte Mandatsfelder, Mandatskurzform sowie Markdown- und Emoji-Eingaben.
-- [x] Aktivierungsvoreinstellungen für sichtbare Arbeitskreise, Beitritt per Einladung/Anfrage und öffentliche Standardinhalte.
+- [x] Private Entwürfe für neue Arbeitskreise; Veröffentlichung durch Space-Administrator*innen mit Beitritt per Einladung/Anfrage, öffentlichen Standardinhalten und Streamankündigung.
 - [x] Globale Kreisübersicht: hierarchische Tabelle und zoombare Kartenansicht; Arbeitskreise aus dem allgemeinen Space-Verzeichnis ausblenden.
 - [ ] Installation und Migration auf HumHub 1.18.5/MySQL oder MariaDB abnehmen.
 - [ ] End-to-End-Prüfung mit Mitglied, Nichtmitglied und Admin im echten HumHub-Layout.

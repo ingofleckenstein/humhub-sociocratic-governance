@@ -21,6 +21,8 @@ $service->save($space, new CircleForm([
 ]));
 $service->save(Space::findOne(2), new CircleForm(['purpose' => 'Digitale Zusammenarbeit zuverlässig ermöglichen.', 'parent_space_id' => 1]));
 $circle = Circle::findOne(1);
+$permanentMembership = new PermanentMembership(['space_id' => 1, 'user_id' => 1, 'reason' => 'dauerhafte Kreisleitung']);
+if (!$permanentMembership->save()) { throw new RuntimeException('Could not prepare permanent membership preview.'); }
 $circles = Access::visibleCircles();
 Space::$members[1][] = 3;
 $directoryData = (new CircleDirectory())->data();
@@ -42,6 +44,9 @@ $pages = [
     'work-review' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '', 'section' => 'overview']],
     'work-resources' => ['work/view', ['space' => $space, 'item' => $workTask, 'error' => '', 'section' => 'resources']],
     'circle' => ['circle/index', compact('space', 'circle', 'circles') + ['canWrite' => true]],
+    'circle-roles' => ['circle/index', compact('space', 'circle', 'circles') + [
+        'canWrite' => true, 'canPublish' => true, 'permanentMemberships' => [$permanentMembership], 'section' => 'roles',
+    ]],
     'guide' => ['circle/guide', compact('space')],
     'edit' => ['circle/edit', ['space' => $space, 'form' => CircleForm::forCircle($circle), 'parents' => [2 => 'Technik'], 'members' => [1 => 'Alex', 2 => 'Robin']]],
     'directory' => ['directory/index', $directoryData + compact('circles')],
@@ -111,6 +116,10 @@ foreach ($pages as $name => [$template, $params]) {
                 throw new RuntimeException('Map application node is incomplete');
             }
         }
+    }
+    if ($name === 'circle-roles' && (!str_contains($html, 'Dauerhafte Mitgliedschaft: dauerhafte Kreisleitung')
+        || !str_contains($html, 'Space veröffentlichen'))) {
+        throw new RuntimeException('Circle roles omit permanent membership or publication action.');
     }
     file_put_contents($out . '/' . $name . '.html', $html);
     echo "Rendered $name\n";

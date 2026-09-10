@@ -26,9 +26,11 @@ class Module extends ContentContainerModule
     {
         parent::enableContentContainer($container);
         if (!$container instanceof Space) { return; }
-        $container->visibility = Space::VISIBILITY_REGISTERED_ONLY;
-        $container->join_policy = Space::JOIN_POLICY_APPLICATION;
-        $container->default_content_visibility = Content::VISIBILITY_PUBLIC;
+        // A new circle is prepared as a private draft. Publication is an
+        // explicit action once its mandate is ready to share.
+        $container->visibility = Space::VISIBILITY_NONE;
+        $container->join_policy = Space::JOIN_POLICY_NONE;
+        $container->default_content_visibility = Content::VISIBILITY_PRIVATE;
         if (!$container->save(false, ['visibility', 'join_policy', 'default_content_visibility'])) {
             throw new \RuntimeException('Die Kreis-Voreinstellungen konnten nicht gespeichert werden.');
         }

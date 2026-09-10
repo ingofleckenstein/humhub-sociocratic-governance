@@ -13,7 +13,7 @@ use yii\helpers\Html;
 <?= Html::activeLabel($config, 'work_auto_archive_days') ?><?= Html::activeTextInput($config, 'work_auto_archive_days', ['type' => 'number', 'min' => 0]) ?>
 <p class="sg-note">Abgelehnte und abgenommene Aufgaben werden nach dieser Anzahl von Tagen automatisch archiviert. <strong>0</strong> bedeutet: niemals automatisch archivieren. Archivieren entfernt keine Daten.</p>
 <p class="sg-note">Nach Benennung der Admin-Sonderrolle darf nur diese Person diese Seite bearbeiten. Ohne Benennung dürfen Systemadministrator*innen die Ersteinrichtung vornehmen. Diese Zuordnung verleiht keine technischen HumHub-Adminrechte.</p>
-<p class="sg-note">Optional: Dieses Konto veröffentlicht allgemeine Mitteilungen im Kreis-Stream, etwa neue Ideen und vollständig gedeckte Ressourcen. Ohne Auswahl veröffentlicht weiterhin die Person, die die Änderung auslöst.</p>
+<p class="sg-note">Dieses Konto veröffentlicht allgemeine Mitteilungen im Kreis-Stream, etwa neue Ideen, vollständig gedeckte Ressourcen und die Ankündigung eines veröffentlichten Kreises. Für die Kreisveröffentlichung muss ein aktives Konto ausgewählt sein; ohne Auswahl erscheinen andere Mitteilungen weiterhin unter der Person, die die Änderung auslöst.</p>
 <?= Html::submitButton('Einstellungen speichern', ['class' => 'sg-button']) ?><?= Html::endForm() ?>
 </section>
 <?php if (Yii::$app->user->isAdmin()): ?>

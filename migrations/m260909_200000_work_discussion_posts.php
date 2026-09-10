@@ -7,7 +7,9 @@ class m260909_200000_work_discussion_posts extends Migration
     public function safeUp()
     {
         $this->addColumn('{{%sg_work_item}}', 'stream_post_id', $this->integer()->null());
-        $this->addForeignKey('fk_sg_work_stream_post', '{{%sg_work_item}}', 'stream_post_id', '{{%post}}', 'id', 'SET NULL', 'RESTRICT');
+        if ($this->db->driverName !== 'sqlite') {
+            $this->addForeignKey('fk_sg_work_stream_post', '{{%sg_work_item}}', 'stream_post_id', '{{%post}}', 'id', 'SET NULL', 'RESTRICT');
+        }
     }
     public function safeDown()
     {

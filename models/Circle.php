@@ -20,11 +20,13 @@ class Circle extends \yii\db\ActiveRecord
         'jade' => 'Jade',
         'amber' => 'Bernstein',
         'slate' => 'Schieferblau',
+        'spruce' => 'Fichtengrün',
     ];
 
     public static function tableName() { return '{{%sg_circle}}'; }
     public function getSpace() { return $this->hasOne(\humhub\modules\space\models\Space::class, ['id' => 'space_id']); }
     public function getRoles() { return $this->hasMany(Role::class, ['space_id' => 'space_id']); }
+    public function getPermanentMemberships() { return $this->hasMany(PermanentMembership::class, ['space_id' => 'space_id']); }
 
     public function mandateSummary(): string
     {
@@ -49,7 +51,20 @@ class Circle extends \yii\db\ActiveRecord
                 return $color;
             }
         }
-        return '';
+        // A full palette must not prevent creating another circle. Reuse a
+        // color deterministically only after every available tone is in use.
+        $colors = array_keys(self::COLORS);
+        return $colors[count($query->column()) % count($colors)];
+    }
+
+    public static function hasAvailableColor(?int $exceptSpaceId = null): bool
+    {
+        $query = self::find()->select('color');
+        if ($exceptSpaceId !== null) {
+            $query->andWhere(['<>', 'space_id', $exceptSpaceId]);
+        }
+        $used = array_flip(array_filter($query->column(), static fn($color): bool => array_key_exists((string) $color, self::COLORS)));
+        return count($used) < count(self::COLORS);
     }
 
     public function isCompetenceCircle(): bool

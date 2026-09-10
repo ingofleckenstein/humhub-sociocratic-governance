@@ -17,14 +17,18 @@ HumHub-Befehle laufen unter diesem Benutzer. Siehe [Deployment](DEPLOYMENT.md).
    Die Migrationen legen die Governance-Tabellen und die strukturierten Mandatsfelder
    mit dem konfigurierten Tabellenpräfix an.
 3. Im gewünschten Space unter dessen Modulverwaltung „Arbeitskreis“ aktivieren.
-   Der Space wird auf sichtbar für registrierte Nutzer*innen, Beitritt per Einladung
-   und Anfrage sowie öffentliche Standardinhalte gesetzt. Die Sichtbarkeit kann danach
-   im Space-Adminbereich geändert werden.
-4. Als Space-Mitglied „Arbeitskreis“ öffnen und „Mandat & Rollen pflegen“ wählen.
+   Der Space beginnt als privater Entwurf. Bis zur Veröffentlichung sind die
+   Governance-Ansichten nur für Space-Administrator*innen zugänglich.
+4. Als Space-Administrator*in „Arbeitskreis“ öffnen und „Kreisprofil pflegen“ wählen.
 5. Den Kernkreis zuerst ohne Oberkreis speichern. Weitere Kreise danach einrichten.
-6. In der globalen Modulkonfiguration Kernkreis, Trägerorganisation und bei Bedarf
-   Admin-Sonderrolle festlegen.
-7. Unter Administration → Nutzer*innen → Profilattribute verwalten erscheint die
+6. In der globalen Modulkonfiguration Kernkreis, Trägerorganisation, bei Bedarf
+   Admin-Sonderrolle und das aktive Unternehmenskonto für die allgemeine Kommunikation
+   festlegen.
+7. Sobald „Mandat in Kürze“ ausgefüllt ist, neben „Kreisprofil pflegen“ **Space
+   veröffentlichen** wählen. Der Space wird für angemeldete Personen sichtbar, erlaubt
+   Beitritt per Einladung oder Anfrage und verwendet öffentliche Standardinhalte. Das
+   Kommunikationskonto veröffentlicht dazu eine verlinkte Willkommensnachricht im Stream.
+8. Unter Administration → Nutzer*innen → Profilattribute verwalten erscheint die
    Kategorie „Rollen & Zuständigkeiten“. Das optionale Feld „Form der Mitarbeit“
    unterscheidet hauptamtliche, hauptamtliche unentgeltliche und ehrenamtliche
    Mitarbeit und erläutert die Abgrenzung über den regelmäßigen Wochenumfang. Der
@@ -56,7 +60,9 @@ Akzentfarben wählen. Die Farbe dient ausschließlich der Wiedererkennbarkeit:
 Karten und Vorhaben erhalten eine schmale Kante und eine helle Tönung.
 
 Dauerhafte Mitgliedschaften sind dokumentierte Vereinbarungen mit vorhandenen
-Kreismitgliedern. Sie erzwingen noch keine Mitgliedschaft und keinen Austrittsschutz.
+Kreismitgliedern. Sie erscheinen zusätzlich im Kreis unter **Rollen** direkt bei der
+betreffenden Person; ohne andere Rollenbesetzung stehen sie dort als dauerhafte
+Kreismitglieder. Sie erzwingen noch keine Mitgliedschaft und keinen Austrittsschutz.
 
 ## Abnahme auf der Testinstallation
 
@@ -68,11 +74,14 @@ Kreismitgliedern. Sie erzwingen noch keine Mitgliedschaft und keinen Austrittssc
 - Zwei Bearbeitungsformulare öffnen: nach Speichern des ersten muss der zweite Stand
   als veraltet abgelehnt werden.
 - Oberkreisbeziehung auf sich selbst und indirekte Schleife versuchen: beide müssen scheitern.
-- Profilanzeige und Verwaltung der dauerhaften Vereinbarungen prüfen.
+- Profilanzeige, Rollenansicht und Verwaltung der dauerhaften Vereinbarungen prüfen.
 - Modul im Space deaktivieren und wieder aktivieren: Angaben bleiben erhalten.
 - Global deaktivieren/reaktivieren: Tabellen und Inhalt bleiben erhalten.
-- Aktivierung prüfen: Sichtbarkeit für registrierte Nutzer*innen, Beitritt per Einladung
-  und Anfrage, öffentliche Standardinhalte sowie Schreibrecht für Mitglieder.
+- Aktivierung als Entwurf prüfen: Nicht-Administrator*innen dürfen Kreisprofil und
+  Kreisübersicht nicht sehen. Veröffentlichung als Space-Administrator*in prüfen:
+  Sichtbarkeit für registrierte Nutzer*innen, Beitritt per Einladung und Anfrage,
+  öffentliche Standardinhalte, Schreibrecht für Mitglieder sowie genau eine
+  Streamnachricht des konfigurierten Kommunikationskontos.
 - Kreisleitung durch eine*n Space-Administrator*in wechseln und den Besitzerwechsel prüfen;
   als normales Mitglied muss dieser Wechsel abgelehnt werden.
 - Kreisübersicht in Tabellen- und Kartenansicht mit sichtbaren und privaten Kreisen prüfen.
