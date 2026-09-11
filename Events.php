@@ -47,11 +47,6 @@ class Events
     {
         if (\Yii::$app->user->isGuest) { return; }
         $event->sender->addEntry(new MenuLink([
-            'id' => 'sociocratic-governance-start', 'label' => 'Start', 'icon' => 'home',
-            'url' => ['/sociocratic-governance/start/index'], 'sortOrder' => 100,
-            'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'start'),
-        ]));
-        $event->sender->addEntry(new MenuLink([
             'id' => 'sociocratic-governance-directory', 'label' => 'Kreise', 'icon' => 'sitemap',
             'url' => ['/sociocratic-governance/directory/index'], 'sortOrder' => 245,
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'directory'),
@@ -62,12 +57,17 @@ class Events
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'dashboard'),
         ]));
     }
-    /** Replaces the generic stream-only dashboard entry with the personal Governance start. */
+    /** Repurposes the established dashboard menu entry as the personal Governance start. */
     public static function topMenuRun($event)
     {
         if (\Yii::$app->user->isGuest) { return; }
         $dashboard = $event->sender->getEntryById('dashboard');
-        if ($dashboard) { $event->sender->removeEntry($dashboard); }
+        if ($dashboard instanceof MenuLink) {
+            $dashboard->setLabel('Start')
+                ->setIcon('home')
+                ->setUrl(['/sociocratic-governance/start/index']);
+            $dashboard->isActive = ControllerHelper::isActivePath('sociocratic-governance', 'start');
+        }
         $spaces = $event->sender->getEntryById('spaces');
         if ($spaces) { $spaces->setLabel('Spaces entdecken'); }
     }

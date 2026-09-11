@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.6.2 – 2026-09-11
+
+### Ein Startpunkt in der Navigation
+
+- Der bestehende HOME- beziehungsweise Dashboard-Menüpunkt heißt nun „Start"
+  und führt direkt zum persönlichen Einstieg. Der zusätzliche Start-Eintrag
+  entfällt; gespeicherte frühere HOME-Links werden weiterhin weitergeleitet.
+
 ## 0.6.1 – 2026-09-11
 
 ### Ein persönlicher Einstieg
