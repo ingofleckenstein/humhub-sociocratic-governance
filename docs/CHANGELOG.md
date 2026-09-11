@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.6.1 – 2026-09-11
+
+### Ein persönlicher Einstieg
+
+- Der frühere Dashboard- beziehungsweise HOME-Aufruf leitet angemeldete
+  Personen jetzt unmittelbar auf „Start“. Dadurch gibt es keinen zweiten,
+  konkurrierenden persönlichen Einstieg.
+
 ## 0.6.0 – 2026-09-11
 
 ### Persönlicher Start, Navigation und globale Governance-Suche

@@ -9,6 +9,7 @@ $events = [
     ['class' => \humhub\modules\user\models\fieldtype\BaseType::class, 'event' => \humhub\modules\user\models\fieldtype\BaseType::EVENT_INIT, 'callback' => [Events::class, 'profileFieldTypes']],
     ['class' => \humhub\widgets\TopMenu::class, 'event' => \humhub\widgets\TopMenu::EVENT_INIT, 'callback' => [Events::class, 'topMenu']],
     ['class' => \humhub\widgets\TopMenu::class, 'event' => \humhub\widgets\TopMenu::EVENT_RUN, 'callback' => [Events::class, 'topMenuRun']],
+    ['class' => \humhub\modules\dashboard\controllers\DashboardController::class, 'event' => \yii\base\Controller::EVENT_BEFORE_ACTION, 'callback' => [Events::class, 'redirectDashboardHome']],
     ['class' => \humhub\widgets\MetaSearchWidget::class, 'event' => \humhub\widgets\MetaSearchWidget::EVENT_INIT, 'callback' => [Events::class, 'metaSearch']],
     ['class' => \humhub\modules\space\components\ActiveQuerySpace::class, 'event' => \humhub\modules\space\components\ActiveQuerySpace::EVENT_CHECK_VISIBILITY, 'callback' => [Events::class, 'filterSpaceDirectory']],
     ['class' => \humhub\commands\CronController::class, 'event' => \humhub\commands\CronController::EVENT_ON_DAILY_RUN, 'callback' => [Events::class, 'archiveDueWork']],

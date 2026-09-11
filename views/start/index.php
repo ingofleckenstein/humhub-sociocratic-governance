@@ -29,7 +29,7 @@ $name = Yii::$app->user->identity?->displayName;
 <?= Html::a('Mitwirken und Möglichkeiten finden', ['/sociocratic-governance/dashboard/index'], ['class' => 'sg-button']) ?>
 <?= Html::a('Kreise entdecken', ['/sociocratic-governance/directory/index'], ['class' => 'sg-button sg-button-secondary']) ?>
 <?= Html::a('Spaces entdecken', ['/space/spaces'], ['class' => 'sg-button sg-button-secondary']) ?>
-</div><p class="sg-muted">Aktuelles aus der Community findest du in der <?= Html::a('Aktivität', ['/dashboard/dashboard']) ?>.</p></section>
+</div></section>
 
 <details class="sg-card sg-collapsible sg-affiliations"><summary><h2>Meine Zugehörigkeiten</h2><span><?= count($circles) ?> Kreise · <?= count($spaces) ?> Spaces</span></summary>
 <p class="sg-muted">Kreise sind Arbeits- und Kompetenzkreise. Spaces können auch sichere Gruppen rund um ein Event sein.</p><div class="sg-grid">

@@ -71,6 +71,13 @@ class Events
         $spaces = $event->sender->getEntryById('spaces');
         if ($spaces) { $spaces->setLabel('Spaces entdecken'); }
     }
+    /** Makes the former generic dashboard URL use the personal Governance start. */
+    public static function redirectDashboardHome($event)
+    {
+        if (\Yii::$app->user->isGuest || ($event->action->id ?? '') !== 'index') { return; }
+        $event->isValid = false;
+        $event->sender->redirect(['/sociocratic-governance/start/index']);
+    }
     /** Registers circles, work items and resource needs in HumHub's global meta search. */
     public static function metaSearch($event)
     {
