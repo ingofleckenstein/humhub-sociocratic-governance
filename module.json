@@ -2,7 +2,7 @@
   "id": "sociocratic-governance",
   "name": "Sociocratic Governance",
   "description": "Arbeitskreise, Mandate, manuelle Kreisrollen und methodische Konsent-Unterstützung.",
-  "version": "0.5.11",
+  "version": "0.6.0",
   "humhub": {
     "minVersion": "1.18.5"
   },

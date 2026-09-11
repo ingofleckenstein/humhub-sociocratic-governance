@@ -9,7 +9,8 @@ $circleUrl = $space->createUrl($circle && $circle->isCompetenceCircle() ? '/spac
 ?>
 <div class="sg <?= Html::encode($toneClass) ?>">
 <header class="sg-hero"><span class="sg-eyebrow">Vorhaben · <?= Html::encode($space->name) ?></span><h1>Board</h1>
-<p>Was ist offen, in Bearbeitung oder wartet auf eine Abnahme?</p></header>
+<p>Was ist offen, in Bearbeitung oder wartet auf eine Abnahme?</p>
+<?= Html::a($circle && $circle->isCompetenceCircle() ? '← Zurück zum Space' : '← Zurück zum Kreis', $circleUrl, ['class' => 'sg-hero-action']) ?></header>
 <nav class="sg-subnav" aria-label="Vorhaben-Bereiche">
 <?= Html::a('Board', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'is-active']) ?>
 <?= Html::a('Neues Vorhaben', $space->createUrl('/sociocratic-governance/work/new')) ?>

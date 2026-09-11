@@ -16,6 +16,7 @@ $byId = [];
 foreach ($circles as $item) { $byId[(int) $item->space_id] = $item; }
 $canPublish = $canPublish ?? false;
 $permanentMemberships = $permanentMemberships ?? [];
+$viewerRoleLabels = $viewerRoleLabels ?? [];
 $publicationError = Yii::$app->session->getFlash('sgPublicationError');
 if (!$publicationError && $canPublish && (!$circle || trim($circle->mandateSummary()) === '')) {
     $publicationError = 'Veröffentlichung fehlgeschlagen: Bitte hinterlege zuerst „Mandat in Kürze“, bevor du den Space veröffentlichst.';
@@ -25,13 +26,17 @@ if (!$publicationError && $canPublish && (!$circle || trim($circle->mandateSumma
 <?php if ($publicationError): ?><div class="alert alert-danger" role="alert"><strong>Fehler:</strong> <?= Html::encode($publicationError) ?></div><?php endif ?>
 <header class="sg-hero"><span class="sg-eyebrow">Projektkreis</span><h1><?= Html::encode($space->name) ?></h1>
 <p>Gemeinsam Verantwortung übernehmen – im vereinbarten Mandat selbstständig handeln.</p>
+<?php if ($viewerRoleLabels): ?><p class="sg-role-context"><strong>Deine Rolle:</strong> <?= Html::encode(implode(', ', $viewerRoleLabels)) ?></p><?php endif ?>
+<?= Html::a('← Zurück zur Kreisübersicht', ['/sociocratic-governance/directory/index'], ['class' => 'sg-hero-action']) ?>
 <div class="sg-actions">
 <?= Html::a('Vorhaben', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-button']) ?>
 <?= Html::a('So arbeiten wir', $space->createUrl('/sociocratic-governance/circle/guide'), ['class' => 'sg-button sg-button-secondary']) ?>
+<?php if ($canWrite || $canPublish): ?><details class="sg-manage-menu"><summary>Kreis verwalten</summary><div>
 <?php if ($canWrite): ?><?= Html::a('Kreisprofil pflegen', $space->createUrl('/sociocratic-governance/circle/edit'), ['class' => 'sg-button sg-button-secondary']) ?><?php endif ?>
 <?php if ($canPublish): ?><?= Html::beginForm($space->createUrl('/sociocratic-governance/circle/publish'), 'post', ['class' => 'sg-inline-form']) ?>
 <?= Html::submitButton('Space veröffentlichen', ['class' => 'sg-button']) ?>
 <?= Html::endForm() ?><?php endif ?>
+</div></details><?php endif ?>
 </div></header>
 <nav class="sg-subnav" aria-label="Projektkreis-Bereiche">
 <?php foreach ($sections as $key => $label): ?><?= Html::a($label, $circleUrl($key), ['class' => $section === $key ? 'is-active' : '']) ?><?php endforeach ?>

@@ -34,7 +34,8 @@ $statusLabel = match ($item->status) {
     default => WorkItem::STATUSES[$item->status] ?? $item->status,
 };
 $rich = static fn($text) => class_exists(\humhub\modules\content\widgets\richtext\RichText::class) ? \humhub\modules\content\widgets\richtext\RichText::output((string) $text) : nl2br(Html::encode((string) $text));
-$viewUrl = static fn(string $name) => $space->createUrl('/sociocratic-governance/work/view', ['id' => $item->id, 'section' => $name]);
+$returnParams = $returnParams ?? [];
+$viewUrl = static fn(string $name) => $space->createUrl('/sociocratic-governance/work/view', ['id' => $item->id, 'section' => $name] + $returnParams);
 $sections = ['overview' => 'Worum geht es?', 'collaboration' => 'Mitmachen & umsetzen', 'history' => 'Bisheriger Weg'];
 $personLink = static function ($person): string {
     return $person ? Html::a(Html::encode($person->displayName), $person->getUrl()) : 'Nicht verfügbar';
@@ -65,7 +66,7 @@ $button = static function ($action, $label) use ($formStart) {
 <div class="sg">
 <header class="sg-hero"><span class="sg-eyebrow"><?= Html::encode($itemTypeLabel) ?> #<?= (int) $item->id ?> · <?= Html::encode($statusLabel) ?><?= $item->archived_at ? ' · Archiviert' : '' ?></span>
 <h1><?= Html::encode($item->title) ?></h1><p><?= $item->kind === 'idea' ? 'Ein Vorschlag zur gemeinsamen Prüfung.' : 'Eine konkrete Aufgabe im Projektkreis.' ?></p>
-<?= Html::a('← zurück zum Board', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-button']) ?></header>
+<?= Html::a($returnLabel ?? '← Zurück zum Board', $returnUrl ?? $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-hero-action']) ?></header>
 <nav class="sg-subnav" aria-label="Bereiche dieses Vorhabens"><?php foreach ($sections as $key => $label): ?><?= Html::a($label, $viewUrl($key), ['class' => $section === $key ? 'is-active' : '']) ?><?php endforeach ?></nav>
 <?php if ($error): ?><p class="alert alert-danger" role="alert"><?= Html::encode($error) ?></p><?php endif ?>
 

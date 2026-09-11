@@ -2,7 +2,7 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
-**Status: Version 0.5.11 – Kreisveröffentlichung, dauerhafte Mitgliedschaften und klare Entwurfsnavigation sind bereit für den lokalen Installationstest.**
+**Status: Version 0.6.0 – persönlicher Einstieg, klare Navigation und verbesserte Auffindbarkeit sind bereit für den lokalen Installationstest.**
 Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Tabellenansicht beginnt beim konfigurierten Kernkreis, folgt der Projektkreis-Hierarchie und trennt Kompetenzkreise sichtbar ab. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie und sichtbarer Doppelbindung; ihre Schaltflächen führen zu Kreisinfos, Mitgliederseite und Vorhaben-Board. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 
 Im unveröffentlichten Arbeitsstand ergänzt: vollständiger Mitgliederring in der
@@ -11,13 +11,21 @@ der verfügbaren Pflichtmodule. Konfiguration und Grenzen stehen in
 [Installation](docs/INSTALLATION.md). Die Live-Abnahme bleibt offen.
 
 Das Mitwirkungs-Dashboard „Wie kann ich mich einbringen?“ bündelt alle jeweils
-sichtbaren Ideen und Aufgaben. Es lässt sich nach Themen oder nach benötigten
+sichtbaren Ideen und Aufgaben. Es lässt sich nach Kreisen, Themen oder nach benötigten
 Ressourcen orientieren. Arbeitskreise pflegen Themen direkt am Vorhaben und schätzen
 bei Aufgaben den Bedarf. Angemeldete Personen können persönlich zusagen; sichtbar
 sind nur die Mitwirkenden und der aggregierte Stand, nicht Art oder Höhe einzelner
 Zusagen. Zeitressourcen unterscheiden asynchron leistbare Stunden von
 termingebundener Zeit. Umgesetzte oder abgelehnte Aufgaben lassen sich manuell und
 optional nach einer Backend-Frist archivieren; sie werden nicht gelöscht.
+
+Der persönliche Einstieg „Start“ stellt zunächst ungelesene Hinweise, anstehende
+Aufgaben und aktive Zusagen in den Vordergrund. Ohne diese persönlichen Anknüpfungspunkte führt er
+klar zum Mitwirken sowie zum Entdecken von Kreisen und Spaces. Die meist stabilen
+Zugehörigkeiten bleiben getrennt und aufklappbar erreichbar. Die globale
+HumHub-Suche erkennt zusätzlich Projekt- und Kompetenzkreise, Ideen/Aufgaben sowie
+Ressourcenbedarfe. Alle Ergebnisse folgen den gleichen Sichtbarkeitsregeln wie die
+zugehörigen Kreis- und Vorhabensseiten.
 
 Jeder Arbeitskreis hat außerdem eine aus sechs ruhigen, veränderbaren Akzentfarben
 gewählte Kennung. Sie erscheint als schmale Kante und helle Hintergrundtönung in
@@ -500,7 +508,7 @@ Versionsnummern ersetzen keine Datenbankmigrationen und keine dokumentierten Upg
 
 ## 13. Aktueller Repository- und Teststand
 
-**Version 0.5.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
+**Version 0.6.0, Entwicklungsziel HumHub Community Edition 1.18.5.**
 
 Implementiert:
 

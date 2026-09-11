@@ -8,7 +8,8 @@ $toneClass = $circle ? $circle->colorClass() : 'sg-tone-teal';
 ?>
 <div class="sg <?= Html::encode($toneClass) ?>">
 <header class="sg-hero"><span class="sg-eyebrow">Vorhaben · <?= Html::encode($space->name) ?></span><h1>Neues Vorhaben</h1>
-<p>Eine Idee zur gemeinsamen Prüfung oder eine konkrete Aufgabe anlegen.</p></header>
+<p>Eine Idee zur gemeinsamen Prüfung oder eine konkrete Aufgabe anlegen.</p>
+<?= Html::a('← Zurück zum Board', $space->createUrl('/sociocratic-governance/work/index'), ['class' => 'sg-hero-action']) ?></header>
 <nav class="sg-subnav" aria-label="Vorhaben-Bereiche">
 <?= Html::a('Board', $space->createUrl('/sociocratic-governance/work/index')) ?>
 <?= Html::a('Neues Vorhaben', $space->createUrl('/sociocratic-governance/work/new'), ['class' => 'is-active']) ?>

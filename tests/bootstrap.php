@@ -85,6 +85,7 @@ namespace humhub\components {
 namespace {
     class TestIdentity extends \yii\base\Component {
         public $id = 1;
+        public $identity;
         public $isGuest = false;
         public $admin = false;
         public function isAdmin() { return $this->admin; }
@@ -147,4 +148,5 @@ namespace {
     }
     \humhub\modules\space\models\Space::$members = [1 => [1, 2], 2 => [1, 2], 3 => [2]];
     \humhub\modules\space\models\Space::$owners = [1 => 1, 2 => 1, 3 => 2];
+    \Yii::$app->user->identity = \humhub\modules\user\models\User::findOne(1);
 }

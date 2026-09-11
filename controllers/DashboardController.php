@@ -15,13 +15,16 @@ class DashboardController extends \humhub\components\Controller
         return true;
     }
 
-    public function actionIndex($focus = 'topics', $topic = null, $resourceType = null)
+    public function actionIndex($focus = 'topics', $topic = null, $resourceType = null, $circle = null)
     {
         if (!in_array($focus, ['topics', 'resources'], true)) { $focus = 'topics'; }
         if ($topic !== null && (!is_string($topic) || mb_strlen($topic) > 80)) { throw new \yii\web\BadRequestHttpException('Ungültiges Thema.'); }
         if ($resourceType !== null && (!is_string($resourceType) || !array_key_exists($resourceType, WorkResource::TYPES))) {
             throw new \yii\web\BadRequestHttpException('Ungültiger Ressourcenfilter.');
         }
-        return $this->render('index', (new ParticipationDashboard())->data($topic, $resourceType) + ['focus' => $focus]);
+        if ($circle !== null && (!is_scalar($circle) || !ctype_digit((string) $circle) || (int) $circle < 1)) {
+            throw new \yii\web\BadRequestHttpException('Ungültiger Kreis.');
+        }
+        return $this->render('index', (new ParticipationDashboard())->data($topic, $resourceType, $circle === null ? null : (int) $circle) + ['focus' => $focus]);
     }
 }

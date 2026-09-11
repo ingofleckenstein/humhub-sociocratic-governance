@@ -1,5 +1,38 @@
 # Änderungen
 
+## 0.6.0 – 2026-09-11
+
+### Persönlicher Start, Navigation und globale Governance-Suche
+
+- „Start“ zeigt ungelesene persönliche Hinweise vor Aufgaben und Zusagen. Der
+  Stream beschreibt nun korrekt die zuletzt sichtbaren Aktivitäten, ohne einen
+  nicht vorhandenen Besuchszeitpunkt zu behaupten.
+- „Mitwirken“ kann zusätzlich nach einem Kreis gefiltert werden. Der gewählte
+  Kreis bleibt beim Öffnen eines Vorhabens und beim Zurückgehen erhalten.
+- Das Kreisverzeichnis hat Suche, Kreisart- und „Nur meine Kreise“-Filter.
+- Die Space-Navigation trennt jetzt sichtbar „MEINE SPACES“ und „SPACES
+  ENTDECKEN“. Kreisleitungen und andere Rollen sehen ihre Rolle im Kreisprofil;
+  Verwaltungsaktionen liegen dort gebündelt unter „Kreis verwalten“.
+- Der neue Einstieg „Start“ ersetzt in der Hauptnavigation die reine
+  Stream-Übersicht. Er priorisiert offene Aufgaben und aktive Zusagen; ohne
+  diese persönlichen Anknüpfungspunkte führt er direkt zu Mitwirken sowie zum
+  Entdecken von Kreisen und Spaces. Die getrennten, meist stabilen
+  Zugehörigkeiten bleiben aufklappbar erreichbar. Der bisherige Stream bleibt
+  dort als „Aktivität“ erreichbar.
+- Die Themenwahl in „Mitwirken“ ist ein kompaktes Aufklappmenü. Die sichtbaren
+  Ideen und Aufgaben beginnen damit ohne vorheriges Scrollen.
+- „Letzte Aktivitäten“ beginnt nach den eigenen Zugehörigkeiten am Ende von
+  „Start“ und verwendet den regulären, sichtbarkeitsgeprüften HumHub-Stream.
+- Vorhabensdetails führen nun kontextabhängig zurück zu „Start“, „Mitwirken“
+  oder zum zugehörigen Board. Die Bereichswechsel im Vorhaben behalten diesen
+  Rückweg bei; die Kreis-Arbeitshilfe verwendet dieselbe sichtbare Rückwegform.
+- Rückwege stehen jetzt einheitlich oben rechts: Kreisprofil führt zur
+  Kreisübersicht, Board zum Kreis beziehungsweise Space, neue Vorhaben zum
+  Board und Mitwirken, Kreisübersicht sowie Suche zu Start.
+- Die globale HumHub-Suche enthält nun sichtbare Projekt- und Kompetenzkreise,
+  Ideen/Aufgaben und Ressourcenbedarfe. Ressourcen werden über ihre Bezeichnung
+  gefunden; vertrauliche Detailangaben werden nicht durchsucht.
+
 ## 0.5.11 – 2026-09-10
 
 ### Klarer Zugang und Rückmeldung bei Kreisveröffentlichungen

@@ -10,8 +10,8 @@ Yii::setAlias('@humhub/modules/sociocraticGovernance', dirname(__DIR__));
 $vcard = getenv('VCARD_SOURCE');
 if ($vcard) { Yii::setAlias('@humhub/modules/popovervcard', $vcard); }
 foreach ([
-    'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController', 'services\CircleService',
-    'controllers\AdminController', 'controllers\WorkController', 'controllers\DashboardController', 'models\WorkItem', 'models\WorkEvent', 'models\WorkProposalRevision', 'models\WorkTopic', 'models\WorkResource', 'models\WorkResourceContribution', 'services\WorkAccess', 'services\WorkArchiver', 'services\ParticipationDashboard', 'services\WorkNotificationRecipients', 'services\WorkNotifier', 'services\WorkService', 'notifications\WorkItemNotificationCategory', 'notifications\WorkItemNotification', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
+    'Module', 'Events', 'controllers\CircleController', 'controllers\DirectoryController', 'controllers\SearchController', 'controllers\StartController', 'services\CircleService',
+    'controllers\AdminController', 'controllers\WorkController', 'controllers\DashboardController', 'models\WorkItem', 'models\WorkEvent', 'models\WorkProposalRevision', 'models\WorkTopic', 'models\WorkResource', 'models\WorkResourceContribution', 'services\WorkAccess', 'services\WorkArchiver', 'services\ParticipationDashboard', 'services\PersonalDashboard', 'services\WorkNotificationRecipients', 'services\WorkNotifier', 'services\WorkService', 'search\GovernanceSearch', 'search\GovernanceSearchProvider', 'search\GovernanceSearchResult', 'notifications\WorkItemNotificationCategory', 'notifications\WorkItemNotification', 'widgets\CircleBadge', 'widgets\ProfileRoles', 'widgets\VCardGovernance',
     'widgets\GovernanceVCard', 'services\VCardTemplate', 'services\RequiredModules', 'services\VCardData', 'assets\GovernanceAsset',
 ] as $class) {
     if (!class_exists('humhub\modules\sociocraticGovernance\\' . $class)) { throw new RuntimeException($class); }
@@ -20,6 +20,6 @@ foreach ([
 $config = require dirname(__DIR__) . '/config.php';
 foreach ($config['events'] as $event) {
     if (!$vcard && str_contains($event['class'], 'popovervcard')) { continue; }
-    if (!class_exists($event['class']) || !is_callable($event['callback'])) { throw new RuntimeException('Invalid event registration'); }
+    if (!class_exists($event['class']) || !is_callable($event['callback'])) { throw new RuntimeException('Invalid event registration: ' . $event['class']); }
 }
 echo "All event classes and callbacks exist.\n";

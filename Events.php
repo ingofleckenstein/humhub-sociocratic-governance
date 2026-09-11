@@ -9,6 +9,7 @@ use humhub\helpers\ControllerHelper;
 use humhub\modules\content\models\ContentContainerModuleState;
 use humhub\modules\space\components\SpaceDirectoryQuery;
 use humhub\modules\sociocraticGovernance\models\Circle;
+use humhub\modules\sociocraticGovernance\search\GovernanceSearchProvider;
 use humhub\modules\sociocraticGovernance\models\fieldtype\CircleResponsibilities;
 class Events
 {
@@ -46,6 +47,11 @@ class Events
     {
         if (\Yii::$app->user->isGuest) { return; }
         $event->sender->addEntry(new MenuLink([
+            'id' => 'sociocratic-governance-start', 'label' => 'Start', 'icon' => 'home',
+            'url' => ['/sociocratic-governance/start/index'], 'sortOrder' => 100,
+            'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'start'),
+        ]));
+        $event->sender->addEntry(new MenuLink([
             'id' => 'sociocratic-governance-directory', 'label' => 'Kreise', 'icon' => 'sitemap',
             'url' => ['/sociocratic-governance/directory/index'], 'sortOrder' => 245,
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'directory'),
@@ -55,6 +61,22 @@ class Events
             'url' => ['/sociocratic-governance/dashboard/index'], 'sortOrder' => 246,
             'isActive' => ControllerHelper::isActivePath('sociocratic-governance', 'dashboard'),
         ]));
+    }
+    /** Replaces the generic stream-only dashboard entry with the personal Governance start. */
+    public static function topMenuRun($event)
+    {
+        if (\Yii::$app->user->isGuest) { return; }
+        $dashboard = $event->sender->getEntryById('dashboard');
+        if ($dashboard) { $event->sender->removeEntry($dashboard); }
+        $spaces = $event->sender->getEntryById('spaces');
+        if ($spaces) { $spaces->setLabel('Spaces entdecken'); }
+    }
+    /** Registers circles, work items and resource needs in HumHub's global meta search. */
+    public static function metaSearch($event)
+    {
+        if (!\Yii::$app->user->isGuest) {
+            $event->sender->addProvider(GovernanceSearchProvider::class);
+        }
     }
     public static function filterSpaceDirectory($event)
     {

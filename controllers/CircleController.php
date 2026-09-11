@@ -28,11 +28,20 @@ class CircleController extends ContentContainerController
     public function actionIndex($section = 'overview')
     {
         $circle = Circle::findOne($this->contentContainer->id);
+        $viewerRoleLabels = [];
+        if ($circle) {
+            foreach ($circle->roles as $role) {
+                if ((int) $role->user_id === (int) Yii::$app->user->id) {
+                    $viewerRoleLabels[] = \humhub\modules\sociocraticGovernance\models\Role::LABELS[$role->role_key] ?? $role->role_key;
+                }
+            }
+        }
         return $this->render('index', [
             'space' => $this->contentContainer, 'circle' => $circle,
             'circles' => Access::visibleCircles(), 'canWrite' => Access::write($this->contentContainer),
             'canPublish' => Access::admin($this->contentContainer) && $circle && !$circle->is_published,
             'permanentMemberships' => PermanentMembership::find()->where(['space_id' => $this->contentContainer->id])->with('user')->all(),
+            'viewerRoleLabels' => $viewerRoleLabels,
             'section' => $this->section($section),
         ]);
     }

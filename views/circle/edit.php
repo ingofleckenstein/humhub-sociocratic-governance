@@ -4,7 +4,8 @@ use yii\helpers\Html;
 ?>
 <div class="sg">
 <header class="sg-hero"><span class="sg-eyebrow">Kreis pflegen</span><h1><?= Html::encode($space->name) ?></h1>
-<p>Dokumentiere die gemeinsam vereinbarten Angaben. Das Speichern ersetzt keinen Konsentbeschluss.</p></header>
+<p>Dokumentiere die gemeinsam vereinbarten Angaben. Das Speichern ersetzt keinen Konsentbeschluss.</p>
+<?= Html::a('← Zurück zum Kreis', $space->createUrl('/sociocratic-governance/circle/index'), ['class' => 'sg-hero-action']) ?></header>
 <section class="sg-card">
 <?= Html::beginForm('', 'post') ?>
 <?= Html::errorSummary($form, ['class' => 'alert alert-danger', 'header' => 'Bitte prüfen:']) ?>

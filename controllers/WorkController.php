@@ -42,11 +42,12 @@ class WorkController extends ContentContainerController
         return $items;
     }
 
-    public function actionView($id, $section = 'overview')
+    public function actionView($id, $section = 'overview', $from = null, $focus = 'topics', $topic = null, $resourceType = null, $circle = null)
     {
         $item = $this->findItem($id);
         $section = $this->section($section);
-        return $this->render('view', ['space' => $this->contentContainer, 'item' => $item, 'error' => '', 'section' => $section]);
+        $return = $this->returnContext($from, $focus, $topic, $resourceType, $circle);
+        return $this->render('view', ['space' => $this->contentContainer, 'item' => $item, 'error' => '', 'section' => $section] + $return);
     }
     public function actionCreate()
     {
@@ -104,5 +105,31 @@ class WorkController extends ContentContainerController
         if ($section === 'resources') { return 'collaboration'; }
         return is_string($section) && in_array($section, ['overview', 'collaboration', 'history'], true)
             ? $section : 'overview';
+    }
+    /** Keeps a person in the area from which they deliberately opened a task. */
+    private function returnContext($from, $focus, $topic, $resourceType, $circle): array
+    {
+        if ($from === 'start') {
+            return ['returnUrl' => ['/sociocratic-governance/start/index'], 'returnLabel' => '← Zurück zu Start', 'returnParams' => ['from' => 'start']];
+        }
+        if ($from === 'participation') {
+            $focus = in_array($focus, ['topics', 'resources'], true) ? $focus : 'topics';
+            $params = ['focus' => $focus];
+            if (is_string($topic) && mb_strlen($topic) <= 80) { $params['topic'] = $topic; }
+            if (is_string($resourceType) && array_key_exists($resourceType, \humhub\modules\sociocraticGovernance\models\WorkResource::TYPES)) {
+                $params['resourceType'] = $resourceType;
+            }
+            if (is_scalar($circle) && ctype_digit((string) $circle) && (int) $circle > 0) { $params['circle'] = (int) $circle; }
+            return [
+                'returnUrl' => array_merge(['/sociocratic-governance/dashboard/index'], $params),
+                'returnLabel' => '← Zurück zu Mitwirken',
+                'returnParams' => ['from' => 'participation'] + $params,
+            ];
+        }
+        return [
+            'returnUrl' => $this->contentContainer->createUrl('/sociocratic-governance/work/index'),
+            'returnLabel' => '← Zurück zum Board',
+            'returnParams' => [],
+        ];
     }
 }

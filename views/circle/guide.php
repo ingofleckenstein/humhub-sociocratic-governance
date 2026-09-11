@@ -5,7 +5,7 @@ use yii\helpers\Html;
 <div class="sg">
 <header class="sg-hero"><span class="sg-eyebrow">Methodische Unterstützung</span><h1>So arbeiten wir im Kreis</h1>
 <p>Ein klarer Prozess hilft uns, Verantwortung zu teilen und gemeinsam ins Handeln zu kommen.</p>
-<?= Html::a('Zurück zum Kreis', $space->createUrl('/sociocratic-governance/circle/index')) ?></header>
+<?= Html::a('← Zurück zum Kreis', $space->createUrl('/sociocratic-governance/circle/index'), ['class' => 'sg-hero-action']) ?></header>
 <section class="sg-card"><h2>Von der Idee zum Vorhaben</h2>
 <p><strong>Idee → Mandatsprüfung → Aufgabe → Beratung → Konsent → Umsetzung → Review</strong></p>
 <p>Alle registrierten Menschen dürfen Ideen an beliebige Kreise geben. Zuerst prüfen wir nur: Sind wir zuständig? Innerhalb unseres Mandats wird die Idee zur Aufgabe für kommende Sitzungen. Andernfalls geben wir sie begründet an den Oberkreis weiter. Ideen außerhalb des Gesamtmandats können hier nicht bearbeitet werden.</p>

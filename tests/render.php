@@ -3,6 +3,7 @@
 require __DIR__ . '/bootstrap.php';
 use humhub\modules\sociocraticGovernance\models\{Circle, CircleForm, Configuration, PermanentMembership};
 use humhub\modules\sociocraticGovernance\services\{Access, CircleDirectory, CircleService, ParticipationDashboard};
+use humhub\modules\sociocraticGovernance\search\GovernanceSearch;
 use humhub\modules\space\models\Space;
 $out = getenv('PREVIEW_DIR');
 if (!$out || !is_dir($out)) { throw new RuntimeException('Set PREVIEW_DIR to an existing output directory.'); }
@@ -37,6 +38,8 @@ $workTask = $workService->change($workTask->id, 2, 'claim');
 $workTask = $workService->change($workTask->id, 3, 'start');
 $workTask = $workService->change($workTask->id, 4, 'submit', ['note' => 'Das Ergebnis liegt vor.']);
 $dashboardData = (new ParticipationDashboard())->data();
+$personalData = ['circles' => $circles, 'spaces' => [], 'tasks' => [$workTask], 'contributions' => []];
+$searchData = (new GovernanceSearch())->search('Gespräch');
 $pages = [
     'work-board' => ['work/index', ['space' => $space, 'items' => [$workIdea, $workTask], 'error' => '', 'draft' => new \humhub\modules\sociocraticGovernance\models\WorkItem(), 'draftTopics' => '']],
     'work-new' => ['work/new', ['space' => $space, 'error' => '', 'draft' => new \humhub\modules\sociocraticGovernance\models\WorkItem(), 'draftTopics' => '']],
@@ -51,6 +54,8 @@ $pages = [
     'edit' => ['circle/edit', ['space' => $space, 'form' => CircleForm::forCircle($circle), 'parents' => [2 => 'Technik'], 'members' => [1 => 'Alex', 2 => 'Robin']]],
     'directory' => ['directory/index', $directoryData + compact('circles')],
     'dashboard' => ['dashboard/index', $dashboardData + ['focus' => 'topics']],
+    'start' => ['start/index', $personalData],
+    'search' => ['search/index', $searchData + ['keyword' => 'Gespräch']],
     'admin' => ['admin/index', ['config' => Configuration::findOne(1), 'permanent' => new PermanentMembership(), 'spaces' => [1 => 'Kern', 2 => 'Technik'], 'users' => [1 => 'Alex', 2 => 'Robin'], 'declarations' => []]],
 ];
 foreach ($pages as $name => [$template, $params]) {
