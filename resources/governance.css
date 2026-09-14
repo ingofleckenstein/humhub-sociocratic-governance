@@ -64,7 +64,7 @@
 .sg .sg-role-key,.sg .sg-map-flow-key { display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:16px; font-size:12px; font-weight:700; color:var(--sg-muted); }
 .sg .sg-role-key span,.sg .sg-map-flow-key span { display:inline-flex; align-items:center; gap:6px; }.sg .sg-role-key span::before { content:''; width:11px; height:11px; border-radius:50%; background:#6c938e; }.sg .sg-role-key-leader::before { background:#9e5545 !important; }.sg .sg-role-key-delegate::before { background:#336b83 !important; }.sg .sg-role-key-facilitator::before { background:#4f6f3f !important; }.sg .sg-role-key-secretary::before { background:#74506c !important; }
 .sg .sg-map-intro { display:flex; justify-content:space-between; gap:16px; align-items:center; }
-.sg .sg-circle-map { height:700px; overflow:hidden; position:relative; border:1px solid #c9dbd6; border-radius:7px; background:radial-gradient(circle at 1px 1px,#d6e5e1 1px,transparent 0) 0 0/20px 20px; touch-action:none; cursor:grab; }
+.sg .sg-circle-map { height:700px; overflow:hidden; position:relative; border:1px solid #c9dbd6; border-radius:7px; background:radial-gradient(circle at 1px 1px,#d6e5e1 1px,transparent 0) 0 0/20px 20px; touch-action:none; overscroll-behavior:contain; cursor:grab; }
 .sg .sg-circle-map.sg-map-fallback-mode { height:auto; min-height:260px; overflow:visible; cursor:default; }
 .sg .sg-map-fallback { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; padding:20px; }
 .sg .sg-map-fallback-node { background:var(--sg-soft); border:2px solid var(--sg-accent); border-radius:12px; padding:15px; overflow-wrap:anywhere; }

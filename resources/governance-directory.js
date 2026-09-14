@@ -170,21 +170,69 @@
         });
         var scale = 1, tx = 0, ty = 0, positioned = false;
         function apply() { world.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')'; window.requestAnimationFrame(drawLinks); }
-        function position() {
-            if (map.offsetWidth === 0) { return; }
-            scale = Math.min(1, Math.max(0.12, Math.min((map.clientWidth - 88) / worldWidth, (map.clientHeight - 88) / worldHeight))); tx = (map.clientWidth - worldWidth * scale) / 2; ty = (map.clientHeight - worldHeight * scale) / 2; positioned = true; apply(); drawLinks();
+        function clampScale(value) { return Math.max(0.42, Math.min(1.7, value)); }
+        function zoomAt(pointX, pointY, nextScale) {
+            var previousScale = scale, worldX = (pointX - tx) / previousScale, worldY = (pointY - ty) / previousScale;
+            scale = clampScale(nextScale);
+            tx = pointX - worldX * scale; ty = pointY - worldY * scale;
+            positioned = true; apply();
         }
-        function changeZoom(factor) { scale = Math.max(0.42, Math.min(1.7, scale * factor)); positioned = true; apply(); }
+        function position(resetZoom) {
+            if (map.offsetWidth === 0) { return; }
+            if (resetZoom || !positioned) { scale = Math.min(1, Math.max(0.12, Math.min((map.clientWidth - 88) / worldWidth, (map.clientHeight - 88) / worldHeight))); }
+            tx = (map.clientWidth - worldWidth * scale) / 2; ty = (map.clientHeight - worldHeight * scale) / 2; positioned = true; apply(); drawLinks();
+        }
+        function changeZoom(factor) { zoomAt(map.clientWidth / 2, map.clientHeight / 2, scale * factor); }
         function keepCardVisible(card) {
             var cardRect = card.getBoundingClientRect(), mapRect = map.getBoundingClientRect(), padding = 24, dx = 0, dy = 0;
             if (cardRect.left < mapRect.left + padding) { dx = mapRect.left + padding - cardRect.left; } else if (cardRect.right > mapRect.right - padding) { dx = mapRect.right - padding - cardRect.right; }
             if (cardRect.top < mapRect.top + padding) { dy = mapRect.top + padding - cardRect.top; } else if (cardRect.bottom > mapRect.bottom - padding) { dy = mapRect.bottom - padding - cardRect.bottom; }
             if (dx || dy) { tx += dx; ty += dy; apply(); }
         }
-        zoomIn.addEventListener('click', function () { changeZoom(1.18); }); zoomOut.addEventListener('click', function () { changeZoom(0.85); }); reset.addEventListener('click', position); map.addEventListener('sg:shown', position); map.addEventListener('sg:node-size-changed', function (event) { window.requestAnimationFrame(function () { drawLinks(); keepCardVisible(event.target); }); });
-        map.addEventListener('wheel', function (event) { event.preventDefault(); var rect = map.getBoundingClientRect(), beforeX = (event.clientX - rect.left - tx) / scale, beforeY = (event.clientY - rect.top - ty) / scale; changeZoom(event.deltaY < 0 ? 1.12 : 0.89); tx = event.clientX - rect.left - beforeX * scale; ty = event.clientY - rect.top - beforeY * scale; apply(); }, {passive: false});
-        map.addEventListener('keydown', function (event) { if (event.key === '+' || event.key === '=') { event.preventDefault(); changeZoom(1.18); } if (event.key === '-') { event.preventDefault(); changeZoom(0.85); } if (event.key === 'Home') { event.preventDefault(); position(); } });
-        var drag = null; map.addEventListener('pointerdown', function (event) { if (event.target.closest('a, button')) { return; } drag = {x: event.clientX, y: event.clientY, tx: tx, ty: ty}; map.setPointerCapture(event.pointerId); }); map.addEventListener('pointermove', function (event) { if (!drag) { return; } tx = drag.tx + event.clientX - drag.x; ty = drag.ty + event.clientY - drag.y; positioned = true; apply(); }); map.addEventListener('pointerup', function () { drag = null; }); window.requestAnimationFrame(function () { if (!positioned) { position(); } });
+        zoomIn.addEventListener('click', function () { changeZoom(1.18); }); zoomOut.addEventListener('click', function () { changeZoom(0.85); }); reset.addEventListener('click', function () { position(false); }); map.addEventListener('sg:shown', function () { if (!positioned) { position(true); } }); map.addEventListener('sg:node-size-changed', function (event) { window.requestAnimationFrame(function () { drawLinks(); keepCardVisible(event.target); }); });
+        map.addEventListener('wheel', function (event) { event.preventDefault(); var rect = map.getBoundingClientRect(); zoomAt(event.clientX - rect.left, event.clientY - rect.top, scale * (event.deltaY < 0 ? 1.12 : 0.89)); }, {passive: false});
+        map.addEventListener('keydown', function (event) { if (event.key === '+' || event.key === '=') { event.preventDefault(); changeZoom(1.18); } if (event.key === '-') { event.preventDefault(); changeZoom(0.85); } if (event.key === 'Home') { event.preventDefault(); position(false); } });
+        var pointers = {}, drag = null, pinch = null;
+        function activePointers() { return Object.keys(pointers).map(function (id) { return pointers[id]; }); }
+        function beginPinch(points) {
+            var first = points[0], second = points[1], rect = map.getBoundingClientRect(), centerX = (first.x + second.x) / 2 - rect.left, centerY = (first.y + second.y) / 2 - rect.top;
+            pinch = {first: first.id, second: second.id, distance: Math.max(1, Math.hypot(second.x - first.x, second.y - first.y)), scale: scale, worldX: (centerX - tx) / scale, worldY: (centerY - ty) / scale};
+        }
+        function updatePinch() {
+            if (!pinch || !pointers[pinch.first] || !pointers[pinch.second]) { return; }
+            var first = pointers[pinch.first], second = pointers[pinch.second], rect = map.getBoundingClientRect(), centerX = (first.x + second.x) / 2 - rect.left, centerY = (first.y + second.y) / 2 - rect.top;
+            scale = clampScale(pinch.scale * Math.max(1, Math.hypot(second.x - first.x, second.y - first.y)) / pinch.distance);
+            tx = centerX - pinch.worldX * scale; ty = centerY - pinch.worldY * scale; positioned = true; apply();
+        }
+        function endPointer(pointerId) {
+            delete pointers[pointerId]; pinch = null; drag = null;
+            var remaining = activePointers();
+            if (remaining.length === 1) { drag = {id: remaining[0].id, x: remaining[0].x, y: remaining[0].y, tx: tx, ty: ty}; }
+        }
+        function startPointer(event) {
+            if (event.target.closest('a, button') && activePointers().length === 0) { return; }
+            pointers[event.pointerId] = {id: event.pointerId, x: event.clientX, y: event.clientY};
+            if (map.setPointerCapture) { map.setPointerCapture(event.pointerId); }
+            var points = activePointers();
+            if (points.length >= 2) { drag = null; beginPinch(points); } else { drag = {id: event.pointerId, x: event.clientX, y: event.clientY, tx: tx, ty: ty}; }
+        }
+        function movePointer(event) {
+            if (!pointers[event.pointerId]) { return; }
+            pointers[event.pointerId].x = event.clientX; pointers[event.pointerId].y = event.clientY;
+            if (pinch) { updatePinch(); return; }
+            if (!drag || drag.id !== event.pointerId) { return; }
+            tx = drag.tx + event.clientX - drag.x; ty = drag.ty + event.clientY - drag.y; positioned = true; apply();
+        }
+        if (window.PointerEvent) {
+            map.addEventListener('pointerdown', startPointer); map.addEventListener('pointermove', movePointer); map.addEventListener('pointerup', function (event) { endPointer(event.pointerId); }); map.addEventListener('pointercancel', function (event) { endPointer(event.pointerId); });
+        } else {
+            function syncTouches(touches) { pointers = {}; Array.prototype.forEach.call(touches, function (touch) { pointers['touch-' + touch.identifier] = {id: 'touch-' + touch.identifier, x: touch.clientX, y: touch.clientY}; }); }
+            map.addEventListener('touchstart', function (event) { if (event.target.closest('a, button')) { return; } syncTouches(event.touches); var points = activePointers(); if (points.length >= 2) { drag = null; beginPinch(points); } else if (points.length === 1) { drag = {id: points[0].id, x: points[0].x, y: points[0].y, tx: tx, ty: ty}; } event.preventDefault(); }, {passive: false});
+            map.addEventListener('touchmove', function (event) { syncTouches(event.touches); if (pinch) { updatePinch(); } else { var points = activePointers(); if (drag && points[0]) { tx = drag.tx + points[0].x - drag.x; ty = drag.ty + points[0].y - drag.y; positioned = true; apply(); } } event.preventDefault(); }, {passive: false});
+            map.addEventListener('touchend', function (event) { syncTouches(event.touches); pinch = null; drag = null; var points = activePointers(); if (points.length === 1) { drag = {id: points[0].id, x: points[0].x, y: points[0].y, tx: tx, ty: ty}; } }, {passive: false});
+            map.addEventListener('touchcancel', function () { pointers = {}; pinch = null; drag = null; }, {passive: false});
+        }
+        window.requestAnimationFrame(function () { if (!positioned) { position(true); } });
     }
     function initWorkActions() {
         document.querySelectorAll('[data-sg-work-action]').forEach(function (select) {

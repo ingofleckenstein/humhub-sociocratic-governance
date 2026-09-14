@@ -121,6 +121,12 @@ foreach ($pages as $name => [$template, $params]) {
                 throw new RuntimeException('Map application node is incomplete');
             }
         }
+        $mapScript = file_get_contents(dirname(__DIR__) . '/resources/governance-directory.js');
+        foreach (['function zoomAt', 'map.clientWidth / 2', 'position(false)', 'window.PointerEvent', "'touchstart'"] as $requiredInteraction) {
+            if (!str_contains($mapScript, $requiredInteraction)) {
+                throw new RuntimeException('Map interaction support is incomplete: ' . $requiredInteraction);
+            }
+        }
     }
     if ($name === 'circle-roles' && (!str_contains($html, 'Dauerhafte Mitgliedschaft: dauerhafte Kreisleitung')
         || !str_contains($html, 'Space veröffentlichen') || str_contains($html, 'data-confirm'))) {

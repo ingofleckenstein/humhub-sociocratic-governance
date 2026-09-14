@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.6.3 – 2026-09-14
+
+### Verlässliche Kartensteuerung
+
+- Die Zoom-Schaltflächen vergrößern und verkleinern nun um die Mitte der
+  sichtbaren Karte statt um deren linke obere Ecke.
+- „Ansicht zentrieren“ richtet die Karte neu aus, ohne die aktuelle
+  Vergrößerung zurückzusetzen.
+- Zwei-Finger-Zoom funktioniert über Pointer-Ereignisse und mit einem
+  Touch-Fallback auch in Browsern ohne Pointer-Event-Unterstützung.
+
 ## 0.6.2 – 2026-09-11
 
 ### Ein Startpunkt in der Navigation

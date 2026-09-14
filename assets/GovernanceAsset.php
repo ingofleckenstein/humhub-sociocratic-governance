@@ -4,6 +4,6 @@ namespace humhub\modules\sociocraticGovernance\assets;
 class GovernanceAsset extends \yii\web\AssetBundle
 {
     public $sourcePath = __DIR__ . '/../resources';
-    public $css = ['governance.css?v=20260911.6'];
-    public $js = ['governance-directory.js?v=20260909.22'];
+    public $css = ['governance.css?v=20260914.1'];
+    public $js = ['governance-directory.js?v=20260914.1'];
 }
