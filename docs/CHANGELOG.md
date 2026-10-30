@@ -344,3 +344,6 @@ Modulregistrierung und initiale Konzeptdokumentation.
 
 ## 0.6.5
 - Persönliche Navigation trennt Chats, allgemeine Spaces sowie Projekt- und Kompetenzkreise. Kreise folgen den Governance-Leserechten und erscheinen nicht doppelt unter Spaces.
+
+## 0.6.6
+- Redundanten Bereich „Meine Zugehörigkeiten“ von Start entfernt; Mitgliedschaften bleiben über die linke Navigation erreichbar.

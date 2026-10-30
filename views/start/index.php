@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use humhub\modules\sociocraticGovernance\models\WorkItem;
 use humhub\modules\stream\widgets\StreamViewer;
 \humhub\modules\sociocraticGovernance\assets\GovernanceAsset::register($this);
-$circleUrl = static fn($circle) => $circle->space->createUrl('/sociocratic-governance/circle/index');
 $workUrl = static fn($item, $section = 'overview') => $item->space->createUrl('/sociocratic-governance/work/view', ['id' => $item->id, 'section' => $section, 'from' => 'start']);
 $notifications = $notifications ?? [];
 $unseenNotificationCount = $unseenNotificationCount ?? 0;
@@ -32,12 +31,6 @@ $name = Yii::$app->user->identity?->displayName;
 <?= Html::a('Kreise entdecken', ['/sociocratic-governance/directory/index'], ['class' => 'sg-button sg-button-secondary']) ?>
 <?= Html::a('Spaces entdecken', ['/space/spaces'], ['class' => 'sg-button sg-button-secondary']) ?>
 </div></section>
-
-<details class="sg-card sg-collapsible sg-affiliations"><summary><h2>Meine Zugehörigkeiten</h2><span><?= count($circles) ?> Kreise · <?= count($spaces) ?> Spaces</span></summary>
-<p class="sg-muted">Kreise sind Arbeits- und Kompetenzkreise. Spaces können auch sichere Gruppen rund um ein Event sein.</p><div class="sg-grid">
-<section><h3>Meine Kreise</h3><?php if ($circles): ?><ul class="sg-personal-list"><?php foreach ($circles as $circle): ?><li><span class="<?= Html::encode($circle->colorClass()) ?> sg-personal-dot"></span><?= Html::a(Html::encode($circle->space->name), $circleUrl($circle)) ?><small><?= $circle->isCompetenceCircle() ? 'Kompetenzkreis' : 'Projektkreis' ?></small></li><?php endforeach ?></ul><?php else: ?><p class="sg-muted">Du bist derzeit keinem Kreis zugeordnet.</p><?php endif ?></section>
-<section><h3>Meine Spaces</h3><?php if ($spaces): ?><ul class="sg-personal-list"><?php foreach ($spaces as $space): ?><li><?= Html::a(Html::encode($space->name), $space->getUrl()) ?></li><?php endforeach ?></ul><?php else: ?><p class="sg-muted">Du bist derzeit keinem allgemeinen Space zugeordnet.</p><?php endif ?></section>
-</div></details>
 
 <section class="sg-dashboard-section sg-start-activity"><h2>Letzte Aktivitäten</h2><p>Was in deinen sichtbaren Bereichen zuletzt passiert ist.</p>
 <?= StreamViewer::widget([
