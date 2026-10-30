@@ -74,6 +74,10 @@ class Events
     /** Makes the former generic dashboard URL use the personal Governance start. */
     public static function redirectDashboardHome($event)
     {
+        if (!$event->isValid || \Yii::$app->response->getIsRedirection()
+            || (\Yii::$app->has('gateManager') && \Yii::$app->get('gateManager')->hasOpenGate())) {
+            return;
+        }
         if (\Yii::$app->user->isGuest || ($event->action->id ?? '') !== 'index') { return; }
         $event->isValid = false;
         $event->sender->redirect(['/sociocratic-governance/start/index']);
@@ -106,7 +110,7 @@ class Events
     {
         $module = \Yii::$app->getModule('popover-vcard');
         if (!$module || version_compare($module->getVersion(), '1.2.1', '<')
-            || version_compare($module->getVersion(), '1.3.0', '>=')) { return; }
+            || version_compare($module->getVersion(), '1.4.0', '>=')) { return; }
         if (!in_array($event->config['class'] ?? '', [\humhub\modules\popovervcard\widgets\VCardUser::class, \humhub\modules\popovervcard\widgets\VCardSpace::class], true)) { return; }
         $event->config['class'] = \humhub\modules\sociocraticGovernance\widgets\GovernanceVCard::class;
     }

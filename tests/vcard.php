@@ -47,7 +47,11 @@ if ($humhub && $vcard) {
     }
     verify(humhub\modules\popovervcard\widgets\VCardUser::widget([]) === '', 'Real VCard user creation reaches Governance adapter');
     verify(humhub\modules\popovervcard\widgets\VCardSpace::widget([]) === '', 'Real VCard space creation reaches Governance adapter');
-    $module->version = '1.3.0';
+    $module->version = '1.3.1';
+    $supportedConfig = ['class' => humhub\modules\popovervcard\widgets\VCardUser::class];
+    humhub\modules\sociocraticGovernance\Events::vCardCreate(new humhub\libs\WidgetCreateEvent($supportedConfig));
+    verify($supportedConfig['class'] === humhub\modules\sociocraticGovernance\widgets\GovernanceVCard::class, 'VCard 1.3.x reaches Governance adapter');
+    $module->version = '1.4.0';
     $widgetConfig = ['class' => humhub\modules\popovervcard\widgets\VCardUser::class];
     humhub\modules\sociocraticGovernance\Events::vCardCreate(new humhub\libs\WidgetCreateEvent($widgetConfig));
     verify($widgetConfig['class'] === humhub\modules\popovervcard\widgets\VCardUser::class, 'Unverified VCard API version is not replaced');
