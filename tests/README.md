@@ -73,3 +73,6 @@ HTML-Ausgabe sowie POST/CSRF/Revision der neuen Formulare.
 
 Diese isolierten Tests ersetzen keine HumHub-HTTP- und MySQL-Abnahme. Die echten
 parallel laufenden MySQL-Verbindungen und das Theme sind weiterhin separat zu prüfen.
+
+## Persönliche Navigation (0.6.4)
+Auf der Testinstallation Dashboard und Chats mit Admin und normalen Mitgliedern rendern. Prüfen: nur eigene Space-Mitgliedschaften, nur lesbare aktive Chats, blaue Punkte anhand des persönlichen Lesestands, einklappbare Leiste und initial geschlossene Leiste unter 768 px. Gäste dürfen Start nicht öffnen.

@@ -338,3 +338,6 @@ Noch keine vollständige HumHub-/MySQL-Abnahme, kein Serverdeployment durchgefü
 ## 0.0.1
 
 Modulregistrierung und initiale Konzeptdokumentation.
+
+## 0.6.4
+- Start: einklappbare linke Übersicht mit Chats, Space-Bildern und Mitgliedschaften; blaue Punkte für ungelesene Chats beziehungsweise neue sichtbare Space-Beiträge seit dem letzten Besuch.

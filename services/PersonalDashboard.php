@@ -72,6 +72,7 @@ final class PersonalDashboard
             }
         }
 
-        return compact('circles', 'spaces', 'tasks', 'contributions', 'notifications', 'unseenNotificationCount');
+        return compact('circles', 'spaces', 'tasks', 'contributions', 'notifications', 'unseenNotificationCount')
+            + (new PersonalNavigation())->data($user);
     }
 }
