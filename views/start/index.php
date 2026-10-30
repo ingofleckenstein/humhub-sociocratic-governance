@@ -14,7 +14,7 @@ $isReturning = $hasPriority || $circles || $spaces;
 $name = Yii::$app->user->identity?->displayName;
 ?>
 <div class="sg sg-start-layout">
-<?= $this->render('_navigation', ['chatGroups' => $chatGroups ?? [], 'navigationSpaces' => $navigationSpaces ?? []]) ?>
+<?= $this->render('_navigation', ['chatGroups' => $chatGroups ?? [], 'navigationSpaces' => $navigationSpaces ?? [], 'navigationProjectCircles' => $navigationProjectCircles ?? [], 'navigationCompetenceCircles' => $navigationCompetenceCircles ?? []]) ?>
 <main class="sg-start-main">
 <header class="sg-hero"><span class="sg-eyebrow">Start</span><h1><?= $name ? ($isReturning ? 'Willkommen zurück, ' : 'Willkommen, ') . Html::encode($name) : 'Willkommen' ?></h1>
 <?php if ($hasPriority): ?><p>Das braucht gerade deine Aufmerksamkeit. Danach kannst du schauen, wo du dich darüber hinaus einbringen möchtest.</p>

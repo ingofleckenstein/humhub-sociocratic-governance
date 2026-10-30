@@ -3,9 +3,9 @@
 use humhub\helpers\Html;
 use humhub\modules\space\widgets\Image;
 ?>
-<aside class="sg-start-sidebar" aria-label="Meine Chats und Spaces">
+<aside class="sg-start-sidebar" aria-label="Meine Chats, Spaces und Kreise">
 <details class="sg-start-navigation" open>
-<summary>Chats &amp; Spaces <span class="sg-start-navigation__chevron" aria-hidden="true">⌄</span></summary>
+<summary>Chats, Spaces &amp; Kreise <span class="sg-start-navigation__chevron" aria-hidden="true">⌄</span></summary>
 <nav aria-label="Persönliche Übersicht">
 <h2><?= Html::a('Chats', ['/conversations/overview/index']) ?></h2>
 <ul>
@@ -21,16 +21,13 @@ use humhub\modules\space\widgets\Image;
 </ul>
 <hr>
 <h2>Meine Spaces</h2>
-<ul>
-<?php foreach ($navigationSpaces as $item): $space = $item['space']; ?>
-<li><a href="<?= Html::encode($space->getUrl()) ?>">
-<?= Image::widget(['space' => $space, 'width' => 28, 'link' => false, 'showTooltip' => false]) ?>
-<span class="sg-start-navigation__label"><?= Html::encode($space->displayName) ?></span>
-<?php if ($item['unread']): ?><span class="sg-unread-dot" role="img" aria-label="Neue Beiträge seit deinem letzten Besuch" title="Neue Beiträge seit deinem letzten Besuch"></span><?php endif ?>
-</a></li>
-<?php endforeach ?>
-<?php if (!$navigationSpaces): ?><li class="sg-muted">Noch keine Mitgliedschaften</li><?php endif ?>
-</ul>
+<?= $this->render('_navigation-items', ['items' => $navigationSpaces, 'circles' => false]) ?>
+<hr>
+<h2>Meine Kreise</h2>
+<h3>Projektkreise</h3>
+<?= $this->render('_navigation-items', ['items' => $navigationProjectCircles ?? [], 'circles' => true]) ?>
+<h3>Kompetenzkreise</h3>
+<?= $this->render('_navigation-items', ['items' => $navigationCompetenceCircles ?? [], 'circles' => true]) ?>
 </nav>
 </details>
 </aside>

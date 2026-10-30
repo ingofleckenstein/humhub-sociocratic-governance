@@ -3,6 +3,7 @@
 namespace humhub\modules\sociocraticGovernance\services;
 
 use Yii;
+use humhub\modules\sociocraticGovernance\models\Circle;
 use humhub\modules\space\models\Membership;
 use humhub\modules\content\models\Content;
 use humhub\modules\user\models\User;
@@ -17,9 +18,16 @@ final class PersonalNavigation
             $chatGroups = (new \humhub\modules\conversations\services\ConversationOverviewService())->groupedBySpace($user);
         }
         $navigationSpaces = [];
-        foreach (Membership::findByUser($user)->with('space')->all() as $membership) {
+        $navigationProjectCircles = [];
+        $navigationCompetenceCircles = [];
+        $memberships = Membership::findByUser($user)->with('space')->all();
+        $spaceIds = array_map(static fn($membership): int => (int) $membership->space_id, $memberships);
+        $circles = $spaceIds ? Circle::find()->where(['space_id' => $spaceIds])->indexBy('space_id')->all() : [];
+        foreach ($memberships as $membership) {
             $space = $membership->space;
             if (!$space || !$space->isMember($user->id)) { continue; }
+            $circle = $circles[(int) $space->id] ?? null;
+            if ($circle && !Access::readForUser($space, $user)) { continue; }
             $unread = false;
             $query = Content::find()->where([
                 'contentcontainer_id' => $space->contentcontainer_id,
@@ -31,9 +39,15 @@ final class PersonalNavigation
             foreach ($query->each() as $content) {
                 if ($content->canView($user)) { $unread = true; break; }
             }
-            $navigationSpaces[] = ['space' => $space, 'unread' => $unread];
+            $item = ['space' => $space, 'unread' => $unread];
+            if (!$circle) { $navigationSpaces[] = $item; }
+            elseif ($circle->isCompetenceCircle()) { $navigationCompetenceCircles[] = $item; }
+            else { $navigationProjectCircles[] = $item; }
         }
-        usort($navigationSpaces, static fn(array $a, array $b): int => strnatcasecmp($a['space']->name, $b['space']->name));
-        return compact('chatGroups', 'navigationSpaces');
+        $byName = static fn(array $a, array $b): int => strnatcasecmp($a['space']->name, $b['space']->name);
+        usort($navigationSpaces, $byName);
+        usort($navigationProjectCircles, $byName);
+        usort($navigationCompetenceCircles, $byName);
+        return compact('chatGroups', 'navigationSpaces', 'navigationProjectCircles', 'navigationCompetenceCircles');
     }
 }

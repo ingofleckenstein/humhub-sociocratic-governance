@@ -20,8 +20,19 @@ $users = humhub\modules\user\models\User::find()->where(['status' => 1])->orderB
 foreach ($users as $user) {
     Yii::$app->user->setIdentity($user);
     $data = (new humhub\modules\sociocraticGovernance\services\PersonalDashboard())->data();
-    foreach ($data['navigationSpaces'] as $item) {
-        if (!$item['space']->isMember($user->id)) { throw new RuntimeException('Non-member space in sidebar'); }
+    $seen = [];
+    foreach (['navigationSpaces', 'navigationProjectCircles', 'navigationCompetenceCircles'] as $category) {
+        foreach ($data[$category] as $item) {
+            $space = $item['space'];
+            if (!$space->isMember($user->id) || isset($seen[$space->id])) { throw new RuntimeException('Non-member or duplicate navigation item'); }
+            $seen[$space->id] = true;
+            $circle = humhub\modules\sociocraticGovernance\models\Circle::findOne($space->id);
+            if ($category === 'navigationSpaces' && $circle) { throw new RuntimeException('Circle duplicated under Spaces'); }
+            if ($category !== 'navigationSpaces') {
+                if (!$circle || !humhub\modules\sociocraticGovernance\services\Access::readForUser($space, $user)) { throw new RuntimeException('Unreadable circle in navigation'); }
+                if ($circle->isCompetenceCircle() !== ($category === 'navigationCompetenceCircles')) { throw new RuntimeException('Incorrect circle category'); }
+            }
+        }
     }
     $controller = new humhub\modules\sociocraticGovernance\controllers\StartController('start', Yii::$app->getModule('sociocratic-governance'));
     Yii::$app->controller = $controller;
@@ -32,14 +43,14 @@ foreach ($users as $user) {
     }
     $start = $controller->actionIndex();
 
-    if (substr_count($start, 'class="sg-start-sidebar"') !== 1 || !str_contains($start, 'Meine Spaces')) { throw new RuntimeException('Sidebar missing'); }
+    if (substr_count($start, 'class="sg-start-sidebar"') !== 1 || !str_contains($start, 'Meine Spaces') || !str_contains($start, 'Projektkreise') || !str_contains($start, 'Kompetenzkreise')) { throw new RuntimeException('Sidebar missing'); }
     $controller = new humhub\modules\conversations\controllers\OverviewController('overview', Yii::$app->getModule('conversations'));
     Yii::$app->controller = $controller;
     $overview = $controller->actionIndex();
     if (substr_count($overview, 'class="conversation-overview__head"') !== 1 || substr_count($overview, 'role="table"') !== 1) { throw new RuntimeException('Overview must contain one table and heading'); }
 
 
-    echo 'PASS user ' . $user->id . ': permission-aware sidebar, dashboard rendering, single chat table; spaces=' . count($data['navigationSpaces']) . PHP_EOL;
+    echo 'PASS user ' . $user->id . ': permission-aware sidebar, dashboard rendering, single chat table; spaces=' . count($data['navigationSpaces']) . ', project circles=' . count($data['navigationProjectCircles']) . ', competence circles=' . count($data['navigationCompetenceCircles']) . PHP_EOL;
 }
 
 

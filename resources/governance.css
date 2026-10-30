@@ -182,3 +182,5 @@
 .sg-start-layout .sg-hero { padding: 28px; }
 .sg-start-layout { width: 100%; }
 .sg .sg-start-navigation h2 { font-size: .85rem; margin: .6rem .3rem; }
+
+.sg .sg-start-navigation h3 { font-size: .78rem; color: var(--sg-muted); margin: .8rem .3rem .25rem; }

@@ -341,3 +341,6 @@ Modulregistrierung und initiale Konzeptdokumentation.
 
 ## 0.6.4
 - Start: einklappbare linke Übersicht mit Chats, Space-Bildern und Mitgliedschaften; blaue Punkte für ungelesene Chats beziehungsweise neue sichtbare Space-Beiträge seit dem letzten Besuch.
+
+## 0.6.5
+- Persönliche Navigation trennt Chats, allgemeine Spaces sowie Projekt- und Kompetenzkreise. Kreise folgen den Governance-Leserechten und erscheinen nicht doppelt unter Spaces.
