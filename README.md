@@ -2,6 +2,17 @@
 
 Eine universell nutzbare Governance-Erweiterung für HumHub: Kreise sichtbar machen, Zusammenarbeit methodisch unterstützen und Menschen innerhalb klarer Mandate zum Handeln ermächtigen.
 
+### Chat-Navigation mit Chats 1.22
+
+Die linke Startseitenliste trennt persönliche Chats von **Weitere lesbare Chats**
+aus nicht abonnierten Spaces. Die Relevanz und Leserechte liefert das optionale
+Chats-Modul; ein ausdrückliches Chat-Abonnement verschiebt einen Chat in die
+persönliche Liste. Zusätzliche Chats erzeugen keine Ungelesen-Markierung.
+Ältere Chats-Versionen ohne Relevanzkennzeichen bleiben kompatibel.
+Die Integration wurde mit nichtmitgliedschaftlichen Testkonten auf HumHub 1.18.6
+und 1.19.3 geprüft (`conversations/tests/public-access-runtime.php`); die
+Navigationssuite prüft zusätzlich den Trenner im gerenderten Einstieg.
+
 **Status: Version 0.6.2 – persönlicher Einstieg, klare Navigation und verbesserte Auffindbarkeit sind bereit für den lokalen Installationstest.**
 Arbeitskreis-Ansichten, strukturierte Mandatspflege, vier manuell besetzbare Kreisrollen, Profilanzeige, Backend-Konfiguration und globale Kreisübersicht sind implementiert. Die Tabellenansicht beginnt beim konfigurierten Kernkreis, folgt der Projektkreis-Hierarchie und trennt Kompetenzkreise sichtbar ab. Die Kartenansicht ist eine lokale JavaScript-Oberfläche mit verschiebbarer/zoombarer Hierarchie und sichtbarer Doppelbindung; Zoom-Schaltflächen arbeiten um die Kartenmitte, „Ansicht zentrieren“ bewahrt die gewählte Vergrößerung, und zwei Finger zoomen über Pointer- und Touch-Ereignisse. Ihre Schaltflächen führen zu Kreisinfos, Mitgliederseite und Vorhaben-Board. Die vollständige HumHub-/MySQL-Erprobung auf der Testinstallation steht noch aus.
 

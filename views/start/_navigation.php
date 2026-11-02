@@ -9,7 +9,7 @@ use humhub\modules\space\widgets\Image;
 <nav aria-label="Persönliche Übersicht">
 <h2><?= Html::a('Chats', ['/conversations/overview/index']) ?></h2>
 <ul>
-<?php $hasChats = false; foreach ($chatGroups as $group): ?>
+<?php $hasChats = false; foreach ($chatGroups as $group): if (!($group['isRelevant'] ?? true)) { continue; } ?>
 <?php foreach ($group['conversations'] as $chat): $hasChats = true; $unread = !$group['isMuted'] && ($group['unreadCounts'][(int) $chat->id] ?? 0) > 0; ?>
 <li><a href="<?= Html::encode($chat->url) ?>" title="<?= Html::encode($group['space']->displayName) ?>">
 <?= Image::widget(['space' => $group['space'], 'width' => 28, 'link' => false, 'showTooltip' => false]) ?>
@@ -19,6 +19,20 @@ use humhub\modules\space\widgets\Image;
 <?php endforeach; endforeach ?>
 <?php if (!$hasChats): ?><li class="sg-muted">Noch keine Chats</li><?php endif ?>
 </ul>
+<?php $additionalChatGroups = array_filter($chatGroups, static fn(array $group): bool => !($group['isRelevant'] ?? true)); ?>
+<?php if ($additionalChatGroups): ?>
+<hr>
+<h3>Weitere lesbare Chats</h3>
+<p class="sg-muted">Aus nicht abonnierten Spaces</p>
+<ul>
+<?php foreach ($additionalChatGroups as $group): foreach ($group['conversations'] as $chat): ?>
+<li><a href="<?= Html::encode($chat->url) ?>" title="<?= Html::encode($group['space']->displayName) ?>">
+<?= Image::widget(['space' => $group['space'], 'width' => 28, 'link' => false, 'showTooltip' => false]) ?>
+<span class="sg-start-navigation__label"><?= Html::encode($chat->title) ?></span>
+</a></li>
+<?php endforeach; endforeach; ?>
+</ul>
+<?php endif; ?>
 <hr>
 <h2>Meine Spaces</h2>
 <?= $this->render('_navigation-items', ['items' => $navigationSpaces, 'circles' => false]) ?>

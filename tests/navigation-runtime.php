@@ -42,6 +42,8 @@ foreach ($users as $user) {
         }
     }
     $start = $controller->actionIndex();
+    $additionalChats = array_filter($data['chatGroups'], static fn(array $group): bool => !($group['isRelevant'] ?? true));
+    if ((bool)$additionalChats !== str_contains($start, 'Weitere lesbare Chats')) { throw new RuntimeException('Additional readable chats must be separated in the sidebar'); }
 
     if (substr_count($start, 'class="sg-start-sidebar"') !== 1 || !str_contains($start, 'Meine Spaces') || !str_contains($start, 'Projektkreise') || !str_contains($start, 'Kompetenzkreise')) { throw new RuntimeException('Sidebar missing'); }
     $controller = new humhub\modules\conversations\controllers\OverviewController('overview', Yii::$app->getModule('conversations'));
